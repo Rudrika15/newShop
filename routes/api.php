@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\api\CategoryapiController;
 use App\Http\Controllers\api\LoginController;
+use App\Http\Controllers\api\MyorderController;
 use App\Http\Controllers\api\OrderapiController;
 use App\Http\Controllers\api\PincodeapiController;
 use App\Http\Controllers\api\ProductapiController;
@@ -21,6 +23,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getProductList', [ProductapiController::class, 'getProductList']);
     Route::get('/getOrderList', [OrderapiController::class, 'getOrderList']);
     Route::get('/getPincode', [PincodeapiController::class, 'getPincode']);
+    Route::get('/getMyorderList', [MyorderController::class, 'getMyorderList']);
+    Route::get('/getCategoryList', [CategoryapiController::class, 'getCategoryfilter']);
     Route::post('/orderSave', [OrderapiController::class, 'orderSave']);
 });
 

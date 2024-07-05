@@ -12,4 +12,7 @@ class Product_stock extends Model
         'product_id',
         'quantity'
     ];
+    public function products(){
+        return $this->hasMany(Product::class, 'product_stockid','id');
+    }
 }

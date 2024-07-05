@@ -8,17 +8,17 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header mb-3">User Create</div>
+                    <div class="card-header">User Create</div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('user.store') }}">
                             @csrf
 
                             <div class="row mb-3">
-                                <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
+                                <label for="name" class="col-md-4 col-form-label text-md-end mt-4">{{ __('Name') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="name" type="text"
-                                        class="form-control @error('name') is-invalid @enderror" name="name"
+                                        class="form-control @error('name') is-invalid @enderror mt-4" name="name"
                                         value="{{ old('name') }}" required autocomplete="name" autofocus>
 
                                     @error('name')

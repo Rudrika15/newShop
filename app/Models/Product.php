@@ -39,4 +39,8 @@ class Product extends Model
     {
         return $this->belongsTo(Sku::class, 'skuid', 'id');
     }
+    public function producstock()
+    {
+        return $this->belongsTo(Product_stock::class, 'product_stockid', 'id');
+    }
 }

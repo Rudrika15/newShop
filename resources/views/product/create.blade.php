@@ -137,7 +137,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="slug">Slug</label>
-                                <input class="form-control mt-2" type="text" name="slug[]" id="slug"
+                                <input class="form-control mt-2" type="text" name="slug" id="slug"
                                     value="{{ old('slug.0') }}">
                                 <span class="text-danger">
                                     @error('slug')
@@ -149,7 +149,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="color">Color</label>
-                                <input class="form-control mt-2" type="text" name="color[]" id="color"
+                                <input class="form-control mt-2" type="text" name="color" id="color"
                                     value="{{ old('color.0') }}">
                                 <span class="text-danger">
                                     @error('color')
@@ -159,8 +159,8 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="size">Size</label>
-                                <input class="form-control mt-2" type="text" name="size[]" id="size"
-                                    value="{{ old('size.0') }}">
+                                <input class="form-control mt-2" type="text" name="size" id="size"
+                                    value="{{ old(' ') }}">
                                 <span class="text-danger">
                                     @error('size')
                                         {{ $message }}
@@ -170,24 +170,28 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="opening_stock">Opening Stock</label>
-                                <input class="form-control mt-2" type="text" name="opening_stock[]"
-                                    id="opening_stock" value="{{ old('opening_stock.0') }}">
+                                <label for="quantity">Opening Stock</label>
+                                <input class="form-control mt-2" type="text" name="quantity[]" id="quantity"
+                                    value="{{ old('quantity') }}">
                                 <span class="text-danger">
-                                    @error('opening_stock')
+                                    @error('quantity')
                                         {{ $message }}
                                     @enderror
                                 </span>
                             </div>
                             <div class="col-md-6">
                                 <label for="image" class="mb-2">Image</label>
-                                <input class="form-control" type="file" name="image[]" id="image">
+                                <input class="form-control" type="file" name="image" id="image">
                                 <span class="text-danger">
                                     @error('image')
                                         {{ $message }}
                                     @enderror
                                 </span>
                             </div>
+                        </div>
+                        <div class="col-md-12 d-flex justify-content-end">
+                            <button type="button" id="add-block" class="btn btn-secondary shadow-none me-5">Add
+                                Block</button>
                         </div>
                         {{--  <div class="row mb-3">
                             <div class="col-md-6">
@@ -198,13 +202,10 @@
                 </div>
 
                 <div class="row d-flex justify-content-end mb-5">
-                    <div class="col-md-6 d-flex justify-content-end">
+                    <div class="col-md-12 d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
-                    <div class="col-md-6 d-flex justify-content-end">
-                        <button type="button" id="add-block" class="btn btn-secondary shadow-none me-5">Add
-                            Block</button>
-                    </div>
+                   
                 </div>
             </form>
         </div>
@@ -250,8 +251,8 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="opening_stock">Opening Stock</label>
-                        <input class="form-control mt-2" type="text" name="opening_stock[]" id="opening_stock">
+                        <label for="quantity">Opening Stock</label>
+                        <input class="form-control mt-2" type="text" name="quantity[]" id="quantity">
                         <span class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
@@ -268,12 +269,11 @@
             `;
             document.getElementById('additional-blocks').appendChild(newBlock);
         });
-    
+
         document.addEventListener('click', function(event) {
             if (event.target && event.target.classList.contains('remove-block')) {
                 event.target.closest('.dynamic-block').remove();
             }
         });
     </script>
-    
 @endsection

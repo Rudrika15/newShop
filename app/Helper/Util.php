@@ -5,9 +5,10 @@ namespace App\Helper;
 class Util
 {
 
-    public static function getSuccessResponse($data, $token)
+    public static function getSuccessResponse($data,$message = "", $token)
     {
         $response = [
+            'message' => $message,
             'status' => 200,
             'data' => $data,
             'token' => $token,
@@ -37,6 +38,24 @@ class Util
         return response($response, 200);
     }
     public static function getPincodeResponse($data, $message = "result")
+    {
+        $response = [
+            'message' => $message,
+            'status' => 200,
+            'data' => $data,
+        ];
+        return response($response, 200);
+    }
+    public static function getMyorderListResponse($data, $message = "result")
+    {
+        $response = [
+            'message' => $message,
+            'status' => 200,
+            'data' => $data,
+        ];
+        return response($response, 200);
+    }
+    public static function getCategoryListResponse($data, $message = "result")
     {
         $response = [
             'message' => $message,
