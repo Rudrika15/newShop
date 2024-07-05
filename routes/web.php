@@ -1,0 +1,82 @@
+<?php
+
+use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\CategoryController;
+use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SkuController;
+use App\Http\Controllers\SkusController;
+use App\Http\Controllers\UserController;
+
+Route::get('/', function () {
+    return view('auth.login');
+});
+
+Auth::routes();
+
+
+//All Normal Users Routes List
+
+Route::middleware(['auth', 'user-access:user'])->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+});
+
+
+//All Admin Routes List
+
+Route::middleware(['auth', 'user-access:admin'])->group(function () {
+    Route::get('/admin/home', [UserController::class, 'adminHome'])->name('admin.home');
+    Route::get('/user/index', [UserController::class, 'index'])->name('user.index');
+    Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
+    Route::get('/admin/trash-user', [UserController::class, 'trashUser'])->name('user.trash');
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
+    Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+    Route::post('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
+    Route::get('/user/change-password/{id}', [UserController::class, 'password'])->name('user.password');
+    Route::post('/user/update-password/{user}', [UserController::class, 'updatepassword'])->name('user.updatepassword');
+    Route::get('/user/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
+    Route::get('/user/restore/{id}', [UserController::class, 'restore'])->name('user.restore');
+    Route::get('/user/force-delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::get('logout', [UserController::class, 'logout'])->name('logout');
+
+    // SKU 
+    Route::get('/sku/index', [SkuController::class, 'index'])->name('sku.index');
+    Route::get('/sku/trash/', [SkuController::class, 'trash'])->name('sku.trash');
+    Route::get('/sku/create', [SkuController::class, 'create'])->name('sku.create');
+    Route::post('/sku/store', [SkuController::class, 'store'])->name('sku.store');
+    Route::get('/sku/edit/{id}', [SkuController::class, 'edit'])->name('sku.edit');
+    Route::post('/sku/update/{sku}', [SkuController::class, 'update'])->name('sku.update');
+    Route::get('/sku/delete/{id}', [SkuController::class, 'delete'])->name('sku.delete');
+    Route::get('/sku/restore/{id}', [SkuController::class, 'restore'])->name('sku.restore');
+    Route::get('/sku/force-delete/{id}', [SkuController::class, 'destroy'])->name('sku.destroy');
+
+    //Category
+    Route::get('/category/index', [CategoryController::class, 'index'])->name('category.index');
+    Route::get('/category/trash', [CategoryController::class, 'trash'])->name('category.trash');
+    Route::get('/category/create', [CategoryController::class, 'create'])->name('category.create');
+    Route::post('/category/store', [CategoryController::class, 'store'])->name('category.store');
+    Route::get('/category/edit/{id}', [CategoryController::class, 'edit'])->name('category.edit');
+    Route::post('/category/update/{id}', [CategoryController::class, 'update'])->name('category.update');
+    Route::get('/category/delete/{id}', [CategoryController::class, 'delete'])->name('category.delete');
+    Route::get('/category/restore/{id}', [CategoryController::class, 'restore'])->name('category.restore');
+    Route::get('/category/force-delete/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
+
+    //catalogs
+    // Route::get('Product/index', [ProductController::class, 'index'])->name('Product.index');
+    // Route::get('catalog/create', [CatalogController::class, 'index'])->name('catalog.index');
+    // Route::get('catalog/post', [CatalogController::class, 'index'])->name('catalog.index');
+
+    //products
+    Route::get('product/index',[ProductController::class, 'index'])->name('product.index');
+    Route::get('product/trash-product',[ProductController::class, 'trashProduct'])->name('product.trash');
+    Route::get('product/create',[ProductController::class, 'create'])->name('product.create');
+    Route::post('product/store',[ProductController::class, 'store'])->name('product.store');
+    Route::get('product/edit/{product}',[ProductController::class, 'edit'])->name('product.edit');
+    Route::put('product/update/{product}',[ProductController::class, 'update'])->name('product.update');
+    Route::get('product/delete/{id}',[ProductController::class, 'delete'])->name('product.delete');
+    Route::get('product/restore/{id}',[ProductController::class, 'restore'])->name('product.restore');
+    Route::get('product/force-delete/{id}',[ProductController::class, 'destroy'])->name('product.destory');
+});
