@@ -70,13 +70,13 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     // Route::get('catalog/post', [CatalogController::class, 'index'])->name('catalog.index');
 
     //products
-    Route::get('product/index',[ProductController::class, 'index'])->name('product.index');
-    Route::get('product/trash-product',[ProductController::class, 'trashProduct'])->name('product.trash');
-    Route::get('product/create',[ProductController::class, 'create'])->name('product.create');
-    Route::post('product/store',[ProductController::class, 'store'])->name('product.store');
-    Route::get('product/edit/{product}',[ProductController::class, 'edit'])->name('product.edit');
-    Route::put('product/update/{product}',[ProductController::class, 'update'])->name('product.update');
-    Route::get('product/delete/{id}',[ProductController::class, 'delete'])->name('product.delete');
-    Route::get('product/restore/{id}',[ProductController::class, 'restore'])->name('product.restore');
-    Route::get('product/force-delete/{id}',[ProductController::class, 'destroy'])->name('product.destory');
+    Route::get('product/index', [ProductController::class, 'index'])->name('product.index');
+    Route::get('product/trash-product', [ProductController::class, 'trashProduct'])->name('product.trash');
+    Route::get('product/create', [ProductController::class, 'create'])->name('product.create');
+    Route::post('product/store', [ProductController::class, 'store'])->name('product.store');
+    Route::get('product/edit/{product}', [ProductController::class, 'edit'])->name('product.edit');
+    Route::put('product/update/{product}', [ProductController::class, 'update'])->name('product.update');
+    Route::get('product/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
+    Route::get('product/restore/{id}', [ProductController::class, 'restore'])->name('product.restore');
+    Route::get('product/force-delete/{id}', [ProductController::class, 'destroy'])->name('product.destory');
 });

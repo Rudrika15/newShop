@@ -18,88 +18,11 @@
                 <form method="POST" action="{{ route('product.update', $product->id) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-                    {{--  <div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="sku">SKU</label>
-                                <input type="text" class="form-control" id="sku" name="sku"
-                                    value="{{ $product->sku }}">
-                                <span class="text-danger">
-                                    @error('sku')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="categoryid">Category ID</label>
-                            <input type="text" class="form-control" id="categoryid" name="categoryid"
-                                value="{{ $product->categoryid }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="slug">Slug</label>
-                            <input type="text" class="form-control" id="slug" name="slug"
-                                value="{{ $product->slug }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="color">Color</label>
-                            <input type="text" class="form-control" id="color" name="color"
-                                value="{{ $product->color }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="size">Size</label>
-                            <input type="text" class="form-control" id="size" name="size"
-                                value="{{ $product->size }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="image">Image</label>
-                            <input type="file" class="form-control" id="image" name="image">
-                            <img src="{{ asset('images/' . $product->image) }}" width="50" height="50">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="opening_stock">Opening Stock</label>
-                            <input type="number" class="form-control" id="opening_stock" name="opening_stock"
-                                value="{{ $product->opening_stock }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description">{{ $product->description }}</textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="discount_amt">Discount Amount</label>
-                            <input type="number" class="form-control" id="discount_amt" name="discount_amt"
-                                value="{{ $product->discount_amt }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="mrp">MRP</label>
-                            <input type="number" class="form-control" id="mrp" name="mrp"
-                                value="{{ $product->mrp }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="is_active">Is Active</label>
-                            <select class="form-control" id="is_active" name="is_active">
-                                <option value="1" {{ $product->is_active ? 'selected' : '' }}>Yes</option>
-                                <option value="0" {{ !$product->is_active ? 'selected' : '' }}>No</option>
-                            </select>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Update Product</button>
-                    </div>  --}}
                     <div class="row border p-3 m-3">
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="title">Catalog Name</label>
-                                <input class="form-control mt-2" type="text" name="title" id="title"
+                                <label for="title" class="form-label">Catalog Name</label>
+                                <input class="form-control" type="text" name="title" id="title"
                                     value="{{ $product->catalog->title }}" readonly>
                                 <span class="text-danger">
                                     @error('title')
@@ -108,9 +31,9 @@
                                 </span>
                             </div>
                             <div class="col-md-6">
-                                <label for="main_image">Main Image</label>
+                                <label for="main_image" class="form-label">Main Image</label>
                                 <input class="form-control my-2" type="file" name="main_image" id="main_image">
-                                <img src="{{ asset('images/main_images/' . $product->image) }}" width="50"
+                                <img src="{{ asset('images/catalog/' . $product->catalog->main_image) }}" width="50"
                                     height="50">
                                 <span class="text-danger">
                                     @error('main_image')
@@ -121,7 +44,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="categoryid">Category</label>
+                                <label for="categoryid" class="form-label">Category</label>
                                 <select id="categoryid" name="categoryid" class="form-select">
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}"
@@ -136,30 +59,23 @@
                                     @enderror
                                 </span>
                             </div>
-                        </div>
-                        <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="description" class="form-label">Description</label>
-                                <textarea type="text" name="description" class="form-control mt-2">{{ $product->description }}</textarea>
+                                <textarea type="text" name="description" class="form-control">{{ $product->description }}</textarea>
                                 <span class="text-danger">
                                     @error('description')
                                         {{ $message }}
                                     @enderror
                                 </span>
                             </div>
-                            <div class="col-md-6">
-                                <label for="image" class="mb-2">Image</label>
-                                <input class="form-control mt-2" type="file" name="image" id="image">
-                                <span class="text-danger">
-                                    @error('image')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                            </div>
+                        </div>
+                        <div class="row mb-3">
+                           
+
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="is_active">Is Active</label>
+                                <label for="is_active" class="form-label">Is Active</label>
                                 <select class="form-control" id="is_active" name="is_active">
                                     <option value="Yes" {{ $product->is_active ? 'selected' : '' }}>Yes</option>
                                     <option value="No" {{ !$product->is_active ? 'selected' : '' }}>No</option>
@@ -173,8 +89,8 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                <label for="base_price">Base Price</label>
-                                <input class="form-control mt-2" type="text" name="base_price" id="base_price"
+                                <label for="base_price" class="form-label">Base Price</label>
+                                <input class="form-control" type="text" name="base_price" id="base_price"
                                     value="{{ $product->base_price }}">
                                 <span class="text-danger">
                                     @error('base_price')
@@ -183,8 +99,8 @@
                                 </span>
                             </div>
                             <div class="col-md-4">
-                                <label for="tax_price">Tex Price</label>
-                                <input class="form-control mt-2" type="text" name="tax_price" id="tax_price"
+                                <label for="tax_price" class="form-label">Tex Price</label>
+                                <input class="form-control" type="text" name="tax_price" id="tax_price"
                                     value="{{ $product->tax_price }}">
                                 <span class="text-danger">
                                     @error('tax_price')
@@ -194,19 +110,9 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="opening_stock">Opening Stock</label>
-                                <input class="form-control mt-2" type="text" name="opening_stock" id="opening_stock"
-                                    value="{{ $product->opening_stock }}">
-                                <span class="text-danger">
-                                    @error('opening_stock')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="mrp">MRP</label>
-                                <input class="form-control mt-2" type="text" name="mrp" id="mrp"
+                            <div class="col-md-4" >
+                                <label for="mrp" class="form-label">MRP</label>
+                                <input class="form-control" type="text" name="mrp" id="mrp"
                                     value="{{ $product->mrp }}">
                                 <span class="text-danger">
                                     @error('mrp')
@@ -214,9 +120,9 @@
                                     @enderror
                                 </span>
                             </div>
-                            <div class="col-md-4">
-                                <label for="discount_amt">Discount Amount</label>
-                                <input class="form-control mt-2" type="text" name="discount_amt" id="discount_amt"
+                            <div class="col-md-4" >
+                                <label for="discount_amt" class="form-label">Discount Amount</label>
+                                <input class="form-control" type="text" name="discount_amt" id="discount_amt"
                                     value="{{ $product->discount_amt }}">
                                 <span class="text-danger">
                                     @error('discount_amt')
@@ -228,8 +134,48 @@
                     </div>
                     <div class="row border p-3 m-3">
                         <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="sku">SKU</label>
+                            <div class="col-md-5" class="form-label">
+                                <label for="slug" class="form-label">Slug</label>
+                                <input class="form-control" type="text" name="slug" id="slug"
+                                    value="{{ $product->slug }}">
+                                <span class="text-danger">
+                                    @error('slug')
+                                        {{ $message }}
+                                    @enderror
+                                </span>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="opening_stock" class="form-label">Opening Stock</label>
+                                <input class="form-control" type="text" name="opening_stock" id="opening_stock"
+                                    value="{{ $product->opening_stock }}">
+                                <span class="text-danger">
+                                    @error('opening_stock')
+                                        {{ $message }}
+                                    @enderror
+                                </span>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="image" class="form-label">Image</label>
+                                <input class="form-control" type="file" name="image" id="image">
+                                <span class="text-danger">
+                                    @error('image')
+                                        {{ $message }}
+                                    @enderror
+                                </span>
+                            </div>
+                            <div class="col-md-1">
+                                @if ('{{ $product->image }}')
+                                    <img src="{{ asset('images/product/' . $product->image) }}" width="70"
+                                        height="70"><br>
+                                @else
+                                    <p>No image found</p>
+                                @endif
+
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="sku" class="form-label">SKU</label>
                                 <select id="sku" name="sku" class="form-select">
                                     @foreach ($skus as $sku)
                                         <option value="{{ $sku->id }}"
@@ -244,21 +190,9 @@
                                     @enderror
                                 </span>
                             </div>
-                            <div class="col-md-6">
-                                <label for="slug">Slug</label>
-                                <input class="form-control mt-2" type="text" name="slug" id="slug"
-                                    value="{{ $product->slug }}">
-                                <span class="text-danger">
-                                    @error('slug')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="color">Color</label>
-                                <input class="form-control mt-2" type="text" name="color" id="color"
+                            <div class="col-md-4">
+                                <label for="color" class="form-label">Color</label>
+                                <input class="form-control" type="text" name="color" id="color"
                                     value="{{ $product->color }}">
                                 <span class="text-danger">
                                     @error('color')
@@ -266,9 +200,9 @@
                                     @enderror
                                 </span>
                             </div>
-                            <div class="col-md-6">
-                                <label for="size">Size</label>
-                                <input class="form-control mt-2" type="text" name="size" id="size"
+                            <div class="col-md-4">
+                                <label for="size" class="form-label">Size</label>
+                                <input class="form-control" type="text" name="size" id="size"
                                     value="{{ $product->size }}">
                                 <span class="text-danger">
                                     @error('size')
