@@ -72,11 +72,14 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     //products
     Route::get('product/index', [ProductController::class, 'index'])->name('product.index');
     Route::get('product/trash-product', [ProductController::class, 'trashProduct'])->name('product.trash');
+    Route::get('product/trash-product/{id}', [ProductController::class, 'view'])->name('product.view');
     Route::get('product/create', [ProductController::class, 'create'])->name('product.create');
     Route::post('product/store', [ProductController::class, 'store'])->name('product.store');
+    Route::get('catalog/edit/{catalog}', [ProductController::class, 'editcatalog'])->name('catalog.edit');
+    Route::put('catalog/update/{catalog}', [ProductController::class, 'catalogupdate'])->name('catalog.update');
     Route::get('product/edit/{product}', [ProductController::class, 'edit'])->name('product.edit');
     Route::put('product/update/{product}', [ProductController::class, 'update'])->name('product.update');
-    Route::get('product/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
-    Route::get('product/restore/{id}', [ProductController::class, 'restore'])->name('product.restore');
-    Route::get('product/force-delete/{id}', [ProductController::class, 'destroy'])->name('product.destory');
+    Route::get('catalog/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
+    Route::get('catalog/restore/{id}', [ProductController::class, 'restore'])->name('product.restore');
+    Route::get('catalog/force-delete/{id}', [ProductController::class, 'destroy'])->name('product.destory');
 });

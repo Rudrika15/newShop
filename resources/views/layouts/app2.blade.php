@@ -199,16 +199,6 @@
                       <i class="bi bi-circle"></i><span>Products</span>
                     </a>
                   </li>
-                  <li>
-                    <a href="#">
-                      <i class="bi bi-circle"></i><span>ApexCharts</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i class="bi bi-circle"></i><span>ECharts</span>
-                    </a>
-                  </li>
                 </ul>
               </li><!-- End Charts Nav -->
         

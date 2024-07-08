@@ -17,17 +17,19 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::paginate(5);
+        $catalogs = Catalog::with('products')->paginate(5);
 
-        return view('product.index', compact('products'));
+        return view('product.index', compact('catalogs'));
     }
 
     //trash user data
     public function trashProduct()
     {
-        $products = Product::onlyTrashed()->paginate(5);
+        $catalogs = Catalog::with(['products' => function ($query) {
+            $query->onlyTrashed();
+        }])->onlyTrashed()->paginate(5);
 
-        return view('product.trash', compact('products'));
+        return view('product.trash', compact('catalogs'));
     }
     /**
      * Show the form for creating a new resource.
@@ -54,14 +56,14 @@ class ProductController extends Controller
             'discount_amt' => 'required|numeric',
             'mrp' => 'required|numeric',
             'is_active' => 'required|in:Yes,No',
-           // 'sku' => 'required|array',
+            // 'sku' => 'required|array',
             // 'slug' => 'required|array',
             // 'color' => 'required|array',
             // 'size' => 'nullable|array',
             // 'image' => 'required|array',
             // 'image.*' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             // 'quantity' => 'required|array',
-    
+
         ]);
 
         // Save the catalog
@@ -77,7 +79,7 @@ class ProductController extends Controller
 
         $catalog->save();
 
-    
+
         // Loop through and save each product
         foreach ($request->sku as $index => $sku) {
             $product = new Product();
@@ -109,10 +111,8 @@ class ProductController extends Controller
             $stock->quantity = $request->quantity[$index];
             $stock->product_id = $product->id;
             $stock->save();
-
         }
         return redirect()->route('product.index')->with('success', 'Products created successfully');
-
     }
 
     /**
@@ -126,17 +126,59 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function editcatalog(string $id)
     {
-        $product = Product::find($id);
-        $categories = Category::all();
-        $skus = Sku::all();
-        return view('product.edit', compact('product', 'categories', 'skus'));
+        $catalog = Catalog::find($id);
+        return view('product.edit', compact('catalog'));
     }
 
     /**
      * Update the specified resource in storage.
      */
+    public function catalogupdate(Request $request, Catalog $catalog)
+    {
+        // return $request;
+        $request->validate([
+            'title' => 'required',
+            'main_image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+
+        ]);
+
+        $input = $request->all();
+        // Move old image to deleted folder
+        if ($image = $request->file('main_image')) {
+
+            // Delete old image if it exists
+            if ($catalog->image && file_exists(public_path('images/catalog/' . $catalog->image))) {
+                unlink(public_path('images/catalog/' . $catalog->image));
+            }
+
+            $destinationPath = 'images/catalog';
+            // $oldImagePath = 'images/catalog' . $catalog->image;
+            $catalogImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move($destinationPath, $catalogImage);
+            $input['main_image'] = $catalogImage;
+        } else {
+            // unset($input['image']);
+        }
+
+        $catalog->update($input);
+
+        return redirect()->route('product.index')->with('success', 'catalog updated successfully');
+    }
+
+    public function edit(string $id)
+    {
+        $product = Product::find($id);
+        $categories = Category::all();
+        $skus = Sku::all();
+        return view('product.editproduct', compact('product', 'categories', 'skus'));
+    }
+
+
+
+
+    // product 
     public function update(Request $request, Product $product)
     {
         // return $request;
@@ -147,7 +189,7 @@ class ProductController extends Controller
             'color' => 'required',
             'size' => '',
             'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'opening_stock' => 'required',
+            // 'opening_stock' => 'required',
             'description' => 'required',
             'base_price' => 'required',
             'tax_price' => 'required',
@@ -183,32 +225,45 @@ class ProductController extends Controller
      */
     public function delete(string $id)
     {
-        $product = Product::find($id);
-        if ($product) {
-            $product->delete(); // Soft delete the user
-            return redirect()->back()->with('success', 'product deleted successfully');
+        // Find the catalog by ID
+        $catalog = Catalog::findOrFail($id);
+
+        // Delete all products associated with this catalog
+        foreach ($catalog->products as $product) {
+            // Optionally, you can delete associated images or other related data here
+            $product->delete();
         }
-        return redirect()->back()->with('success', 'product not found');
+        $catalog->delete();
+
+        // Redirect back with a success message
+        return redirect()->route('product.index')->with('success', 'Catalog and its products deleted successfully');
     }
     //restore
     public function restore($id)
     {
-        $product = Product::withTrashed()->find($id);
-        if ($product) {
-            $product->restore(); // Soft delete the user
-            return redirect()->back()->with('success', 'product restored successfully');
-        }
-        return redirect()->back()->with('success', 'product not found');
+        $catalog = Catalog::withTrashed()->findOrFail($id);
+        $catalog->restore();
+
+        // Restore associated products
+        $catalog->products()->withTrashed()->restore();
+
+        return redirect()->route('product.index')->with('success', 'Catalog and associated products restored successfully.');
     }
 
-    // permanently delete
-    public function destroy($id)
+    //force-delete
+    public function destory($id)
     {
-        $product = Product::withTrashed()->find($id);
-        if ($product) {
-            $product->forceDelete(); // Soft delete the user
-            return redirect()->back()->with('success', 'product permanently deleted successfully');
-        }
-        return redirect()->back()->with('success', 'product not found');
+        $catalog = Catalog::onlyTrashed()->findOrFail($id);
+        $catalog->forceDelete();
+
+        $catalog->products()->forceDelete();
+
+        return redirect()->back()->with('success', 'Catalog and associated products permanently deleted.');
+    }
+
+    public function view($id)
+    {
+        $product = Product::onlyTrashed()->findOrFail($id);
+        return view('product.productview', compact('product'));
     }
 }

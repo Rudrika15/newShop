@@ -11,74 +11,70 @@
             <div class="row m-0 py-2">
                 <div class="col-lg-6">
                     <h3>
-                        @if (count($products) > 0)
-                            TRASH PRODUCTS LIST
+                        @if (count($catalogs) > 0)
+                            TRASHED PRODUCTS LIST
                         @else
-                            There are no trash data
+                            There are no data
                         @endif
                     </h3>
                 </div>
                 <div class="col-lg-6 d-flex justify-content-end align-items-center">
-                    {{--  <span style="float:right;"><a href="{{ route('category.trash') }}"
-                            class="btn btn-warning">Go To Trash</a>
-                    </span>  --}}
-                    <span style="float:right;"><a href="{{ route('product.index') }}"
-                            class="btn btn-primary shadow-none ms-2">Back</a>
-                    </span>
+                    <span style="float:right;"><a href="{{ route('product.index') }}" class="btn btn-primary shadow-none">Go
+                            Back</a></span>
                 </div>
             </div>
-            @if (count($products) !== 0)
+            @if (count($catalogs) !== 0)
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
-                            <tr>
+                            <tr class="text-center">
                                 <th>ID</th>
                                 <th>Catalog Name</th>
-                                <th>SKU</th>
-                                <th>Category</th>
-                                <th>Slug</th>
-                                <th>Color</th>
-                                <th>Size</th>
-                                <th>Image</th>
-                                <th>Opening Stock</th>
-                                <th>Description</th>
-                                <th>Base Price</th>
-                                <th>Tax </th>
-                                <th>Discount Amount</th>
-                                <th>MRP</th>
-                                <th>Is Active</th>
-                                <th>Actions</th>
+                                <th>Main Image</th>
+                                <th>Action</th>
+                                <th>Product</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($products as $product)
-                                <tr>
-                                    <td>{{ $product->id }}</td>
-                                    <td>{{ $product->catalog->title }}</td>
-                                    <td>{{ $product->sku }}</td>
-                                    <td>{{ $product->category->categoryname }}</td>
-                                    <td>{{ $product->slug }}</td>
-                                    <td>{{ $product->color }}</td>
-                                    <td>{{ $product->size }}</td>
-                                    <td><img src="{{ asset('images/product/' . $product->image) }}" width="50"
-                                            height="50"></td>
-                                    <td>{{ $product->opening_stock }}</td>
-                                    <td>{{ $product->description }}</td>
-                                    <td>{{ $product->base_price }}</td>
-                                    <td>{{ $product->tax_price }}</td>
-                                    <td>{{ $product->discount_amt }}</td>
-                                    <td>{{ $product->mrp }}</td>
-                                    <td>{{ $product->is_active }}</td>
+                            @foreach ($catalogs as $catalog)
+                                <tr class="text-center">
+                                    <td>{{ $catalog->id }}</td>
+                                    <td>{{ $catalog->title }}</td>
+                                    <td>
+                                        <img src="{{ asset('images/catalog/' . $catalog->main_image) }}" width="50"
+                                            height="50">
+                                    </td>
                                     <td>
                                         <div class="d-flex gap-2 justify-content-center">
                                             <div>
-                                                <a href="{{ route('product.restore', $product->id) }}"
-                                                    class="btn btn-primary btn-sm shadow-none">Restore</a>
+                                                <a href="{{ route('product.restore', $catalog->id) }}"
+                                                    class="btn btn-primary btn-sm shadow-none">Restore
+                                                </a>
                                             </div>
                                             <div>
-                                                <button class="delete-user btn btn-danger btn-sm shadow-none"
-                                                    data-id="{{ $product->id }}">Delete</button>
+                                                <div>
+                                                    <button class="delete-user btn btn-danger btn-sm shadow-none"
+                                                        data-id="{{ $catalog->id }}">Delete</button>
+                                                </div>
                                             </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2 justify-content-center flex-nowrap">
+                                            @foreach ($catalog->products as $product)
+                                                <div>
+                                                    <a href="{{ route('product.view', $product->id) }}"
+                                                        class="btn btn-primary btn-sm shadow-none">
+                                                        {{ $product->slug }}
+                                                    </a>
+                                                </div>
+                                                {{--  <div>
+                                                    <button class="delete-user btn btn-danger btn-sm shadow-none"
+                                                        data-id="{{ $product->id }}">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </div>  --}}
+                                            @endforeach
                                         </div>
                                     </td>
                                 </tr>
@@ -89,7 +85,8 @@
             @endif
         </div>
     </div>
-    {!! $products->withQueryString()->links('pagination::bootstrap-5') !!}
+
+    {!! $catalogs->withQueryString()->links('pagination::bootstrap-5') !!}
 
     <script>
         const deleteButtons = document.querySelectorAll('.delete-user');
@@ -111,7 +108,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Redirect to a route that handles user deletion
-                        window.location.href = `/product/force-delete/${userId}`;
+                        window.location.href = `/catalog/force-delete/${userId}`;
                     }
                 });
             });
