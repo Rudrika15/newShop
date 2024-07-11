@@ -122,14 +122,16 @@
                 <div id="additional-blocks">
                     <div class="col-md-12 d-flex justify-content-end">
                         <button type="button" id="add-block" class="btn btn-secondary shadow-none me-5">Add
-                            Block</button>
+                            Block
+                            {{--  {{ count(old('sku')['slug'] ?? []) }}  --}}
+                        </button>
                     </div>
-                    <div class="row border p-3 mb-5 me-5 ms-5 mt-2 dynamic-block">
+                    <div class="row border p-3 mb-5 me-5 ms-5 mt-2 single-product">
                         <div class="row mb-3">
                             <div class="col-md-5">
                                 <label for="slug" class="form-label">Slug</label>
-                                <input class="form-control" type="text" name="slug[]" id="slug"
-                                    value={{ old('slug')[0] ?? '' }}>
+                                <input class="form-control" type="text" name="sku[slug][]" id="slug"
+                                    value={{ old('sku')['slug'][0] ?? '' }}>
                                 <span class="text-danger">
                                     @error('slug')
                                         {{ $message }}
@@ -138,8 +140,8 @@
                             </div>
                             <div class="col-md-2">
                                 <label for="quantity" class="form-label">Opening Stock</label>
-                                <input class="form-control " type="text" name="quantity[]" id="quantity"
-                                    value={{ old('quantity')[0] ?? '' }}>
+                                <input class="form-control " type="text" name="sku[quantity][]" id="quantity"
+                                    value={{ old('sku')['quantity'][0] ?? '' }}>
                                 <span class="text-danger">
                                     @error('quantity')
                                         {{ $message }}
@@ -148,8 +150,8 @@
                             </div>
                             <div class="col-md-5">
                                 <label for="image" class="form-label">Image</label>
-                                <input class="form-control" type="file" name="image[]" id="image"
-                                    value={{ old('image')[0] ?? '' }}>
+                                <input class="form-control" type="file" name="sku[image][]" id="image"
+                                    value={{ old('sku')['image'][0] ?? '' }}>
                                 <span class="text-danger">
                                     @error('image')
                                         {{ $message }}
@@ -162,10 +164,13 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="sku" class="form-label">SKU</label>
-                                <select id="sku" name="sku[]" class="form-select">
+                                <select id="sku" name="sku[sku][]" class="form-select sku-input">
                                     <option value="">Select</option>
                                     @foreach ($skus as $sku)
-                                        <option value="{{ $sku->id }}">{{ $sku->prefix }}</option>
+                                        <option value="{{ $sku->id }}" data-color="{{ $sku->colorname }}"
+                                            {{ isset(old('sku')['sku'][0]) && old('sku')['sku'][0] == $sku->id ? 'selected' : '' }}>
+                                            {{ $sku->prefix }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <span class="text-danger">
@@ -176,18 +181,20 @@
                             </div>
                             <div class="col-md-3">
                                 <label for="color" class="form-label">Color</label>
-                                <input class="form-control " type="text" name="color[]" id="color"
-                                    value={{ old('color')[0] ?? '' }}>
+                                <input class="form-control color-input" type="text" name="sku[color][]"
+                                    id="color" value="{{ old('sku')['color'][0] ?? '' }}" readonly>
                                 <span class="text-danger">
                                     @error('color')
                                         {{ $message }}
                                     @enderror
                                 </span>
                             </div>
+
+
                             <div class="col-md-3">
                                 <label for="size" class="form-label">Size</label>
-                                <input class="form-control " type="text" name="size[]" id="size"
-                                    value={{ old('size')[0] ?? '' }}>
+                                <input class="form-control " type="text" name="sku[size][]" id="size"
+                                    value={{ old('sku')['size'][0] ?? '' }}>
                                 <span class="text-danger">
                                     @error('size')
                                         {{ $message }}
@@ -195,15 +202,82 @@
                                 </span>
                             </div>
                         </div>
-
-                        {{--  <div class="row mb-3">
-                            <div class="col-md-6">
-                                <button type="button" class="btn btn-danger remove-block">Remove Block</button>
-                            </div>
-                        </div>  --}}
                     </div>
                 </div>
 
+                @if (!empty(old('sku')['slug']) && count(old('sku')['slug']) > 1)
+                    @for ($i = 1; $i < count(old('sku')['slug']); $i++)
+                        @if (
+                            !empty(old('sku')['slug'][$i]) &&
+                                !empty(old('sku')['quantity'][$i]) &&
+                                !empty(old('sku')['image'][$i]) &&
+                                !empty(old('sku')['sku'][$i]) &&
+                                !empty(old('sku')['color'][$i]))
+                            <div class="row border p-3 mb-5 me-5 ms-5 mt-2 dynamic-block single-product">
+                                <div class="row mb-3">
+                                    <div class="col-md-5">
+                                        <label for="slug" class="form-label">Slug</label>
+                                        <input class="form-control " type="text"
+                                            name="sku[slug][{{ $i }}]" id="slug"
+                                            value="{{ old('sku')['slug'][$i] ?? '' }}">
+                                        <span class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="quantity" class="form-label">Opening Stock</label>
+                                        <input class="form-control" type="text"
+                                            name="sku[quantity][{{ $i }}]" id="quantity"
+                                            value="{{ old('sku')['quantity'][$i] ?? '' }}">
+                                        <span class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="image" class="form-label">Image</label>
+                                        <input class="form-control" type="file"
+                                            name="sku[image][{{ $i }}]" id="image"
+                                            value="{{ old('sku')['image'][$i] ?? '' }}">
+                                        <span class="text-danger"></span>
+                                        <img id="imagePreview" src="" alt="Selected Image"
+                                            style="display: none; margin-top: 10px; max-width: 100%;">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="sku" class="form-label">SKU</label>
+                                        <select id="sku" name="sku[sku][]" class="form-select sku-input">
+                                            <option value="">Select</option>
+                                            @foreach ($skus as $sku)
+                                                <option value="{{ $sku->id }}" data-color="{{ $sku->colorname }}"
+                                                    {{ isset(old('sku')['sku'][0]) && old('sku')['sku'][0] == $sku->id ? 'selected' : '' }}>
+                                                    {{ $sku->prefix }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <span class="text-danger">
+                                            @error('sku')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="color" class="form-label color-input">Color</label>
+                                        <input class="form-control" type="text" name="sku[color][]" id="color"
+                                            value="{{ old('sku')['color'][0] ?? '' }}" readonly>
+                                        <span class="text-danger">
+                                            @error('color')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-12 d-flex justify-content-end">
+                                        <button type="button" class="btn btn-danger remove-block">Remove Block</button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endfor
+                @endif
                 <div class="row d-flex justify-content-end mb-5">
                     <div class="col-md-12 d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary">Submit</button>
@@ -213,26 +287,25 @@
             </form>
         </div>
     </div>
-
     <script>
         document.getElementById('add-block').addEventListener('click', function() {
             var newBlock = document.createElement('div');
-            newBlock.classList.add('row', 'border', 'p-3', 'm-5', 'dynamic-block');
+            newBlock.classList.add('row', 'border', 'p-3', 'm-5', 'dynamic-block', 'single-product');
             newBlock.innerHTML = `
                 <div class="row mb-3">
                     <div class="col-md-5">
                         <label for="slug" class="form-label">Slug</label>
-                        <input class="form-control " type="text" name="slug[]" id="slug">
+                        <input class="form-control " type="text" name="sku[slug][]" id="slug">
                         <span class="text-danger"></span>
                     </div>
                     <div class="col-md-2">
                         <label for="quantity" class="form-label">Opening Stock</label>
-                        <input class="form-control" type="text" name="quantity[]" id="quantity">
+                        <input class="form-control" type="text" name="sku[quantity][]" id="quantity">
                         <span class="text-danger"></span>
                     </div>
                      <div class="col-md-4">
                         <label for="image" class="form-label">Image</label>
-                        <input class="form-control" type="file" name="image[]" id="image">
+                        <input class="form-control" type="file" name="sku[image][]" id="image">
                         <span class="text-danger"></span>
                          <img id="imagePreview" src="" alt="Selected Image" style="display: none; margin-top: 10px; max-width: 100%;">
                     </div>
@@ -240,12 +313,12 @@
                 <div class="row mb-3">
                     <div class="col-md-3">
                         <label for="sku" class="form-label">SKU</label>
-                        <select id="sku" name="sku[]" class="form-select ">
-                            <option value="">Select</option>
-                            @foreach ($skus as $sku)
-                                <option value="{{ $sku->id }}">{{ $sku->prefix }}</option>
-                            @endforeach
-                        </select>
+                        <select id="sku" name="sku[sku][]" class="form-select sku-input" >
+                                    <option value="">Select</option>
+                                    @foreach ($skus as $sku)
+                                        <option value="{{ $sku->id }}" data-color="{{ $sku->colorname }}" {{ isset(old('sku')['sku'][0]) && old('sku')['sku'][0] == $sku->id ? 'selected' : '' }}>{{ $sku->prefix }}</option>
+                                    @endforeach
+                                </select>
                         <span class="text-danger">
                             @error('sku')
                                 {{ $message }}
@@ -254,12 +327,12 @@
                     </div>
                     <div class="col-md-3">
                         <label for="color" class="form-label">Color</label>
-                        <input class="form-control " type="text" name="color[]" id="color">
+                        <input class="form-control color-input" type="text" name="sku[color][]" id="color" readonly>
                         <span class="text-danger"></span>
                     </div>
                     <div class="col-md-3">
                         <label for="size" class="form-label">Size</label>
-                        <input class="form-control " type="text" name="size[]" id="size">
+                        <input class="form-control " type="text" name="sku[size][]" id="size">
                         <span class="text-danger"></span>
                     </div>
                 </div>
@@ -296,5 +369,12 @@
                 imagePreview.style.display = 'none';
             }
         });
+    </script>
+@endsection
+@section('script')
+    <script>
+        $(document).on('change', '.sku-input', function() {
+            $(this).parents('.single-product').find('.color-input').val($(this).find(':selected').data('color'));
+        })
     </script>
 @endsection

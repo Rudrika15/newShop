@@ -31,8 +31,8 @@
                                 </span>
                             </div>
                             <div class="col-md-6">
-                                <label for="main_image" class="form-label">Main Image</label>
-                                <input class="form-control my-2" type="file" name="main_image" id="main_image" readonly>
+                                <label for="main_image" class="form-label">Main Image</label><br>
+                                {{--  <input class="form-control my-2" type="file" name="main_image" id="main_image" readonly>  --}}
                                 <img src="{{ asset('images/catalog/' . $product->catalog->main_image) }}" width="50"
                                     height="50">
                                 <span class="text-danger">
@@ -144,7 +144,7 @@
                                     @enderror
                                 </span>
                             </div>
-                            <div class="col-md-2">
+                            {{--  <div class="col-md-2">
                                 <label for="quantity[]" class="form-label">Opening Stock</label>
                                 <input class="form-control" type="text" name="quantity[]" id="quantity[]"
                                     value="{{ $product->quantity }}">
@@ -153,7 +153,7 @@
                                         {{ $message }}
                                     @enderror
                                 </span>
-                            </div>
+                            </div>  --}}
                             <div class="col-md-4">
                                 <label for="image" class="form-label">Image</label>
                                 <input class="form-control" type="file" name="image" id="image">
@@ -176,10 +176,10 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="sku" class="form-label">SKU</label>
-                                <select id="sku" name="sku" class="form-select">
+                                <select id="sku" name="sku" class="form-select sku-input">
                                     @foreach ($skus as $sku)
-                                        <option value="{{ $sku->id }}"
-                                            {{ $product->sku == $sku->id ? 'selected' : '' }}>
+                                        <option value="{{ $sku->id }}" data-color="{{ $sku->colorname }}"
+                                            {{ isset(old('sku')['sku'][0]) && old('sku')['sku'][0] == $sku->id ? 'selected' : '' }}>
                                             {{ $sku->prefix }}
                                         </option>
                                     @endforeach
@@ -192,7 +192,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="color" class="form-label">Color</label>
-                                <input class="form-control" type="text" name="color" id="color"
+                                <input class="form-control color-input" type="text" name="color" id="color"
                                     value="{{ $product->color }}">
                                 <span class="text-danger">
                                     @error('color')
@@ -221,4 +221,23 @@
             </div>
         </div>
     </div>
+    
+@endsection
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $('.sku-input').change(function() {
+                var selectedOption = $(this).find('option:selected');
+                var color = selectedOption.data('color');
+                $(this).closest('.row').find('.color-input').val(color);
+            });
+
+            // Ensure the correct color is set on page load if there are old values
+            $('.sku-input').each(function() {
+                var selectedOption = $(this).find('option:selected');
+                var color = selectedOption.data('color');
+                $(this).closest('.row').find('.color-input').val(color);
+            });
+        });
+    </script>
 @endsection

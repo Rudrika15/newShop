@@ -81,8 +81,9 @@ class ProductController extends Controller
 
 
         // Loop through and save each product
-        foreach ($request->sku as $index => $sku) {
+        for ($i = 0; $i < count($request->sku['slug']); $i++) {
             $product = new Product();
+            //  return $request->sku['slug'];
 
             $product->catalogid = $catalog->id; // Link to the catalog
             $product->categoryid = $request->categoryid;
@@ -92,14 +93,17 @@ class ProductController extends Controller
             $product->discount_amt = $request->discount_amt;
             $product->mrp = $request->mrp;
             $product->is_active = $request->is_active;
-            $product->sku = $sku;
-            $product->slug = $request->slug[$index];
-            $product->color = $request->color[$index];
-            $product->size = $request->size[$index] ?? null; // Handle nullable size
+            $product->sku = $request->sku['sku'][$i];
+            $product->slug = $request->sku['slug'][$i];
+            $product->color = $request->sku['color'][$i];
+            $product->size = $request->sku['size'][$i] ?? null; // Handle nullable size
 
-            if ($request->hasFile('image.' . $index)) {
-                $image = $request->file('image.' . $index);
-                $imageName = time() . '_' . $index . '.' . $image->extension();
+
+            if (!empty($request->file('sku')['image']) && count($request->file('sku')['image']) > 0) {
+                // return $request->sku['slug'];
+                // return $request->file('sku')['image'][$i];
+                $image = $request->file('sku')['image'][$i];
+                $imageName = time() . '_' . $i . '.' . $image->extension();
                 $image->move(public_path('images/product'), $imageName);
                 $product->image = $imageName;
             }
@@ -108,7 +112,7 @@ class ProductController extends Controller
 
             // Save product stock
             $stock = new Product_Stock();
-            $stock->quantity = $request->quantity[$index];
+            $stock->quantity = $request->sku['quantity'][$i];
             $stock->product_id = $product->id;
             $stock->save();
         }
@@ -149,22 +153,26 @@ class ProductController extends Controller
         if ($image = $request->file('main_image')) {
 
             // Delete old image if it exists
-            if ($catalog->image && file_exists(public_path('images/catalog/' . $catalog->image))) {
-                unlink(public_path('images/catalog/' . $catalog->image));
+            if ($catalog->main_image) {
+                $existingImage = public_path('images/catalog/' . $catalog->main_image);
+                if (file_exists($existingImage)) {
+                    // Delete the existing image
+                    unlink($existingImage);
+                }
+
+                $destinationPath = 'images/catalog';
+                // $oldImagePath = 'images/catalog' . $catalog->image;
+                $catalogImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+                $image->move($destinationPath, $catalogImage);
+                $input['main_image'] = $catalogImage;
+            } else {
+                // unset($input['image']);
             }
 
-            $destinationPath = 'images/catalog';
-            // $oldImagePath = 'images/catalog' . $catalog->image;
-            $catalogImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
-            $image->move($destinationPath, $catalogImage);
-            $input['main_image'] = $catalogImage;
-        } else {
-            // unset($input['image']);
+            $catalog->update($input);
+
+            return redirect()->route('product.index')->with('success', 'catalog updated successfully');
         }
-
-        $catalog->update($input);
-
-        return redirect()->route('product.index')->with('success', 'catalog updated successfully');
     }
 
     public function edit(string $id)
@@ -199,23 +207,26 @@ class ProductController extends Controller
         ]);
 
         $input = $request->all();
+        // dd($input);
         // Move old image to deleted folder
         if ($image = $request->file('image')) {
 
-            // Delete old image if it exists
-            if ($product->image && file_exists(public_path('images/product/' . $product->image))) {
-                unlink(public_path('images/product/' . $product->image));
+            if ($product->image) {
+                $existingImage = public_path('images/product/' . $product->image);
+                if (file_exists($existingImage)) {
+                    // Delete the existing image
+                    unlink($existingImage);
+                }
+
+                $destinationPath = 'images/product';
+                // $oldImagePath = 'images/product' . $product->image;
+                $productImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+                $image->move($destinationPath, $productImage);
+                $input['image'] = $productImage;
+            } else {
+                // unset($input['image']);
             }
-
-            $destinationPath = 'images/product';
-            // $oldImagePath = 'images/product' . $product->image;
-            $productImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
-            $image->move($destinationPath, $productImage);
-            $input['image'] = $productImage;
-        } else {
-            // unset($input['image']);
         }
-
         $product->update($input);
 
         return redirect()->route('product.index')->with('success', 'Product updated successfully');
@@ -228,9 +239,9 @@ class ProductController extends Controller
         // Find the catalog by ID
         $catalog = Catalog::findOrFail($id);
 
-        // Delete all products associated with this catalog
+        // Delete all products with this catalog
         foreach ($catalog->products as $product) {
-            // Optionally, you can delete associated images or other related data here
+            // Optionally, you can delete images or other related data here
             $product->delete();
         }
         $catalog->delete();
@@ -244,10 +255,10 @@ class ProductController extends Controller
         $catalog = Catalog::withTrashed()->findOrFail($id);
         $catalog->restore();
 
-        // Restore associated products
+        // Restore products
         $catalog->products()->withTrashed()->restore();
 
-        return redirect()->route('product.index')->with('success', 'Catalog and associated products restored successfully.');
+        return redirect()->route('product.index')->with('success', 'Catalog and products restored successfully.');
     }
 
     //force-delete
@@ -258,9 +269,10 @@ class ProductController extends Controller
 
         $catalog->products()->forceDelete();
 
-        return redirect()->back()->with('success', 'Catalog and associated products permanently deleted.');
+        return redirect()->back()->with('success', 'Catalog and products permanently deleted.');
     }
 
+    //single product show
     public function view($id)
     {
         $product = Product::onlyTrashed()->findOrFail($id);

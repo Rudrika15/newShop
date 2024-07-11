@@ -81,5 +81,5 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::put('product/update/{product}', [ProductController::class, 'update'])->name('product.update');
     Route::get('catalog/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
     Route::get('catalog/restore/{id}', [ProductController::class, 'restore'])->name('product.restore');
-    Route::get('catalog/force-delete/{id}', [ProductController::class, 'destroy'])->name('product.destory');
+    Route::get('catalog/force-delete/{id}', [ProductController::class, 'destory'])->name('product.destory');
 });
