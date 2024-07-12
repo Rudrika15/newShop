@@ -8,8 +8,7 @@
                     <h4>Edit Product</h4>
                 </div>
                 <div class="col-md-6 d-flex justify-content-end align-items-center mb-2">
-                    <span style="float:right;"><a href="{{ route('product.index') }}"
-                            class="btn btn-primary shadow-none ms-2">Back</a>
+                    <span style="float:right;"><a onclick="history.back()" class="btn btn-primary shadow-none ms-2">Back</a>
                     </span>
                 </div>
             </div>
@@ -45,7 +44,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="categoryid" class="form-label">Category</label>
-                                <select id="categoryid" name="categoryid" class="form-select">
+                                <select id="categoryid" name="categoryid" class="form-select" disabled>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}"
                                             {{ $product->categoryid == $category->id ? 'selected' : '' }}>
@@ -144,17 +143,28 @@
                                     @enderror
                                 </span>
                             </div>
-                            {{--  <div class="col-md-2">
-                                <label for="quantity[]" class="form-label">Opening Stock</label>
-                                <input class="form-control" type="text" name="quantity[]" id="quantity[]"
-                                    value="{{ $product->quantity }}">
+                            <div class="col-md-3">
+                                <label for="quantity" class="form-label">Opening Stock</label>
+                                <input class="form-control" type="text" name="quantity" id="quantity"
+                                    value="{{ $product->productStocks->first()->quantity ?? '' }}" readonly>
                                 <span class="text-danger">
-                                    @error('quantity[]')
+                                    @error('quantity')
                                         {{ $message }}
                                     @enderror
                                 </span>
-                            </div>  --}}
-                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="newstock" class="form-label">New Stock</label>
+                                <input class="form-control" type="text" name="newstock" id="newstock">
+                                <span class="text-danger">
+                                    @error('newstock')
+                                        {{ $message }}
+                                    @enderror
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-5">
                                 <label for="image" class="form-label">Image</label>
                                 <input class="form-control" type="file" name="image" id="image">
                                 <span class="text-danger">
@@ -163,7 +173,7 @@
                                     @enderror
                                 </span>
                             </div>
-                            <div class="col-md-1">
+                            <div class="col-md-1 ">
                                 @if ('{{ $product->image }}')
                                     <img src="{{ asset('images/product/' . $product->image) }}" width="70"
                                         height="70"><br>
@@ -176,10 +186,10 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="sku" class="form-label">SKU</label>
-                                <select id="sku" name="sku" class="form-select sku-input">
+                                <select id="sku" name="sku" class="form-select sku-input" disabled>
                                     @foreach ($skus as $sku)
-                                        <option value="{{ $sku->id }}" data-color="{{ $sku->colorname }}"
-                                            {{ isset(old('sku')['sku'][0]) && old('sku')['sku'][0] == $sku->id ? 'selected' : '' }}>
+                                        <option value="{{ $sku->prefix }}" data-color="{{ $sku->colorname }}"
+                                            {{ $product->sku == $sku->prefix ? 'selected' : '' }}>
                                             {{ $sku->prefix }}
                                         </option>
                                     @endforeach
@@ -190,10 +200,10 @@
                                     @enderror
                                 </span>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label for="color" class="form-label">Color</label>
                                 <input class="form-control color-input" type="text" name="color" id="color"
-                                    value="{{ $product->color }}">
+                                    value="{{ $product->color }}" readonly>
                                 <span class="text-danger">
                                     @error('color')
                                         {{ $message }}
@@ -221,23 +231,11 @@
             </div>
         </div>
     </div>
-    
 @endsection
 @section('script')
     <script>
-        $(document).ready(function() {
-            $('.sku-input').change(function() {
-                var selectedOption = $(this).find('option:selected');
-                var color = selectedOption.data('color');
-                $(this).closest('.row').find('.color-input').val(color);
-            });
-
-            // Ensure the correct color is set on page load if there are old values
-            $('.sku-input').each(function() {
-                var selectedOption = $(this).find('option:selected');
-                var color = selectedOption.data('color');
-                $(this).closest('.row').find('.color-input').val(color);
-            });
-        });
+        $(document).on('change', '.sku-input', function() {
+            $(this).parents('.row').find('.color-input').val($(this).find(':selected').data('color'));
+        })
     </script>
 @endsection

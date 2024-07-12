@@ -39,8 +39,12 @@ class Product extends Model
     {
         return $this->belongsTo(Sku::class, 'skuid', 'id');
     }
-    public function producstock()
+    public function productStocks()
     {
-        return $this->belongsTo(Product_stock::class, 'product_stockid', 'id');
+        return $this->hasMany(Product_stock::class, 'product_id', 'id');
+    }
+    public function stockTransaction()
+    {
+        return $this->hasMany(Stock_Transaction::class, 'product_id', 'id');
     }
 }

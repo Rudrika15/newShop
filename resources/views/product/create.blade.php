@@ -167,8 +167,8 @@
                                 <select id="sku" name="sku[sku][]" class="form-select sku-input">
                                     <option value="">Select</option>
                                     @foreach ($skus as $sku)
-                                        <option value="{{ $sku->id }}" data-color="{{ $sku->colorname }}"
-                                            {{ isset(old('sku')['sku'][0]) && old('sku')['sku'][0] == $sku->id ? 'selected' : '' }}>
+                                        <option value="{{ $sku->prefix }}" data-color="{{ $sku->colorname }}"
+                                            {{ isset(old('sku')['sku'][0]) && old('sku')['sku'][0] == $sku->prefix ? 'selected' : '' }}>
                                             {{ $sku->prefix }}
                                         </option>
                                     @endforeach
@@ -210,7 +210,6 @@
                         @if (
                             !empty(old('sku')['slug'][$i]) &&
                                 !empty(old('sku')['quantity'][$i]) &&
-                                !empty(old('sku')['image'][$i]) &&
                                 !empty(old('sku')['sku'][$i]) &&
                                 !empty(old('sku')['color'][$i]))
                             <div class="row border p-3 mb-5 me-5 ms-5 mt-2 dynamic-block single-product">
@@ -245,8 +244,8 @@
                                         <select id="sku" name="sku[sku][]" class="form-select sku-input">
                                             <option value="">Select</option>
                                             @foreach ($skus as $sku)
-                                                <option value="{{ $sku->id }}" data-color="{{ $sku->colorname }}"
-                                                    {{ isset(old('sku')['sku'][0]) && old('sku')['sku'][0] == $sku->id ? 'selected' : '' }}>
+                                                <option value="{{ $sku->prefix }}" data-color="{{ $sku->colorname }}"
+                                                    {{ isset(old('sku')['sku'][0]) && old('sku')['sku'][0] == $sku->prefix ? 'selected' : '' }}>
                                                     {{ $sku->prefix }}
                                                 </option>
                                             @endforeach
@@ -316,7 +315,7 @@
                         <select id="sku" name="sku[sku][]" class="form-select sku-input" >
                                     <option value="">Select</option>
                                     @foreach ($skus as $sku)
-                                        <option value="{{ $sku->id }}" data-color="{{ $sku->colorname }}" {{ isset(old('sku')['sku'][0]) && old('sku')['sku'][0] == $sku->id ? 'selected' : '' }}>{{ $sku->prefix }}</option>
+                                        <option value="{{ $sku->prefix }}" data-color="{{ $sku->colorname }}" {{ isset(old('sku')['sku'][0]) && old('sku')['sku'][0] == $sku->prefix ? 'selected' : '' }}>{{ $sku->prefix }}</option>
                                     @endforeach
                                 </select>
                         <span class="text-danger">

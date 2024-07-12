@@ -14,4 +14,11 @@ class Stock_Transaction extends Model
         'type',
         'remarks'
     ];
+    
+    protected $table = "stock_transaction";
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
 }

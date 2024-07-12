@@ -8,7 +8,7 @@
                     <h4>Edit Catalog</h4>
                 </div>
                 <div class="col-md-6 d-flex justify-content-end align-items-center mb-2">
-                    <span style="float:right;"><a href="{{ route('product.index') }}"
+                    <span style="float:right;"><a onclick="history.back()"
                             class="btn btn-primary shadow-none ms-2">Back</a>
                     </span>
                 </div>

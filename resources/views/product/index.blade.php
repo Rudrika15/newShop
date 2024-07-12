@@ -67,7 +67,7 @@
                                                     <a href="{{ route('product.edit', $product->id) }}"
                                                         class="btn btn-primary btn-sm shadow-none">
                                                         {{--  <i class="fas fa-edit"><p>{{ $product->slug }}</p></i>  --}}
-                                                        {{ $product->slug }}
+                                                        {{ $product->color }}
                                                     </a>
                                                 </div>
                                                 {{--  <div>

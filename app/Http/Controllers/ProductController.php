@@ -7,8 +7,10 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Product_stock;
 use App\Models\Sku;
+use App\Models\Stock_Transaction;
 use Faker\Core\File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -79,11 +81,24 @@ class ProductController extends Controller
 
         $catalog->save();
 
+        // Function to generate a unique SKU suffix
+        function generateUniqueNumber($prefix)
+        {
+            do {
+                // Generate a 5-digit random number
+                $uniqueNumber = str_pad(random_int(0, 99999), 5, '0', STR_PAD_LEFT);
+                $sku = $prefix . $uniqueNumber;
+            } while (DB::table('products')->where('sku', $sku)->exists());
+
+            return $sku;
+        }
+
 
         // Loop through and save each product
         for ($i = 0; $i < count($request->sku['slug']); $i++) {
             $product = new Product();
             //  return $request->sku['slug'];
+
 
             $product->catalogid = $catalog->id; // Link to the catalog
             $product->categoryid = $request->categoryid;
@@ -93,7 +108,7 @@ class ProductController extends Controller
             $product->discount_amt = $request->discount_amt;
             $product->mrp = $request->mrp;
             $product->is_active = $request->is_active;
-            $product->sku = $request->sku['sku'][$i];
+            $product->sku = generateUniqueNumber($request->sku['sku'][$i]);
             $product->slug = $request->sku['slug'][$i];
             $product->color = $request->sku['color'][$i];
             $product->size = $request->sku['size'][$i] ?? null; // Handle nullable size
@@ -112,8 +127,10 @@ class ProductController extends Controller
 
             // Save product stock
             $stock = new Product_Stock();
-            $stock->quantity = $request->sku['quantity'][$i];
             $stock->product_id = $product->id;
+            $stock->quantity = $request->sku['quantity'][$i];
+
+            // return $stock;
             $stock->save();
         }
         return redirect()->route('product.index')->with('success', 'Products created successfully');
@@ -177,7 +194,7 @@ class ProductController extends Controller
 
     public function edit(string $id)
     {
-        $product = Product::find($id);
+        $product = Product::with('productStocks')->findOrFail($id);
         $categories = Category::all();
         $skus = Sku::all();
         return view('product.editproduct', compact('product', 'categories', 'skus'));
@@ -191,8 +208,8 @@ class ProductController extends Controller
     {
         // return $request;
         $request->validate([
-            'sku' => 'required',
-            'categoryid' => 'required',
+            // 'sku' => 'required',
+            // 'categoryid' => 'required',
             'slug' => 'required',
             'color' => 'required',
             'size' => '',
@@ -229,6 +246,23 @@ class ProductController extends Controller
         }
         $product->update($input);
 
+        // Update quantity if newstock is provided
+        // if ($request->filled('newstock')) {
+        //     $newStock = intval($request->newstock);
+
+        //     // Update product stock
+        //     $productstock = $product->quantity += $newStock;
+
+        //     return $productstock;
+        //     Product_stock::updated($productstock);
+
+        //     // Save stock transaction (assuming you have a StockTransaction model and table)
+        //     Stock_Transaction::create([
+        //         'product_id' => $product->id,
+        //         'type' => 'in', // or 'subtract' based on your needs
+        //         'quantity' => $productstock,
+        //         'remarks' => 'Added stock via product update',
+        //     ]);
         return redirect()->route('product.index')->with('success', 'Product updated successfully');
     }
     /**
