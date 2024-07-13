@@ -2,19 +2,19 @@
 
 @section('content')
     <div class="container">
-        <div class="row">
+        <div class="row py-2" style="background-color: rgb(155, 191, 212)">
             <div class="col-md-6">
                 <h4>Create Product</h4>
             </div>
-            <div class="col-md-6 d-flex justify-content-end align-items-center mb-2">
+            <div class="col-md-6 d-flex justify-content-end align-items-center">
                 <span style="float:right;"><a href="{{ route('product.index') }}"
-                        class="btn btn-primary shadow-none ms-2">Back</a></span>
+                        class="btn btn-primary shadow-none">Back</a></span>
             </div>
         </div>
-        <div class="row border border-3">
+        <div class="row" style="background-color: rgb(237, 223, 201)">
             <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="row border p-3 m-5">
+                <div class="row border border-dark p-3 m-3">
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="title" class="form-label">Catalog Name</label>
@@ -126,7 +126,7 @@
                             {{--  {{ count(old('sku')['slug'] ?? []) }}  --}}
                         </button>
                     </div>
-                    <div class="row border p-3 mb-5 me-5 ms-5 mt-2 single-product">
+                    <div class="row border border-dark p-3 m-3 single-product">
                         <div class="row mb-3">
                             <div class="col-md-5">
                                 <label for="slug" class="form-label">Slug</label>
@@ -212,7 +212,7 @@
                                 !empty(old('sku')['quantity'][$i]) &&
                                 !empty(old('sku')['sku'][$i]) &&
                                 !empty(old('sku')['color'][$i]))
-                            <div class="row border p-3 mb-5 me-5 ms-5 mt-2 dynamic-block single-product">
+                            <div class="row border border-dark p-3 m-3 dynamic-block single-product">
                                 <div class="row mb-3">
                                     <div class="col-md-5">
                                         <label for="slug" class="form-label">Slug</label>
@@ -289,7 +289,7 @@
     <script>
         document.getElementById('add-block').addEventListener('click', function() {
             var newBlock = document.createElement('div');
-            newBlock.classList.add('row', 'border', 'p-3', 'm-5', 'dynamic-block', 'single-product');
+            newBlock.classList.add('row', 'border', 'border-dark', 'p-3', 'm-3', 'dynamic-block', 'single-product');
             newBlock.innerHTML = `
                 <div class="row mb-3">
                     <div class="col-md-5">

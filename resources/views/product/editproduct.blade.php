@@ -2,22 +2,21 @@
 
 @section('content')
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="row">
+            <div class="row py-2" style="background-color: rgb(155, 191, 212)">
                 <div class="col-md-6">
-                    <h4>Edit Product</h4>
+                    <h2>Edit Product</h2>
                 </div>
-                <div class="col-md-6 d-flex justify-content-end align-items-center mb-2">
-                    <span style="float:right;"><a onclick="history.back()" class="btn btn-primary shadow-none ms-2">Back</a>
+                <div class="col-md-6 d-flex justify-content-end align-items-center">
+                    <span style="float:right;"><a onclick="history.back()" class="btn btn-primary shadow-none">Back</a>
                     </span>
                 </div>
             </div>
-            <div class="row border border-3 p-3">
+            <div class="row" style="background-color: rgb(237, 223, 201)">
                 {{--  <h1>Edit Product</h1>  --}}
                 <form method="POST" action="{{ route('product.update', $product->id) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-                    <div class="row border p-3 m-3">
+                    <div class="row border border-dark p-3 m-3">
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="title" class="form-label">Catalog Name</label>
@@ -75,7 +74,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="is_active" class="form-label">Is Active</label>
-                                <select class="form-control" id="is_active" name="is_active">
+                                <select class="form-select" id="is_active" name="is_active">
                                     <option value="Yes" {{ $product->is_active ? 'selected' : '' }}>Yes</option>
                                     <option value="No" {{ !$product->is_active ? 'selected' : '' }}>No</option>
                                 </select>
@@ -131,7 +130,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row border p-3 m-3">
+                    <div class="row border border-dark p-3 m-3">
                         <div class="row mb-3">
                             <div class="col-md-5" class="form-label">
                                 <label for="slug" class="form-label">Slug</label>
@@ -143,27 +142,6 @@
                                     @enderror
                                 </span>
                             </div>
-                            <div class="col-md-3">
-                                <label for="quantity" class="form-label">Opening Stock</label>
-                                <input class="form-control" type="text" name="quantity" id="quantity"
-                                    value="{{ $product->productStocks->first()->quantity ?? '' }}" readonly>
-                                <span class="text-danger">
-                                    @error('quantity')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="newstock" class="form-label">New Stock</label>
-                                <input class="form-control" type="text" name="newstock" id="newstock">
-                                <span class="text-danger">
-                                    @error('newstock')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
                             <div class="col-md-5">
                                 <label for="image" class="form-label">Image</label>
                                 <input class="form-control" type="file" name="image" id="image">
@@ -181,6 +159,49 @@
                                     <p>No image found</p>
                                 @endif
 
+                            </div>
+
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <input type="hidden" name="pstockid"
+                                    value="{{ $product->productStocks->first()->id }}">
+                                <label for="quantity" class="form-label">Opening Stock</label>
+                                <input class="form-control" type="text" name="quantity" id="quantity"
+                                    value="{{ $product->productStocks->first()->quantity ?? '' }}" readonly>
+
+                                <span class="text-danger">
+                                    @error('quantity')
+                                        {{ $message }}
+                                    @enderror
+                                </span>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="newstock" class="form-label">New Stock</label>
+                                <input class="form-control" type="text" name="newstock" id="newstock">
+                                <span class="text-danger">
+                                    @error('newstock')
+                                        {{ $message }}
+                                    @enderror
+                                </span>
+                            </div>
+                            <div class="col-md-2 additionalFields" style="display: none;">
+                                <label for="type" class="form-label">Type</label>
+                                <select class="form-select mb-3" id="type" name="type">
+                                    <option value="in">In</option>
+                                    <option value="out">Out</option>
+                                    <option value="adjust">Adjust</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 additionalFields" style="display: none;">
+                                <label for="remarks" class="form-label">remarks</label>
+                                <input class="form-control" type="text" name="remarks" id="remarks"
+                                    value="{{ old('remarks') }}">
+                                <span class="text-danger">
+                                    @error('remarks')
+                                        {{ $message }}
+                                    @enderror
+                                </span>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -222,20 +243,30 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-5 ">
+                    <div class="row mt-3">
                         <div class="col d-flex justify-content-center">
                             <button type="submit" class="btn btn-primary">Update</button>
                         </div>
                     </div>
                 </form>
             </div>
-        </div>
     </div>
 @endsection
 @section('script')
     <script>
         $(document).on('change', '.sku-input', function() {
             $(this).parents('.row').find('.color-input').val($(this).find(':selected').data('color'));
-        })
+        });
+
+        // stock transaction add type and remarks field  code
+        $(document).ready(function() {
+            $('#newstock').on('input', function() {
+                if ($(this).val().trim() !== '') {
+                    $('.additionalFields').show();
+                } else {
+                    $('.additionalFields').hide();
+                }
+            });
+        });
     </script>
 @endsection

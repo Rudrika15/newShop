@@ -15,7 +15,7 @@ class Stock_Transaction extends Model
         'remarks'
     ];
     
-    protected $table = "stock_transaction";
+    protected $table = "stock_transactions";
 
     public function product()
     {

@@ -247,22 +247,28 @@ class ProductController extends Controller
         $product->update($input);
 
         // Update quantity if newstock is provided
-        // if ($request->filled('newstock')) {
-        //     $newStock = intval($request->newstock);
+        if ($request->filled('newstock')) {
+            $newStock = intval($request->newstock);
 
-        //     // Update product stock
-        //     $productstock = $product->quantity += $newStock;
+            // Update product stock
+            $productstock = $product->productStocks->first()->quantity += $newStock;
 
-        //     return $productstock;
-        //     Product_stock::updated($productstock);
+            //   return $productstock;
 
-        //     // Save stock transaction (assuming you have a StockTransaction model and table)
-        //     Stock_Transaction::create([
-        //         'product_id' => $product->id,
-        //         'type' => 'in', // or 'subtract' based on your needs
-        //         'quantity' => $productstock,
-        //         'remarks' => 'Added stock via product update',
-        //     ]);
+            $pstock = Product_stock::find($request->pstockid);
+            //    return $pstock;
+            $pstock->quantity = $productstock;
+
+            $pstock->save();
+
+            //Save stock transaction (assuming you have a StockTransaction model and table)
+            Stock_Transaction::create([
+                'product_id' => $product->id,
+                'type' => $request->type, // or 'subtract' based on your needs
+                'quantity' => $productstock,
+                'remarks' => $request->remarks,
+            ]);
+        }
         return redirect()->route('product.index')->with('success', 'Product updated successfully');
     }
     /**

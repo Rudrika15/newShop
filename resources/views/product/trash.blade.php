@@ -7,8 +7,8 @@
                 <p>{{ $message }}</p>
             </div>
         @endif
-        <div class="row justify-content-center">
-            <div class="row m-0 py-2">
+        <div class="row justify-content-center" style="background-color: rgb(155, 191, 212)">
+            <div class="row p-2">
                 <div class="col-lg-6">
                     <h3>
                         @if (count($catalogs) > 0)
@@ -26,7 +26,7 @@
             @if (count($catalogs) !== 0)
                 <div class="table-responsive">
                     <table class="table table-bordered">
-                        <thead>
+                        <thead class="table-secondary">
                             <tr class="text-center">
                                 <th>ID</th>
                                 <th>Catalog Name</th>
