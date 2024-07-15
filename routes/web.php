@@ -11,13 +11,20 @@ use App\Http\Controllers\SkusController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
+    // if (auth()->user()->type == 'admin') {
+    //     return redirect()->route('admin.home');
+    // }else if (auth()->user()->type == 'manager') {
+    //     return redirect()->route('manager.home');
+    // }else{
+    //     return redirect()->route('home');
+    // }
     return view('auth.login');
 });
 
-Auth::routes();
 
 
 //All Normal Users Routes List
+Auth::routes();
 
 Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');

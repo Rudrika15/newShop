@@ -34,7 +34,7 @@
 
                         @if (count($categories) !== 0)
                             <table id="sku-table" class="table table-bordered text-center">
-                                <thead>
+                                <thead class="table-secondary">
                                     <tr>
                                         <th>Category Name</th>
                                         {{--  <th>Parent</th>  --}}
@@ -62,14 +62,13 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
-                            <!-- Pagination Links -->
-                            {!! $categories->withQueryString()->links('pagination::bootstrap-5') !!}
                         @endif
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Pagination Links -->
+        {!! $categories->withQueryString()->links('pagination::bootstrap-5') !!}
         <script>
             const deleteButtons = document.querySelectorAll('.delete-user');
 

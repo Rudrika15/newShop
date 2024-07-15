@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <div class="col-lg-10 d-flex justify-content-end align-items-center">
+        <div class="col-lg-10 d-flex justify-content-end align-items-center mb-2">
             <span style="float:right;"><a href="{{ route('category.index') }}" class="btn btn-primary">Back</a></span>
         </div>
         <div class="row justify-content-center">

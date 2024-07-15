@@ -46,7 +46,7 @@
     <header id="header" class="header fixed-top d-flex align-items-center">
 
         <div class="d-flex align-items-center justify-content-between">
-            <a href="index.html" class="logo d-flex align-items-center">
+            <a href="{{ route('admin.home') }}" class="logo d-flex align-items-center">
                 <img src="assets/img/logo.png" alt="">
                 <span class="d-none d-lg-block">Admin</span>
             </a>
@@ -191,17 +191,17 @@
             </li><!-- End SKU Management Nav -->
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-                  <i class="bi bi-bar-chart"></i><span>Products</span><i class="bi bi-chevron-down ms-auto"></i>
+                    <i class="bi bi-bar-chart"></i><span>Products</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                  <li>
-                    <a href="{{route('product.index')}}">
-                      <i class="bi bi-circle"></i><span>Products</span>
-                    </a>
-                  </li>
+                    <li>
+                        <a href="{{ route('product.index') }}">
+                            <i class="bi bi-circle"></i><span>Products</span>
+                        </a>
+                    </li>
                 </ul>
-              </li><!-- End Charts Nav -->
-        
+            </li><!-- End Charts Nav -->
+
 
         </ul>
 
@@ -247,7 +247,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
-   
+
     @yield('script')
     <script>
         // Hide the success message after 5 minutes

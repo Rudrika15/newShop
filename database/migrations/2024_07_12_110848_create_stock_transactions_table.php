@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('stock_transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('product_id');
+            $table->bigInteger('product_id');
             $table->string('quantity');
             $table->enum('type', ['in', 'out', 'adjust']);
             $table->string('remarks');

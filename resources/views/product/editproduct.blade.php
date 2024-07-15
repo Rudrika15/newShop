@@ -76,7 +76,7 @@
                                 <label for="is_active" class="form-label">Is Active</label>
                                 <select class="form-select" id="is_active" name="is_active">
                                     <option value="Yes" {{ $product->is_active ? 'selected' : '' }}>Yes</option>
-                                    <option value="No" {{ !$product->is_active ? 'selected' : '' }}>No</option>
+                                    <option value="No" {{  $product->is_active ? 'selected' : '' }}>No</option>
                                 </select>
                             </div>
                             <span class="text-danger">

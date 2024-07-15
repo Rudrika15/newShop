@@ -35,7 +35,7 @@ class UserController extends Controller
     }
 
     //admin home page
-    public function adminhome()
+    public function adminHome()
     {
         return view('adminHome');
     }

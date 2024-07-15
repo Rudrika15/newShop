@@ -13,7 +13,7 @@ class SkuController extends Controller
      */
     public function index()
     {
-        $skus = Sku::paginate(10);
+        $skus = Sku::paginate(5);
         return view('sku.index', compact('skus'));
     }
 

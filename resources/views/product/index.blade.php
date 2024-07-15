@@ -31,7 +31,7 @@
             </div>
             @if (count($catalogs) !== 0)
                 <div class="table-responsive">
-                    <table class="table table-bordered mt-2">
+                    <table class="table table-bordered  mt-2">
                         <thead class="table-secondary">
                             <tr class="text-center">
                                 <th>ID</th>

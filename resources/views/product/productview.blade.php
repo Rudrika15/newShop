@@ -6,16 +6,18 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="card">
-                    <div class="card-header"><span style="float:left;"><h2>{{ $product->slug }}</h2></span>  <span style="float:right;"><a onclick="history.back()" class="btn btn-primary shadow-none">Go
-                        Back</a></span></div>
+                    <div class="card-header"><span style="float:left;">
+                            <h2>{{ $product->slug }}</h2>
+                        </span> <span style="float:right;"><a onclick="history.back()" class="btn btn-primary shadow-none">Go
+                                Back</a></span></div>
                     <div class="card-body pt-2">
                         <p>Main Image:</p>
-                        @if($product->catalog)
-                        <img src="{{ asset('images/catalog/' . $product->catalog->main_image) }}" width="50"
-                        height="50">
-                    @else
-                        <p>No catalog main image available.</p>
-                    @endif
+                        @if ($product->catalog)
+                            <img src="{{ asset('images/catalog/' . $product->catalog->main_image) }}" width="50"
+                                height="50">
+                        @else
+                            <p>No catalog main image available.</p>
+                        @endif
                         <p>Description: {{ $product->description }}</p>
                         <p>Category: {{ $product->category->categoryname }}</p>
                         <p>Base Price: {{ $product->base_price }}</p>

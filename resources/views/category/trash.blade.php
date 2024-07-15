@@ -14,21 +14,22 @@
                             <div class="col-lg-6">
                                 <h3>
                                     @if (count($categories) > 0)
-                                       CATEGORY TRASH LIST
+                                        CATEGORY TRASH LIST
                                     @else
                                         There are no trash data
                                     @endif
                                 </h3>
                             </div>
                             <div class="col-lg-6 d-flex justify-content-end align-items-center">
-                                <span style="float:right;"><a href="{{ route('category.index') }}" class="btn btn-primary shadow-none">back</a>
+                                <span style="float:right;"><a href="{{ route('category.index') }}"
+                                        class="btn btn-primary shadow-none">back</a>
                                 </span>
                             </div>
                         </div>
 
                         @if (count($categories) !== 0)
                             <table id="sku-table" class="table table-bordered text-center">
-                                <thead>
+                                <thead class="table-secondary">
                                     <tr>
                                         <th>Category Name</th>
                                         <th>Action</th>
@@ -55,14 +56,13 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
-                            <!-- Pagination Links -->
-                            {!! $categories->withQueryString()->links('pagination::bootstrap-5') !!}
                         @endif
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Pagination Links -->
+        {!! $categories->withQueryString()->links('pagination::bootstrap-5') !!}
         <script>
             const deleteButtons = document.querySelectorAll('.delete-user');
 

@@ -21,9 +21,11 @@
                                 </h3>
                             </div>
                             <div class="col-lg-6 d-flex justify-content-end align-items-center">
-                                <span style="float:right;"><a href="{{ route('sku.trash') }}" class="btn btn-warning shadow-none me-2">Go To Trash</a>
+                                <span style="float:right;"><a href="{{ route('sku.trash') }}"
+                                        class="btn btn-warning shadow-none me-2">Go To Trash</a>
                                 </span>
-                                <span style="float:right;"><a href="{{ route('sku.create') }}" class="btn btn-primary shadow-none">Add
+                                <span style="float:right;"><a href="{{ route('sku.create') }}"
+                                        class="btn btn-primary shadow-none">Add
                                         SKU</a>
                                 </span>
                             </div>
@@ -32,7 +34,7 @@
 
                         @if (count($skus) !== 0)
                             <table id="sku-table" class="table table-bordered text-center">
-                                <thead>
+                                <thead class="table-secondary">
                                     <tr>
                                         <th>Prefix</th>
                                         <th>Color Name</th>
@@ -60,14 +62,13 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
-                            <!-- Pagination Links -->
-                            {!! $skus->withQueryString()->links('pagination::bootstrap-5') !!}
                         @endif
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Pagination Links -->
+        {!! $skus->withQueryString()->links('pagination::bootstrap-5') !!}
         <script>
             const deleteButtons = document.querySelectorAll('.delete-user');
 

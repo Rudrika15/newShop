@@ -30,7 +30,7 @@
 
                         @if (count($skus) !== 0)
                             <table id="sku-table" class="table table-bordered text-center">
-                                <thead>
+                                <thead class="table-secondary"> 
                                     <tr>
                                         <th>Prefix</th>
                                         <th>Color Name</th>
@@ -58,14 +58,13 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
-                            <!-- Pagination Links -->
-                            {!! $skus->withQueryString()->links('pagination::bootstrap-5') !!}
                         @endif
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Pagination Links -->
+        {!! $skus->withQueryString()->links('pagination::bootstrap-5') !!}
         <script>
             const deleteButtons = document.querySelectorAll('.delete-user');
 

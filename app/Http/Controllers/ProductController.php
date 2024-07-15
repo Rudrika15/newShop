@@ -19,7 +19,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $catalogs = Catalog::with('products')->paginate(5);
+        $catalogs = Catalog::with('products')->orderBy('created_at', 'desc')->paginate(5);
+
 
         return view('product.index', compact('catalogs'));
     }
@@ -115,8 +116,6 @@ class ProductController extends Controller
 
 
             if (!empty($request->file('sku')['image']) && count($request->file('sku')['image']) > 0) {
-                // return $request->sku['slug'];
-                // return $request->file('sku')['image'][$i];
                 $image = $request->file('sku')['image'][$i];
                 $imageName = time() . '_' . $i . '.' . $image->extension();
                 $image->move(public_path('images/product'), $imageName);
