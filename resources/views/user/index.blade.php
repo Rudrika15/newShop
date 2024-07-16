@@ -1,6 +1,6 @@
 @extends('layouts.app2')
 @section('content')
-    <div class="container mb-2">
+    <div class="container-fluid mb-2">
         @if ($message = Session::get('success'))
             <div class="col-lg-6 alert alert-success" id="successMessage">
                 <p>{{ $message }}</p>

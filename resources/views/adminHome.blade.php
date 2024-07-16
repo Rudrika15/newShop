@@ -42,7 +42,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Recent Orders</h5>
-                                    <table class="table table-striped">
+                                    <table class="table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>Order ID</th>
@@ -81,31 +81,36 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Out-of-Stock Products</h5>
-                                    <table class="table table-striped">
+                                    <table class="table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>Product Name</th>
                                                 <th>Quantity</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>Product A</td>
-                                                <td>0</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Product B</td>
-                                                <td>0</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Product C</td>
-                                                <td>0</td>
-                                            </tr>
+                                            @foreach ($products as $item)
+                                                <tr>
+                                                    <td>{{ $item->product->slug ?? '-' }}</td>
+                                                    <td>{{ $item->quantity }}</td>
+                                                    <td>
+                                                        <div class="d-flex gap-2 justify-content-center">
+                                                            <div>
+                                                                <a href="{{ route('product-stock.edit', $item->id) }}"
+                                                                    class="btn btn-primary shadow-none mb-2 ">Edit</a>
+                                                            </div>
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
+                        {!! $products->withQueryString()->links('pagination::bootstrap-5') !!}
                     </div>
                 </section>
             </div>

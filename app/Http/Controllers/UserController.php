@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product_stock;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +13,18 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
+    // out of stock products
+    //admin home page
+    public function adminHome()
+    {
+        $products = Product_stock::where('quantity', '<=', 10)
+            ->whereHas('product', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->paginate(5);
 
+        return view('adminHome', compact('products'));
+    }
     //user show
     public function index(Request $request)
     {
@@ -34,11 +46,7 @@ class UserController extends Controller
         return view('user.profile', compact('user'));
     }
 
-    //admin home page
-    public function adminHome()
-    {
-        return view('adminHome');
-    }
+
 
     //trash user data
     public function trashUser()
@@ -98,7 +106,7 @@ class UserController extends Controller
     }
 
     public function updatepassword(Request $request, User $user)
-    { 
+    {
         $request->validate([
             'password' => 'required|confirmed|min:6',
         ]);
