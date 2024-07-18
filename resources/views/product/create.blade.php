@@ -63,12 +63,12 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
+                            <input type="hidden" name="is_active" value="No">
+                            <input type="checkbox" id="is_active" name="is_active" value="Yes"
+                                {{ old('is_active') === 'Yes' ? 'checked' : '' }}>
                             <label for="is_active" class="form-label">Is Active</label>
-                            <select class="form-select mb-3" id="is_active" name="is_active">
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
                         </div>
+
                         <span class="text-danger">
                             @error('is_active')
                                 {{ $message }}

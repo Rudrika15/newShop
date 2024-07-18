@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product_stock;
 use Illuminate\Http\Request;
 
 class Product_stockController extends Controller
@@ -41,17 +42,30 @@ class Product_stockController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $productStock = Product_stock::findOrFail($id);
+        return view('product-stock.edit', compact('productStock'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Update the specified product
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'quantity' => 'required|integer',
+            'newstock' => 'required|integer'
+            // Add other validation rules as needed
+        ]);
+
+        $productStock = Product_stock::findOrFail($id);
+
+        $newQuantity = $productStock->quantity + $request->newstock;
+
+        $productStock->update([
+            'quantity' => $newQuantity,
+        ]);
+
+        return redirect()->route('admin.home')->with('success', 'Product updated successfully');
     }
 
     /**

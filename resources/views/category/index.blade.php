@@ -10,7 +10,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row m-0 py-2">
+                        <div class="row p-3">
                             <div class="col-lg-6">
                                 <h3>
                                     @if (count($categories) > 0)

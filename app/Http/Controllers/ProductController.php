@@ -51,14 +51,14 @@ class ProductController extends Controller
         // Validate the data
         $request->validate([
             'title' => 'required',
-            'main_image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'main_image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'categoryid' => 'required',
             'description' => 'required',
             'base_price' => 'required|numeric',
             'tax_price' => 'required|numeric',
             'discount_amt' => 'required|numeric',
             'mrp' => 'required|numeric',
-            'is_active' => 'required|in:Yes,No',
+            // 'is_active' => 'required|in:Yes,No',
             // 'sku' => 'required|array',
             // 'slug' => 'required|array',
             // 'color' => 'required|array',

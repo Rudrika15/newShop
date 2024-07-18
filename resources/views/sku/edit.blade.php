@@ -9,7 +9,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">SKU Edit</div>
-                    <div class="card-body py-2">
+                    <div class="card-body py-3">
                         <form method="POST" action="{{ route('sku.update', $sku->id) }}">
                             @csrf
 
