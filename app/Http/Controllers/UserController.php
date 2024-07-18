@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Catalog;
 use App\Models\Product_stock;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,13 +18,14 @@ class UserController extends Controller
     //admin home page
     public function adminHome()
     {
-        $products = Product_stock::where('quantity', '<=', 10)
-            ->whereHas('product', function ($query) {
-                $query->whereNull('deleted_at');
-            })
-            ->paginate(5);
+        // Fetch catalogs with paginated products and product stocks
+        $catalogs = Catalog::with(['products' => function ($query) {
+            $query->whereNull('deleted_at')->with(['productStocks' => function ($query) {
+                $query->where('quantity', '<=', 10);
+            }]);
+        }])->paginate(10);
 
-        return view('adminHome', compact('products'));
+        return view('adminHome', compact('catalogs'));
     }
     //user show
     public function index(Request $request)

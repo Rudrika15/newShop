@@ -1,9 +1,9 @@
 @extends('layouts.app2')
 
 @section('content')
-    <style>
+    {{--  <style>
         .dashboard {
-            padding: 20px;
+            padding: 5px;
         }
 
         .dashboard .card {
@@ -29,8 +29,13 @@
         .dashboard th {
             background-color: #f0f0f0;
         }
-    </style>
+    </style>  --}}
     <div class="container">
+        @if ($message = Session::get('success'))
+            <div class="col-lg-6 alert alert-success" id="successMessage">
+                <p>{{ $message }}</p>
+            </div>
+        @endif
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <h2 class="text-center">You are an Admin User.</h2>
@@ -78,42 +83,48 @@
 
                         <!-- Out-of-Stock Products -->
                         <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Out-of-Stock Products</h5>
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Product Name</th>
-                                                <th>Quantity</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($products as $item)
-                                                <tr>
-                                                    <td>{{ $item->product->slug ?? '-' }}</td>
-                                                    <td>{{ $item->quantity }}</td>
-                                                    <td>
-                                                        <div class="d-flex gap-2 justify-content-center">
-                                                            <div>
-                                                                <a href="{{ route('product-stock.edit', $item->id) }}"
-                                                                    class="btn btn-primary shadow-none mb-2 ">Edit</a>
-                                                            </div>
-
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                            <div class="card-body mb-2">
+                                <h5 class="card-title">Out-of-Stock Products</h5>
+                                <table class="table table-bordered data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Catalog Name</th>
+                                            <th>Product Name</th>
+                                            <th>Quantity</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($catalogs as $catalog)
+                                            @foreach ($catalog->products as $product)
+                                                @foreach ($product->productStocks as $stock)
+                                                    @if ($stock->quantity <= 10)
+                                                        <tr>
+                                                            <td>{{ $catalog->title }}</td>
+                                                            <td>{{ $product->slug }}</td>
+                                                            <td>{{ $stock->quantity }}</td>
+                                                            <td>
+                                                                <div class="d-flex gap-2 justify-content-center">
+                                                                    <div>
+                                                                        <a href="{{ route('product-stock.edit', $stock->id) }}"
+                                                                            class="btn btn-primary btn-sm shadow-none mb-2">Edit</a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
                                             @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
+                            {!! $catalogs->withQueryString()->links('pagination::bootstrap-5') !!}
                         </div>
-                        {!! $products->withQueryString()->links('pagination::bootstrap-5') !!}
                     </div>
-                </section>
             </div>
+            </section>
         </div>
+    </div>
     </div>
 @endsection

@@ -58,7 +58,7 @@
                             </div>
 
                             <div class="row d-flex justify-content-center">
-                                <div class="col-md-6 offset-md-4">
+                                <div class="col-md-6 offset-md-4 my-3">
                                     <button type="submit" class="btn btn-primary">
                                         Update
                                     </button>

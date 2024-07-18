@@ -51,7 +51,7 @@ class ProductController extends Controller
         // Validate the data
         $request->validate([
             'title' => 'required',
-            'main_image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'main_image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'categoryid' => 'required',
             'description' => 'required',
             'base_price' => 'required|numeric',
@@ -184,11 +184,9 @@ class ProductController extends Controller
             } else {
                 // unset($input['image']);
             }
-
-            $catalog->update($input);
-
-            return redirect()->route('product.index')->with('success', 'catalog updated successfully');
         }
+        $catalog->update($input);
+        return redirect()->route('product.index')->with('success', 'catalog updated successfully');
     }
 
     public function edit(string $id)

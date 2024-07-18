@@ -9,13 +9,14 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">Forggot Password</div>
-                    <div class="card-body m-2">
+                    <div class="card-body">
                         <form method="POST" action="{{ route('user.updatepassword', $user->id) }}">
                             @csrf
                             <div class="row mb-3">
-                                <label for="password" class="col-md-4 col-form-label text-md-end">Enter New Password</label>
+                                <label for="password" class="col-md-4 col-form-label text-md-end mt-3">Enter New
+                                    Password</label>
 
-                                <div class="col-md-6">
+                                <div class="col-md-6 mt-3">
                                     <input id="password" type="password" class="form-control" name="password"
                                         autocomplete="password">
 
@@ -43,7 +44,7 @@
                             </div>
 
                             <div class="row d-flex justify-content-center">
-                                <div class="col-md-6 offset-md-4">
+                                <div class="col-md-6 offset-md-4 my-3">
                                     <button type="submit" class="btn btn-primary">
                                         Update
                                     </button>

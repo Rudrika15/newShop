@@ -26,7 +26,7 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
 //All Admin Routes List
 
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
-    Route::get('/admin/home', [UserController::class, 'adminHome'])->name('admin.home');
+    Route::get('/admin/home/dashboard', [UserController::class, 'adminHome'])->name('admin.home');
     Route::get('/user/index', [UserController::class, 'index'])->name('user.index');
     Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::get('/admin/trash-user', [UserController::class, 'trashUser'])->name('user.trash');

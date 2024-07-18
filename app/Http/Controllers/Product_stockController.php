@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product_stock;
+use App\Models\Stock_Transaction;
 use Illuminate\Http\Request;
 
 class Product_stockController extends Controller
@@ -65,6 +66,12 @@ class Product_stockController extends Controller
             'quantity' => $newQuantity,
         ]);
 
+        Stock_Transaction::create([
+            'product_id' => $productStock->product_id,
+            'type' => $request->type, // 'add' or 'subtract' based on your needs
+            'quantity' => $request->newstock,
+            'remarks' => $request->remarks,
+        ]);
         return redirect()->route('admin.home')->with('success', 'Product updated successfully');
     }
 
