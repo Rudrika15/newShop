@@ -12,14 +12,7 @@ use App\Http\Controllers\SkusController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
-    // if (auth()->user()->type == 'admin') {
-    //     return redirect()->route('admin.home');
-    // }else if (auth()->user()->type == 'manager') {
-    //     return redirect()->route('manager.home');
-    // }else{
-    //     return redirect()->route('home');
-    // }
-    return view('auth.login');
+    return view('adminHome');
 });
 
 
@@ -72,7 +65,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     //stock update 
     Route::get('/admin/product-stock/{id}/edit', [Product_stockController::class, 'edit'])->name('product-stock.edit');
-Route::put('/admin/product-stock/{id}', [Product_stockController::class, 'update'])->name('product-stock.update');
+    Route::put('/admin/product-stock/{id}', [Product_stockController::class, 'update'])->name('product-stock.update');
     // Route::get('catalog/create', [CatalogController::class, 'index'])->name('catalog.index');
     // Route::get('catalog/post', [CatalogController::class, 'index'])->name('catalog.index');
 

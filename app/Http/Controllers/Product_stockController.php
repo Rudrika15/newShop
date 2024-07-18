@@ -53,14 +53,17 @@ class Product_stockController extends Controller
     {
         $request->validate([
             'quantity' => 'required|integer',
-            'newstock' => 'required|integer',
-            'type' => 'required',
-            'remarks' => 'required'
+            'newstock' => 'required|integer'
             // Add other validation rules as needed
         ]);
 
         $productStock = Product_stock::findOrFail($id);
-        $productStock->update($request->all());
+
+        $newQuantity = $productStock->quantity + $request->newstock;
+
+        $productStock->update([
+            'quantity' => $newQuantity,
+        ]);
 
         return redirect()->route('admin.home')->with('success', 'Product updated successfully');
     }
