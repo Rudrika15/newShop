@@ -132,18 +132,18 @@ class CategoryController extends Controller
     }
     public function restore(string $id)
     {
-        $category = Category::withTrashed($id);
+        $category = Category::withTrashed()->find($id);
 
         $category->restore();
 
-        return redirect()->back()->with('success', 'category restored successfully');
+        return redirect()->route('category.trash')->with('success', 'category restored successfully');
     }
     public function destroy(string $id)
     {
-        $category = Category::withTrashed($id);
+        $category = Category::withTrashed()->find($id);
 
         $category->forceDelete();
 
-        return redirect()->back()->with('success', 'category permanently successfully');
+        return redirect()->route('category.trash')->with('success', 'category permanently successfully');
     }
 }

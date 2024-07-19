@@ -12,7 +12,7 @@ use App\Http\Controllers\SkusController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
-    return view('adminHome');
+    return view('auth.login');
 });
 
 

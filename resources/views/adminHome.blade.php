@@ -47,7 +47,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Recent Orders</h5>
-                                    <table class="table table-bordered">
+                                    <table class="table table-bordered text-center">
                                         <thead>
                                             <tr>
                                                 <th>Order ID</th>
@@ -85,7 +85,7 @@
                         <div class="col-lg-6">
                             <div class="card-body mb-2">
                                 <h5 class="card-title">Out-of-Stock Products</h5>
-                                <table class="table table-bordered data-table">
+                                <table class="table table-bordered text-center">
                                     <thead>
                                         <tr>
                                             <th>Catalog Name</th>

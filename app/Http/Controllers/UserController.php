@@ -23,7 +23,7 @@ class UserController extends Controller
             $query->whereNull('deleted_at')->with(['productStocks' => function ($query) {
                 $query->where('quantity', '<=', 10);
             }]);
-        }])->paginate(10);
+        }])->paginate(5);
 
         return view('adminHome', compact('catalogs'));
     }
@@ -36,7 +36,7 @@ class UserController extends Controller
                 ->orWhere('email', 'like', '%' . $request->input('search') . '%')
                 ->orWhere('contact', 'like', '%' . $request->input('search') . '%');
         })
-            ->paginate(5);
+            ->orderBy('created_at', 'desc')->paginate(5);
 
         return view('user.index', compact('users'));
     }

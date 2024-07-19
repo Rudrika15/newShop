@@ -29,6 +29,7 @@ return new class extends Migration
             $table->integer('mrp');
             $table->enum('is_active', ['yes', 'no']);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

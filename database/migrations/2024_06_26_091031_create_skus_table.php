@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('prefix');
             $table->string('colorname');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

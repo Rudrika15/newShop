@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <div class="row py-2" style="background-color: rgb(155, 191, 212)">
+        <div class="row p-2" style="background-color: rgb(155, 191, 212)">
             <div class="col-md-6">
                 <h4>Create Product</h4>
             </div>
@@ -28,12 +28,16 @@
                         </div>
                         <div class="col-md-6">
                             <label for="main_image" class="form-label">Main Image</label>
-                            <input class="form-control" type="file" name="main_image" id="main_image">
+                            <input class="form-control" type="file" name="main_image" id="main_image"
+                                onchange="previewImage(event)">
                             <span class="text-danger">
                                 @error('main_image')
                                     {{ $message }}
                                 @enderror
                             </span>
+                            <!-- Thumbnail preview -->
+                            <img id="thumbnail" src="#" alt="Image Preview"
+                                style="display: none; margin-top: 10px; max-width: 100px; max-height: 100px;">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -42,7 +46,9 @@
                             <select id="categoryid" name="categoryid" class="form-select">
                                 <option value="">Select</option>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->categoryname }}</option>
+                                    <option value="{{ $category->id }}"
+                                        {{ old('categoryid') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->categoryname }}</option>
                                 @endforeach
                             </select>
                             <span class="text-danger">
@@ -65,8 +71,8 @@
                         <div class="col-md-4">
                             <input type="hidden" name="is_active" value="No">
                             <input type="checkbox" id="is_active" name="is_active" value="Yes"
-                                {{ old('is_active') === 'Yes' ? 'checked' : '' }}>
-                            <label for="is_active" class="form-label">Is Active</label>
+                                {{ old('is_active') === 'Yes' ? 'checked' : '' }} checked>
+                            <label for="is_active" class="form-label ms-2">Is Active</label>
                         </div>
 
                         <span class="text-danger">
@@ -174,7 +180,7 @@
                                     @endforeach
                                 </select>
                                 <span class="text-danger">
-                                    @error('sku')
+                                    @error('sku.sku.0')
                                         {{ $message }}
                                     @enderror
                                 </span>
@@ -368,6 +374,16 @@
                 imagePreview.style.display = 'none';
             }
         });
+
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('thumbnail');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
     </script>
 @endsection
 @section('script')

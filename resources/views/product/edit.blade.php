@@ -6,7 +6,7 @@
             <div class="col-md-6">
                 <h2>Edit Catalog</h2>
             </div>
-            <div class="col-md-6 d-flex justify-content-end align-items-center mb-2">
+            <div class="col-md-6 d-flex justify-content-end align-items-center">
                 <span style="float:right;"><a onclick="history.back()" class="btn btn-primary shadow-none ms-2">Back</a>
                 </span>
             </div>

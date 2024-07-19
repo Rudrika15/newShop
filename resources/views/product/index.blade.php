@@ -66,17 +66,11 @@
                                                 {{--  <p>{{ $product->slug }}</p>  --}}
                                                 <div>
                                                     <a href="{{ route('product.edit', $product->id) }}"
-                                                        class="btn btn-primary btn-sm shadow-none">
+                                                        class="btn btn-secondary btn-sm shadow-none">
                                                         {{--  <i class="fas fa-edit"><p>{{ $product->slug }}</p></i>  --}}
                                                         {{ $product->color }}
                                                     </a>
                                                 </div>
-                                                {{--  <div>
-                                                    <button class="delete-user btn btn-danger btn-sm shadow-none"
-                                                        data-id="{{ $product->id }}">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </button>
-                                                </div>  --}}
                                             @endforeach
                                         </div>
                                     </td>

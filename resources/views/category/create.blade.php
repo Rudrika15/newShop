@@ -46,7 +46,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="row d-flex justify-content-end">
+                            <div class="row d-flex justify-content-end my-3">
                                 <div class="col-lg-6 d-flex justify-content-end">
                                     <span style="float:right;"><button type="submit"
                                             class="btn btn-primary">Submit</button>

@@ -52,23 +52,26 @@ class ProductController extends Controller
         $request->validate([
             'title' => 'required',
             'main_image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'categoryid' => 'required',
+            'categoryid' => 'required|exists:categories,id',
             'description' => 'required',
             'base_price' => 'required|numeric',
             'tax_price' => 'required|numeric',
             'discount_amt' => 'required|numeric',
             'mrp' => 'required|numeric',
             // 'is_active' => 'required|in:Yes,No',
-            // 'sku' => 'required|array',
-            // 'slug' => 'required|array',
-            // 'color' => 'required|array',
+            'sku.sku.*' => 'required|exists:skus,prefix',
+            'slug' => 'required',
+            'color' => 'required',
             // 'size' => 'nullable|array',
-            // 'image' => 'required|array',
+            'image' => 'required',
             // 'image.*' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            // 'quantity' => 'required|array',
+            'quantity' => 'required',
 
         ]);
 
+        // $input = $request->all();
+
+        
         // Save the catalog
         $catalog = new Catalog();
         $catalog->title = $request->title;

@@ -29,7 +29,7 @@
                                 <label for="is_parent" class="form-label"> Is Parent</label>
                             </div>
 
-                            <div class="form-group mb-3">
+                            <div class="form-group mb-4">
                                 <label for="parent" class="form-label">Parent Category</label>
                                 <select class="form-control" id="parent" name="parent"
                                     {{ old('is_parent', $category->is_parent) ? 'disabled' : '' }}>
@@ -47,7 +47,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="row d-flex justify-content-center mt-2">
+                            <div class="row d-flex justify-content-center my-3">
                                 <div class="col-md-6 offset-md-3">
                                     <button type="submit" class="btn btn-primary">Update</button>
                                 </div>
