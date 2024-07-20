@@ -14,12 +14,13 @@
                             @csrf
 
                             <div class="row mb-3">
-                                <label for="name" class="col-md-4 col-form-label text-md-end mt-4">{{ __('Name') }}</label>
+                                <label for="name"
+                                    class="col-md-4 col-form-label text-md-end mt-4">{{ __('Name') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="name" type="text"
                                         class="form-control @error('name') is-invalid @enderror mt-4" name="name"
-                                        value="{{ old('name') }}"  autocomplete="name" autofocus>
+                                        value="{{ old('name') }}" autocomplete="name" autofocus>
 
                                     @error('name')
                                         <span class="invalid-feedback" role="alert">
@@ -36,7 +37,7 @@
                                 <div class="col-md-6">
                                     <input id="email" type="email"
                                         class="form-control @error('email') is-invalid @enderror" name="email"
-                                        value="{{ old('email') }}"  autocomplete="email">
+                                        value="{{ old('email') }}" autocomplete="email">
 
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">
@@ -52,7 +53,7 @@
                                 <div class="col-md-6">
                                     <input id="contact" type="text"
                                         class="form-control @error('contact') is-invalid @enderror" name="contact"
-                                        value="{{ old('contact') }}"  autocomplete="contact" autofocus>
+                                        value="{{ old('contact') }}" autocomplete="contact" autofocus>
 
                                     @error('contact')
                                         <span class="invalid-feedback" role="alert">
@@ -69,7 +70,7 @@
                                 <div class="col-md-6">
                                     <input id="password" type="password"
                                         class="form-control @error('password') is-invalid @enderror" name="password"
-                                         autocomplete="new-password">
+                                        autocomplete="new-password">
 
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
@@ -80,7 +81,7 @@
                             </div>
 
                             <div class="row d-flex justify-content-center">
-                                <div class="col-md-6 offset-md-4">
+                                <div class="col-md-6 offset-md-4 my-3">
                                     <button type="submit" class="btn btn-primary">
                                         {{ __('Submit') }}
                                     </button>

@@ -12,13 +12,13 @@
                     <div class="card-body">
                         <div class="row p-3">
                             <div class="col-lg-6">
-                                <h3>
+                                <h4 class="pt-2">
                                     @if (count($categories) > 0)
                                         CATEGORY LIST
                                     @else
                                         There are no data
                                     @endif
-                                </h3>
+                                </h4>
                             </div>
                             <div class="col-lg-6 d-flex justify-content-end align-items-center">
                                 <span style="float:right;"><a href="{{ route('category.trash') }}"

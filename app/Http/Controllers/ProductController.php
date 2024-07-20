@@ -46,10 +46,8 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-
-        //  dd($request);
         // Validate the data
-        $request->validate([
+        $validatedData = $request->validate([
             'title' => 'required',
             'main_image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'categoryid' => 'required|exists:categories,id',
@@ -58,85 +56,80 @@ class ProductController extends Controller
             'tax_price' => 'required|numeric',
             'discount_amt' => 'required|numeric',
             'mrp' => 'required|numeric',
-            // 'is_active' => 'required|in:Yes,No',
-            'sku.sku.*' => 'required|exists:skus,prefix',
-            'slug' => 'required',
-            'color' => 'required',
-            // 'size' => 'nullable|array',
-            'image' => 'required',
-            // 'image.*' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'quantity' => 'required',
-
+            // 'sku.sku.*' => 'required|exists:skus,prefix',
+            // 'sku.slug.*' => 'required',
+            // 'sku.color.*' => 'required',
+            // 'sku.image.*' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            // 'sku.quantity.*' => 'required|numeric',
         ]);
 
-        // $input = $request->all();
+        DB::beginTransaction();
 
-        
-        // Save the catalog
-        $catalog = new Catalog();
-        $catalog->title = $request->title;
+        try {
+            // Save the catalog
+            $catalog = new Catalog();
+            $catalog->title = $request->title;
 
-        if ($request->hasFile('main_image')) {
-            $image = $request->file('main_image');
-            $imageName = time() . '.' . $image->extension();
-            $image->move(public_path('images/catalog'), $imageName);
-            $catalog->main_image = $imageName;
-        }
-
-        $catalog->save();
-
-        // Function to generate a unique SKU suffix
-        function generateUniqueNumber($prefix)
-        {
-            do {
-                // Generate a 5-digit random number
-                $uniqueNumber = str_pad(random_int(0, 99999), 5, '0', STR_PAD_LEFT);
-                $sku = $prefix . $uniqueNumber;
-            } while (DB::table('products')->where('sku', $sku)->exists());
-
-            return $sku;
-        }
-
-
-        // Loop through and save each product
-        for ($i = 0; $i < count($request->sku['slug']); $i++) {
-            $product = new Product();
-            //  return $request->sku['slug'];
-
-
-            $product->catalogid = $catalog->id; // Link to the catalog
-            $product->categoryid = $request->categoryid;
-            $product->description = $request->description;
-            $product->base_price = $request->base_price;
-            $product->tax_price = $request->tax_price;
-            $product->discount_amt = $request->discount_amt;
-            $product->mrp = $request->mrp;
-            $product->is_active = $request->is_active;
-            $product->sku = generateUniqueNumber($request->sku['sku'][$i]);
-            $product->slug = $request->sku['slug'][$i];
-            $product->color = $request->sku['color'][$i];
-            $product->size = $request->sku['size'][$i] ?? null; // Handle nullable size
-
-
-            if (!empty($request->file('sku')['image']) && count($request->file('sku')['image']) > 0) {
-                $image = $request->file('sku')['image'][$i];
-                $imageName = time() . '_' . $i . '.' . $image->extension();
-                $image->move(public_path('images/product'), $imageName);
-                $product->image = $imageName;
+            if ($request->hasFile('main_image')) {
+                $image = $request->file('main_image');
+                $imageName = time() . '.' . $image->extension();
+                $image->move(public_path('images/catalog'), $imageName);
+                $catalog->main_image = $imageName;
             }
 
-            $product->save();
+            $catalog->save();
 
-            // Save product stock
-            $stock = new Product_Stock();
-            $stock->product_id = $product->id;
-            $stock->quantity = $request->sku['quantity'][$i];
+            // Function to generate a unique SKU suffix
+            function generateUniqueNumber($prefix)
+            {
+                do {
+                    $uniqueNumber = str_pad(random_int(0, 99999), 5, '0', STR_PAD_LEFT);
+                    $sku = $prefix . $uniqueNumber;
+                } while (DB::table('products')->where('sku', $sku)->exists());
 
-            // return $stock;
-            $stock->save();
+                return $sku;
+            }
+
+            // Loop through and save each product
+            foreach ($request->sku['slug'] as $i => $slug) {
+                $product = new Product();
+                $product->catalogid = $catalog->id;
+                $product->categoryid = $request->categoryid;
+                $product->description = $request->description;
+                $product->base_price = $request->base_price;
+                $product->tax_price = $request->tax_price;
+                $product->discount_amt = $request->discount_amt;
+                $product->mrp = $request->mrp;
+                $product->sku = generateUniqueNumber($request->sku['sku'][$i]);
+                $product->slug = $slug;
+                $product->color = $request->sku['color'][$i];
+                $product->size = $request->sku['size'][$i] ?? null;
+
+                if (!empty($request->file('sku')['image']) && count($request->file('sku')['image']) > 0) {
+                    $image = $request->file('sku')['image'][$i];
+                    $imageName = time() . '_' . $i . '.' . $image->extension();
+                    $image->move(public_path('images/product'), $imageName);
+                    $product->image = $imageName;
+                }
+
+                $product->save();
+
+                // Save product stock
+                $stock = new Product_Stock();
+                $stock->product_id = $product->id;
+                $stock->quantity = $request->sku['quantity'][$i];
+                $stock->save();
+            }
+
+            DB::commit();
+
+            return redirect()->route('product.index')->with('success', 'Products created successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => 'Failed to create products: ' . $e->getMessage()]);
         }
-        return redirect()->route('product.index')->with('success', 'Products created successfully');
     }
+
 
     /**
      * Display the specified resource.

@@ -31,7 +31,7 @@
                                         </span>
                                     @enderror
                                 </div>
-                            </div>  
+                            </div>
 
                             <div class="row mb-3">
                                 <label for="password"
@@ -72,6 +72,11 @@
                                     @if (Route::has('password.request'))
                                         <a class="btn btn-link" href="{{ route('password.request') }}">
                                             {{ __('Forgot Your Password?') }}
+                                        </a>
+                                    @endif
+                                    @if (Route::has('register'))
+                                        <a class="btn btn-link" href="{{ route('register') }}">
+                                            {{ __('Register') }}
                                         </a>
                                     @endif
                                 </div>

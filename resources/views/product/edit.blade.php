@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row py-2" style="background-color: rgb(155, 191, 212)">
             <div class="col-md-6">
-                <h2>Edit Catalog</h2>
+                <h4 class="pt-2">Edit Catalog</h4>
             </div>
             <div class="col-md-6 d-flex justify-content-end align-items-center">
                 <span style="float:right;"><a onclick="history.back()" class="btn btn-primary shadow-none ms-2">Back</a>

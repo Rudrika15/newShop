@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row p-2" style="background-color: rgb(155, 191, 212)">
             <div class="col-md-6">
-                <h4>Create Product</h4>
+                <h4 class="pt-2">Create Product</h4>
             </div>
             <div class="col-md-6 d-flex justify-content-end align-items-center">
                 <span style="float:right;"><a href="{{ route('product.index') }}"
@@ -173,8 +173,7 @@
                                 <select id="sku" name="sku[sku][]" class="form-select sku-input">
                                     <option value="">Select</option>
                                     @foreach ($skus as $sku)
-                                        <option value="{{ $sku->prefix }}" data-color="{{ $sku->colorname }}"
-                                            {{ isset(old('sku')['sku'][0]) && old('sku')['sku'][0] == $sku->prefix ? 'selected' : '' }}>
+                                        <option value="{{ $sku->prefix }}" data-color="{{ $sku->colorname }}">
                                             {{ $sku->prefix }}
                                         </option>
                                     @endforeach
@@ -188,7 +187,7 @@
                             <div class="col-md-3">
                                 <label for="color" class="form-label">Color</label>
                                 <input class="form-control color-input" type="text" name="sku[color][]"
-                                    id="color" value="{{ old('sku')['color'][0] ?? '' }}" readonly>
+                                    id="color" readonly>
                                 <span class="text-danger">
                                     @error('color')
                                         {{ $message }}
@@ -321,7 +320,7 @@
                         <select id="sku" name="sku[sku][]" class="form-select sku-input" >
                                     <option value="">Select</option>
                                     @foreach ($skus as $sku)
-                                        <option value="{{ $sku->prefix }}" data-color="{{ $sku->colorname }}" {{ isset(old('sku')['sku'][0]) && old('sku')['sku'][0] == $sku->prefix ? 'selected' : '' }}>{{ $sku->prefix }}</option>
+                                        <option value="{{ $sku->prefix }}" data-color="{{ $sku->colorname }}" >{{ $sku->prefix }}</option>
                                     @endforeach
                                 </select>
                         <span class="text-danger">

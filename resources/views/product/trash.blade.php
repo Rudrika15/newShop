@@ -10,13 +10,13 @@
         <div class="row justify-content-center" style="background-color: rgb(155, 191, 212)">
             <div class="row p-2">
                 <div class="col-lg-6">
-                    <h3>
+                    <h4 class="pt-2">
                         @if (count($catalogs) > 0)
                             TRASHED PRODUCTS LIST
                         @else
                             There are no data
                         @endif
-                    </h3>
+                    </h4>
                 </div>
                 <div class="col-lg-6 d-flex justify-content-end align-items-center">
                     <span style="float:right;"><a href="{{ route('product.index') }}" class="btn btn-primary shadow-none">Go

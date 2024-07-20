@@ -10,13 +10,13 @@
         <div class="row justify-content-center" style="background-color: rgb(155, 191, 212)">
             <div class="row p-3">
                 <div class="col-lg-6">
-                    <h2>
+                    <h4 class="pt-2">
                         @if (count($users) > 0)
                             TRASH DATA
                         @else
                             There are no trash data
                         @endif
-                    </h2>
+                    </h4>
                 </div>
                 <div class="col-lg-6 d-flex justify-content-end align-items-center">
                     <span style="float:right;"><a href="{{ route('user.index') }}" class="btn btn-primary">Back</a></span>
