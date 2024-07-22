@@ -72,7 +72,7 @@ class Product_stockController extends Controller
             'quantity' => $request->newstock,
             'remarks' => $request->remarks,
         ]);
-        return redirect()->route('admin.home')->with('success', 'Product updated successfully');
+        return redirect()->route('admin.home')->with('success', 'Product-stock updated successfully');
     }
 
     /**

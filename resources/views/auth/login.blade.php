@@ -50,7 +50,7 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
+                            {{--  <div class="row mb-3">
                                 <div class="col-md-6 offset-md-4">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="remember" id="remember"
@@ -61,22 +61,23 @@
                                         </label>
                                     </div>
                                 </div>
-                            </div>
+                            </div>  --}}
 
                             <div class="row mb-0">
-                                <div class="col-md-8 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
+                                <div class="col-md-8 offset-md-4 ">
+                                    <button type="submit" class="btn btn-primary ms-5">
                                         {{ __('Login') }}
                                     </button>
 
                                     @if (Route::has('password.request'))
-                                        <a class="btn btn-link" href="{{ route('password.request') }}">
+                                        <a class="btn btn-link ms-3" href="{{ route('password.request') }}">
                                             {{ __('Forgot Your Password?') }}
                                         </a>
                                     @endif
+                                    <br><br>
                                     @if (Route::has('register'))
-                                        <a class="btn btn-link" href="{{ route('register') }}">
-                                            {{ __('Register') }}
+                                        <a class="btn btn-link ms-5" href="{{ route('register') }}">
+                                            {{ __("Don't have an account? Sign up") }}
                                         </a>
                                     @endif
                                 </div>

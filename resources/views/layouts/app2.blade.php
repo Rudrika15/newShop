@@ -130,7 +130,8 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.home') }}">
+                <a class="nav-link {{ request()->routeIs('admin.home') ? '' : 'collapsed' }}"
+                    href="{{ route('admin.home') }}">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
@@ -139,12 +140,15 @@
 
 
             <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                <a class="nav-link {{ request()->routeIs('user.index') ? '' : 'collapsed' }}"
+                    data-bs-target="#forms-nav" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-person"></i><span>User Managment</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
-                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <ul id="forms-nav" class="nav-content collapse {{ request()->routeIs('user.index') ? 'show' : '' }}"
+                    data-bs-parent="#sidebar-nav">
                     <li>
-                        <a href="{{ route('user.index') }}">
+                        <a href="{{ route('user.index') }}"
+                            class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>User List</span>
                         </a>
                     </li>
@@ -152,13 +156,17 @@
             </li><!-- End User Managment Nav -->
 
             <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+                <a class="nav-link {{ request()->routeIs('category.index') ? '' : 'collapsed' }}"
+                    data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-layout-text-window-reverse"></i><span>Category Managment</span><i
                         class="bi bi-chevron-down ms-auto"></i>
                 </a>
-                <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <ul id="tables-nav"
+                    class="nav-content collapse {{ request()->routeIs('category.index') ? 'show' : '' }}"
+                    data-bs-parent="#sidebar-nav">
                     <li>
-                        <a href="{{ route('category.index') }}">
+                        <a href="{{ route('category.index') }}"
+                            class="{{ request()->routeIs('category.index') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Category List</span>
                         </a>
                     </li>
@@ -172,12 +180,15 @@
 
 
             <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#sku-nav" data-bs-toggle="collapse" href="#">
+                <a class="nav-link {{ request()->routeIs('sku.index') ? '' : 'collapsed' }}"
+                    data-bs-target="#sku-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-box"></i><span>SKU Management</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
-                <ul id="sku-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <ul id="sku-nav" class="nav-content collapse {{ request()->routeIs('sku.index') ? 'show' : '' }}"
+                    data-bs-parent="#sidebar-nav">
                     <li>
-                        <a href="{{ route('sku.index') }}">
+                        <a href="{{ route('sku.index') }}"
+                            class="{{ request()->routeIs('sku.index') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>SKU List</span>
                         </a>
                     </li>
@@ -190,18 +201,37 @@
                 </ul>
             </li><!-- End SKU Management Nav -->
             <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+                <a class="nav-link {{ request()->routeIs('product.index') ? '' : 'collapsed' }}"
+                    data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-bar-chart"></i><span>Products</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
-                <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <ul id="charts-nav"
+                    class="nav-content collapse {{ request()->routeIs('product.index') ? 'show' : '' }}"
+                    data-bs-parent="#sidebar-nav">
                     <li>
-                        <a href="{{ route('product.index') }}">
+                        <a href="{{ route('product.index') }}"
+                            class="{{ request()->routeIs('product.index') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span>Products</span>
                         </a>
                     </li>
                 </ul>
             </li><!-- End Charts Nav -->
-
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('report.index') ? '' : 'collapsed' }}"
+                    data-bs-target="#report-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-graph-up"></i><span>Reports</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="report-nav"
+                    class="nav-content collapse {{ request()->routeIs('report.index') ? 'show' : '' }}"
+                    data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ route('report.index') }}"
+                            class="{{ request()->routeIs('report.index') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>Report List</span>
+                        </a>
+                    </li>
+                </ul>
+            </li><!-- End Reports Nav -->
 
         </ul>
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Product_stockController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SkuController;
@@ -82,4 +83,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('catalog/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
     Route::get('catalog/restore/{id}', [ProductController::class, 'restore'])->name('product.restore');
     Route::get('catalog/force-delete/{id}', [ProductController::class, 'destory'])->name('product.destory');
+
+    // Report
+    Route::get('report/index', [OrderController::class, 'index'])->name('report.index');
 });

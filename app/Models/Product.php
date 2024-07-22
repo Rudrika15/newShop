@@ -47,4 +47,8 @@ class Product extends Model
     {
         return $this->hasMany(Stock_Transaction::class, 'product_id', 'id');
     }
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'product_id', 'id');
+    }
 }
