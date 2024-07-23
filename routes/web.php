@@ -86,4 +86,5 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     // Report
     Route::get('report/index', [OrderController::class, 'index'])->name('report.index');
+    Route::get('report/printData', [OrderController::class, 'print'])->name('report.print');
 });

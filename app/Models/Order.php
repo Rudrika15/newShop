@@ -19,4 +19,9 @@ class Order extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+    // Product.php
+    public function sku()
+    {
+        return $this->belongsTo(Sku::class);
+    }
 }

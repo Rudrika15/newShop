@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Sku;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -16,17 +17,18 @@ class OrderController extends Controller
         $today = now()->startOfDay();
     
         // Fetch orders created today
+        $skus = Sku::all();
         $orders = Order::whereDate('created_at', $today)->get();
     
-        return view('order.index', compact('orders'));
+        return view('order.index', compact('orders', 'skus'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function print()
     {
-        //
+        
     }
 
     /**
