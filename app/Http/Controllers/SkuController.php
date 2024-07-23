@@ -95,7 +95,7 @@ class SkuController extends Controller
     }
     public function restore(string $id)
     {
-        $sku = Sku::onlyTrashed($id);
+        $sku = Sku::onlyTrashed()->where('id', $id)->first();
 
         $sku->restore();
 
@@ -103,7 +103,7 @@ class SkuController extends Controller
     }
     public function destroy(string $id)
     {
-        $sku = Sku::onlyTrashed($id);
+        $sku = Sku::onlyTrashed()->where('id', $id)->first();
 
         $sku->forceDelete();
 

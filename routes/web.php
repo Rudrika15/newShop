@@ -6,10 +6,9 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\Product_stockController;
+use App\Http\Controllers\ProductStockController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SkuController;
-use App\Http\Controllers\SkusController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
@@ -65,8 +64,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/category/force-delete/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 
     //stock update 
-    Route::get('/admin/product-stock/{id}/edit', [Product_stockController::class, 'edit'])->name('product-stock.edit');
-    Route::put('/admin/product-stock/{id}', [Product_stockController::class, 'update'])->name('product-stock.update');
+    Route::get('/admin/product-stock/{id}/edit', [ProductStockController::class, 'edit'])->name('product-stock.edit');
+    Route::put('/admin/product-stock/{id}', [ProductStockController::class, 'update'])->name('product-stock.update');
     // Route::get('catalog/create', [CatalogController::class, 'index'])->name('catalog.index');
     // Route::get('catalog/post', [CatalogController::class, 'index'])->name('catalog.index');
 

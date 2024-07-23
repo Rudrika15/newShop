@@ -237,7 +237,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mt-3">
+                <div class="row mt-3 mb-3">
                     <div class="col d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary">Update</button>
                     </div>

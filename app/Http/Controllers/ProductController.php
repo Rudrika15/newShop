@@ -182,7 +182,7 @@ class ProductController extends Controller
             }
         }
         $catalog->update($input);
-        return redirect()->route('product.index')->with('success', 'catalog updated successfully');
+        return redirect()->route('product.index')->with('success', 'Catalog Updated Successfully');
     }
 
     public function edit(string $id)
@@ -262,7 +262,7 @@ class ProductController extends Controller
                 'remarks' => $request->remarks,
             ]);
         }
-        return redirect()->route('product.index')->with('success', 'Product updated successfully');
+        return redirect()->route('product.index')->with('success', 'Product Updated Successfully');
     }
     /**
      * Remove the specified resource from storage.
@@ -291,7 +291,7 @@ class ProductController extends Controller
         // Restore products
         $catalog->products()->withTrashed()->restore();
 
-        return redirect()->route('product.index')->with('success', 'Catalog and products restored successfully.');
+        return redirect()->route('product.index')->with('success', 'Catalog and Products Restored Successfully.');
     }
 
     //force-delete
@@ -302,7 +302,7 @@ class ProductController extends Controller
 
         $catalog->products()->forceDelete();
 
-        return redirect()->back()->with('success', 'Catalog and products permanently deleted.');
+        return redirect()->back()->with('success', 'Catalog and Products Permanently Deleted.');
     }
 
     //single product show

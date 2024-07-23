@@ -61,7 +61,7 @@ class CategoryController extends Controller
         // Save the new category
         $newCategory->save();
 
-        return redirect()->route('category.index')->with('success', 'Category created successfully');
+        return redirect()->route('category.index')->with('success', 'Category Created Successfully');
     }
 
 
@@ -114,7 +114,7 @@ class CategoryController extends Controller
         // Save the updated category
         $category->save();
 
-        return redirect()->route('category.index')->with('success', 'Category updated successfully');
+        return redirect()->route('category.index')->with('success', 'Category Updated Successfully');
     }
 
 
@@ -128,7 +128,7 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        return redirect()->back()->with('success', 'category deleted successfully');
+        return redirect()->back()->with('success', 'Category Deleted Successfully');
     }
     public function restore(string $id)
     {
@@ -136,7 +136,7 @@ class CategoryController extends Controller
 
         $category->restore();
 
-        return redirect()->route('category.trash')->with('success', 'category restored successfully');
+        return redirect()->route('category.trash')->with('success', 'Category Restored Successfully');
     }
     public function destroy(string $id)
     {
@@ -144,6 +144,6 @@ class CategoryController extends Controller
 
         $category->forceDelete();
 
-        return redirect()->route('category.trash')->with('success', 'category permanently successfully');
+        return redirect()->route('category.trash')->with('success', 'Category Deleted Permanently Successfully');
     }
 }

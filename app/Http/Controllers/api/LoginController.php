@@ -30,7 +30,12 @@ class LoginController extends Controller
                 
                 $token = $user->createToken('my-app-token')->plainTextToken;
                 // $role = $user->getRoleNames();
-                return Util::getSuccessResponse($user, "User login successfully" ,$token);
+                $user = [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'contact' => $user->contact
+                ];
+                return Util::getSuccessResponse($user, $token, "User login successfully");
             }
         }
     }

@@ -1,20 +1,20 @@
 @extends('layouts.app2')
 
 @section('content')
-    <div class="container-fluid mb-2">
+    {{-- <div class="container-fluid mb-2">
         @if ($message = Session::get('success'))
             <div class="col-lg-6 alert alert-success" id="successMessage">
                 <p>{{ $message }}</p>
             </div>
-        @endif
+        @endif --}}
         <div class="row justify-content-center" style="background-color: rgb(155, 191, 212)">
             <div class="row p-3">
                 <div class="col-lg-6">
                     <h4 class="pt-2">
                         @if (count($catalogs) > 0)
-                            PRODUCTS LIST
+                            Product List
                         @else
-                            There are no data
+                            There are no data to show
                         @endif
                     </h4>
                 </div>
@@ -105,6 +105,7 @@
                     if (result.isConfirmed) {
                         // Redirect to a route that handles user deletion
                         window.location.href = `/catalog/delete/${userId}`;
+                        Swal.fire('Deleted!', 'Deleted Successfully.', 'success');
                     }
                 });
             });
