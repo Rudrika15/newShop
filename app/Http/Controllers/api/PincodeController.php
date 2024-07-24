@@ -24,4 +24,11 @@ class PincodeController extends Controller
             return response()->json($err);
         }
     }
-}
+
+    public function getAllPincode()
+    {
+        $pincode = Pincode::all();
+        return Util::getPincodeResponse($pincode);
+        }
+
+    }

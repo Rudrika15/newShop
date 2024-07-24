@@ -16,6 +16,17 @@ class Util
         return response($response, 200);
     }
 
+    public static function getSuccessResponseForPinChange($data, $token, $message = "Pin Changed Succesfully..")
+    {
+        $response = [
+            'message' => $message,
+            'status' => 200,
+            'data' => $data,
+            'token' => $token,
+        ];
+        return response($response, 200);
+    }
+
 
     public static function getCreateResponse($data, $message = "")
     {
@@ -28,7 +39,7 @@ class Util
     }
 
 
-    public static function getorderListResponse($data, $message = "result")
+    public static function getOrderListResponse($data, $message = "Get Order List")
     {
         $response = [
             'message' => $message,
@@ -46,7 +57,7 @@ class Util
         ];
         return response($response, 200);
     }
-    public static function getMyorderListResponse($data, $message = "result")
+    public static function getMyOrderListResponse($data, $message = "My Order List")
     {
         $response = [
             'message' => $message,
@@ -64,4 +75,14 @@ class Util
         ];
         return response($response, 200);
     }
+
+    public static function getErrorResponse($errors = [], $message = 'Operation failed', $statusCode = 422)
+    {
+        return response()->json([
+            'status' => 'error',
+            'message' => $message,
+            'errors' => $errors
+        ], $statusCode);
+    }
+
 }

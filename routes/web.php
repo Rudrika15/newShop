@@ -41,6 +41,9 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/user/force-delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
     Route::get('logout', [UserController::class, 'logout'])->name('logout');
 
+    //changepin
+    Route::post('/user/updatePin/{id}', [UserController::class, 'updatePin'])->name('user.updatePin');
+
     // SKU 
     Route::get('/sku/index', [SkuController::class, 'index'])->name('sku.index');
     Route::get('/sku/trash/', [SkuController::class, 'trash'])->name('sku.trash');

@@ -13,6 +13,6 @@ class MyOrderController extends Controller
 
         $myorder =  Myorder::all();
 
-        return Util::getMyorderListResponse($myorder);
+        return Util::getMyOrderListResponse($myorder);
     }
 }

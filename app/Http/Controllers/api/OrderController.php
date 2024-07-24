@@ -13,7 +13,7 @@ class OrderController extends Controller
     {
         $orders = Order::all();
 
-        return Util::getorderListResponse($orders);
+        return Util::getOrderListResponse($orders);
     }
     public function orderSave(Request $request)
     {

@@ -27,7 +27,7 @@ class LoginController extends Controller
         if ($user) {
 
             if (Hash::check($request->password, $user->password)) {
-                
+
                 $token = $user->createToken('my-app-token')->plainTextToken;
                 // $role = $user->getRoleNames();
                 $user = [
@@ -39,4 +39,5 @@ class LoginController extends Controller
             }
         }
     }
+
 }

@@ -38,7 +38,7 @@
         @endif
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <h2 class="text-center">You are an Admin User.</h2>
+                <h2 class="text-center">Hello, Admin</h2>
                 <!-- ======= Dashboard ======= -->
                 <section id="dashboard" class="dashboard">
                     <div class="row">
