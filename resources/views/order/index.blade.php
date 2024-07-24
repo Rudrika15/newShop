@@ -24,7 +24,7 @@
 
                             <div class="col-lg-6 d-flex justify-content-end align-items-end">
                                 <span style="float:right;"><button onclick="printPage()"
-                                        class="btn btn-warning btn-print">Print This Page</button>
+                                        class="btn btn-primary btn-print">Print This Page</button>
                                 </span>
                                 {{--  <span style="float:right;"><a href="{{ route('report.index') }}"
                                         class="btn btn-primary ms-2">Back</a>
@@ -35,7 +35,7 @@
 
                         @if (count($orders) !== 0)
                             <table id="sku-table" class="table table-bordered text-center">
-                                <thead class="table-secondary">
+                                <thead>
                                     <tr>
                                         <th>Address</th>
                                         <th>Pincode</th>
@@ -73,13 +73,13 @@
                 </div>
             </div>
         </div>
+        <!-- Pagination Links -->
+        {!! $orders->withQueryString()->links('pagination::bootstrap-5') !!}
 
         <script>
             function printPage() {
                 window.print();
             }
         </script>
-        {{--  <!-- Pagination Links -->
-        {!! $orders->withQueryString()->links('pagination::bootstrap-5') !!}  --}}
     </section>
 @endsection

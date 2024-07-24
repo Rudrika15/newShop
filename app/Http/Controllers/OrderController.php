@@ -15,11 +15,11 @@ class OrderController extends Controller
     {
         // Get today's date
         $today = now()->startOfDay();
-    
+
         // Fetch orders created today
         $skus = Sku::all();
-        $orders = Order::whereDate('created_at', $today)->get();
-    
+        $orders = Order::whereDate('created_at', $today)->paginate(5);
+
         return view('order.index', compact('orders', 'skus'));
     }
 
@@ -28,7 +28,6 @@ class OrderController extends Controller
      */
     public function print()
     {
-        
     }
 
     /**

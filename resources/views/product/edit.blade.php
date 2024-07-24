@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <div class="row py-2" style="background-color: rgb(155, 191, 212)">
+        <div class="row py-2" style="background-color: #D6EFD8">
             <div class="col-md-6">
                 <h4 class="pt-2">Edit Catalog</h4>
             </div>
@@ -11,7 +11,7 @@
                 </span>
             </div>
         </div>
-        <div class="row border border-3 p-2" style="background-color: rgb(237, 223, 201)">
+        <div class="row border border-3 p-2" style="background-color:rgb(236 236 236)">
             {{--  <h1>Edit Product</h1>  --}}
             <form method="POST" action="{{ route('catalog.update', $catalog->id) }}" enctype="multipart/form-data">
                 @csrf

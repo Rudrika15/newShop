@@ -34,7 +34,7 @@
 
                         @if (count($skus) !== 0)
                             <table id="sku-table" class="table table-bordered text-center">
-                                <thead class="table-secondary">
+                                <thead>
                                     <tr>
                                         <th>Prefix</th>
                                         <th>Color Name</th>

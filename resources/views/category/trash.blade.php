@@ -29,7 +29,7 @@
 
                         @if (count($categories) !== 0)
                             <table id="sku-table" class="table table-bordered text-center">
-                                <thead class="table-secondary">
+                                <thead>
                                     <tr>
                                         <th>Category Name</th>
                                         <th>Action</th>
