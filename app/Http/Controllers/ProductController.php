@@ -84,7 +84,7 @@ class ProductController extends Controller
             {
                 do {
                     $uniqueNumber = str_pad(random_int(0, 99999), 5, '0', STR_PAD_LEFT);
-                    $sku = $prefix .'-'. $uniqueNumber;
+                    $sku = $prefix . '-' . $uniqueNumber;
                 } while (DB::table('products')->where('sku', $sku)->exists());
 
                 return $sku;
@@ -171,7 +171,7 @@ class ProductController extends Controller
                     // Delete the existing image
                     unlink($existingImage);
                 }
-               
+
                 $destinationPath = 'images/catalog';
                 // $oldImagePath = 'images/catalog' . $catalog->image;
                 $catalogImage = time() . "." . $image->extension();
@@ -308,8 +308,12 @@ class ProductController extends Controller
     //single product show
     public function view($id)
     {
-        $product = Product::onlyTrashed()->with('catalog')->findOrFail($id);
+        $product = Product::onlyTrashed()
+            ->with(['catalog' => function ($query) {
+                $query->withTrashed();
+            }])
+            ->findOrFail($id);
+
         return view('product.productview', compact('product'));
     }
-    
 }

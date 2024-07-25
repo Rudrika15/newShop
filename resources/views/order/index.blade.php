@@ -23,8 +23,8 @@
                             </div>
 
                             <div class="col-lg-6 d-flex justify-content-end align-items-end">
-                                <span style="float:right;"><button onclick="printPage()"
-                                        class="btn btn-primary btn-print">Print This Page</button>
+                                <span style="float:right;">
+                                    <a id="printButton" class="btn btn-primary btn-print">Print This Page</a>
                                 </span>
                                 {{--  <span style="float:right;"><a href="{{ route('report.index') }}"
                                         class="btn btn-primary ms-2">Back</a>
@@ -43,16 +43,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($orders as $order)
-                                        <tr>
-                                            <td>{{ $order->user_id }}</td>
-                                            <td>{{ $order->price }}</td>
-                                            <td>
-                                                @if ($order->product && $order->product->sku)
-                                                    {{ $order->product->sku }}
-                                                @endif
-                                            </td>
-                                            {{--  <td>
+                                    @foreach ($orders->chunk(10) as $page)
+                                        @foreach ($page as $order)
+                                            <tr>
+                                                <td>{{ $order->user_id }}</td>
+                                                <td>{{ $order->price }}</td>
+                                                <td>
+                                                    @if ($order->product && $order->product->sku)
+                                                        {{ $order->product->sku }}
+                                                    @endif
+                                                </td>
+                                                {{--  <td>
                                                 <div class="d-flex gap-2 justify-content-center">
                                                     <div>
                                                         <a href="{{ route('category.edit', $category->id) }}"
@@ -64,7 +65,11 @@
                                                     </div>
                                                 </div>
                                             </td>  --}}
+                                        @endforeach
                                         </tr>
+                                        @if (!$loop->last)
+                                            <div class="page-break"></div>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
@@ -73,13 +78,18 @@
                 </div>
             </div>
         </div>
+        <iframe id="printFrame" style="display:none;" src=""></iframe>
         <!-- Pagination Links -->
         {!! $orders->withQueryString()->links('pagination::bootstrap-5') !!}
-
         <script>
-            function printPage() {
-                window.print();
-            }
+            document.getElementById('printButton').addEventListener('click', function() {
+                var printPageUrl = '{{ route('report.print') }}';
+                var printFrame = document.getElementById('printFrame');
+                printFrame.src = printPageUrl;
+                printFrame.onload = function() {
+                    printFrame.contentWindow.print();
+                };
+            });
         </script>
     </section>
 @endsection

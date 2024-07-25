@@ -28,6 +28,13 @@ class OrderController extends Controller
      */
     public function print()
     {
+        // Get today's date
+        $today = now()->startOfDay();
+
+        // Fetch orders created today
+        $skus = Sku::all();
+        $orders = Order::whereDate('created_at', $today)->get();
+        return view('order.printReport', compact('orders', 'skus'));
     }
 
     /**
