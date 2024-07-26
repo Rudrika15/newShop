@@ -50,8 +50,8 @@
                                                 <td>{{ $order->price }}</td>
                                                 <td>
                                                     @if ($order->product && $order->product->sku)
-                                                        {{ $order->product->sku }}
-                                                    @endif
+                                                    {{ $order->product->sku }}
+                                                @endif
                                                 </td>
                                                 {{--  <td>
                                                 <div class="d-flex gap-2 justify-content-center">

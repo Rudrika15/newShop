@@ -25,6 +25,14 @@
                         <p>Discount : {{ $product->discount_amt }}</p>
                         <p>Tax : {{ $product->tax_price }}</p>
                         <p>MRP : {{ $product->mrp }}</p>
+                        <p>Product Image :
+                            @if ($product->image)
+                                <img src="{{ asset('images/product/' . $product->image) }}" width="50"
+                                    height="50">
+                            @else
+                                <p>No catalog main image available.</p>
+                            @endif
+                        </p>
                         <p>Color : {{ $product->color }}</p>
                         <p>SKU : {{ $product->sku }}</p>
                         <p>Size : {{ $product->size }}</p>

@@ -26,7 +26,7 @@
             @if (count($users) !== 0)
                 <div class="table-responsive">
                     <table class="table table-bordered text-center">
-                        <thead class="table-secondary">
+                        <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>

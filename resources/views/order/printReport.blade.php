@@ -31,6 +31,7 @@
         @media print {
             .page-break {
                 page-break-before: always;
+                margin-bottom: 80px;
             }
         }
     </style>
@@ -60,9 +61,9 @@
 
                 @if (count($orders) !== 0)
                     <div class="container">
-                        @foreach ($orders->chunk(6) as $page)
-                            @foreach ($page->chunk(2) as $row)
-                                <div class="row mb-4">
+                        @foreach ($orders->chunk(4) as $page)
+                            <div class="row mb-4">
+                                @foreach ($page->chunk(5) as $row)
                                     @foreach ($row as $order)
                                         <div class="col-md-6 mb-4">
                                             <div class="card">
@@ -79,8 +80,8 @@
                                             </div>
                                         </div>
                                     @endforeach
-                                </div>
-                            @endforeach
+                                @endforeach
+                            </div>
                             @if (!$loop->last)
                                 <div class="page-break"></div>
                             @endif

@@ -17,11 +17,8 @@ class Order extends Model
     ];
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'id');
+        return $this->belongsTo(Product::class);
     }
-    // Product.php
-    public function sku()
-    {
-        return $this->belongsTo(Sku::class);
-    }
+    
+   
 }
