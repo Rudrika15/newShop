@@ -2,33 +2,32 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class PincodeSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        $jsonPath = public_path('pincodes_IN.json');
+        // Assuming your JSON file is named "pincodes.json" and located in the "public" folder
+        $jsonPath = public_path('pincode_IN.json');
         $json = File::get($jsonPath);
-        $pincodes = json_decode($json, true);
+        $pincodesData = json_decode($json, true);
 
-        foreach ($pincodes as $pincode) {
-            DB::table('pincodes')->insert([
-                'pincode' => $pincode['pincode'],
-                'area' => $pincode['area'],
-                'city' => $pincode['city'],
-                'state' => $pincode['state'],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        foreach ($pincodesData as $state => $districts) {
+            foreach ($districts as $district => $cities) {
+                foreach ($cities as $city => $pincode) {
+                    DB::table('pincodes')->insert([
+                        'state' => $state,
+                        'district' => $district,
+                        'city' => $city,
+                        'pincode' => trim($pincode),
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+            }
         }
-
-
     }
 }

@@ -255,6 +255,23 @@
                 </ul>
             </li><!-- End Reports Nav -->
 
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pincode.index') ? '' : 'collapsed' }}"
+                    data-bs-target="#pincode-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-geo-alt-fill"></i><span>Pincode Management</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="pincode-nav"
+                    class="nav-content collapse {{ request()->routeIs('pincode.index') ? 'show' : '' }}"
+                    data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ route('pincode.index') }}"
+                            class="{{ request()->routeIs('pincode.index') ? 'active' : '' }}">
+                            <i class="bi bi-geo-alt-fill"></i><span>Pincode List</span>
+                        </a>
+                    </li>
+                </ul>
+            </li><!-- End Pincode Nav -->
+
         </ul>
 
     </aside><!-- End Sidebar-->

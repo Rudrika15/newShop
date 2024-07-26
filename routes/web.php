@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PincodeController;
 use App\Http\Controllers\ProductStockController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SkuController;
@@ -101,4 +102,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     // Report
     Route::get('report/index', [OrderController::class, 'index'])->name('report.index');
     Route::get('report/printData', [OrderController::class, 'print'])->name('report.print');
+
+
+    // Pincodes
+    Route::get('/pincode/index', [PincodeController::class, 'index'])->name('pincode.index');
 });
