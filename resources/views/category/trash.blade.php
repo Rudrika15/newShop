@@ -28,6 +28,36 @@
                                     class="btn btn-primary shadow-none">Back</a>
                             </span>
                         </div>
+                        @if (count($categories) !== 0)
+                        <table id="sku-table" class="table table-bordered text-center">
+                            <thead>
+                                <tr>
+                                    <th>Category Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($categories as $category)
+                                <tr>
+                                    <td>{{ $category->categoryname }}</td>
+                                    {{-- <td>{{ $category->parent }}</td> --}}
+                                    <td>
+                                        <div class="d-flex gap-2 justify-content-center">
+                                            <div>
+                                                <a href="{{ route('category.restore', $category->id) }}"
+                                                    class="btn btn-primary btn-sm shadow-none mb-2 ">Restore</a>
+                                            </div>
+                                            <div>
+                                                <button class="delete-user btn btn-danger btn-sm shadow-none"
+                                                    data-id="{{ $category->id }}">Delete</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        @endif
                     </div>
 
                     @if (count($categories) !== 0)

@@ -13,17 +13,17 @@ use App\Http\Controllers\SliderController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
-    return view('auth.login');
+    return view('welcome');
 });
 
+// Route::get('/demo', function () {
+//     return view('home');
+// });
 
 
 //All Normal Users Routes List
 Auth::routes();
 
-Route::middleware(['auth', 'user-access:user'])->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
-});
 //All Admin Routes List
 
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
@@ -100,4 +100,5 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     // Report
     Route::get('report/index', [OrderController::class, 'index'])->name('report.index');
+    Route::get('report/printData', [OrderController::class, 'print'])->name('report.print');
 });

@@ -6,7 +6,7 @@
                 <p>{{ $message }}</p>
             </div>
         @endif
-        <div class="row justify-content-center" style="background-color: rgb(155, 191, 212)">
+        <div class="row justify-content-center" style="background-color: #D6EFD8">
             <div class="row p-3">
                 <div class="col-md-6">
                     <form action="{{ route('user.index') }}" method="GET">
@@ -26,7 +26,7 @@
             @if (count($users) !== 0)
                 <div class="table-responsive">
                     <table class="table table-bordered text-center">
-                        <thead class="table-secondary">
+                        <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>

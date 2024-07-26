@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <div class="row p-2" style="background-color: rgb(155, 191, 212)">
+        <div class="row p-2" style="background-color: #D6EFD8">
             <div class="col-md-6">
                 <h4 class="pt-2">Create Product</h4>
             </div>
@@ -11,7 +11,7 @@
                         class="btn btn-primary shadow-none">Back</a></span>
             </div>
         </div>
-        <div class="row" style="background-color: rgb(237, 223, 201)">
+        <div class="row" style="background-color: rgb(236 236 236)">
             <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row border border-dark p-3 m-3">

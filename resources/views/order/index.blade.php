@@ -1,5 +1,6 @@
 @extends('layouts.app2')
 @section('content')
+
     <section class="section">
         @if ($message = Session::get('success'))
             <div class="col-lg-6 alert alert-success" id="successMessage">
@@ -20,21 +21,21 @@
                                     @endif
                                 </h4>
                             </div>
-                            {{--  <div class="col-lg-6 d-flex justify-content-end align-items-center">
-                                <span style="float:right;"><a href="{{ route('category.trash') }}"
-                                        class="btn btn-warning">Go To Trash</a>
+
+                            <div class="col-lg-6 d-flex justify-content-end align-items-end">
+                                <span style="float:right;">
+                                    <a id="printButton" class="btn btn-primary btn-print">Print This Page</a>
                                 </span>
-                                <span style="float:right;"><a href="{{ route('category.create') }}"
-                                        class="btn btn-primary ms-2">Add
-                                        category</a>
-                                </span>
-                            </div>  --}}
+                                {{--  <span style="float:right;"><a href="{{ route('report.index') }}"
+                                        class="btn btn-primary ms-2">Back</a>
+                                </span>  --}}
+                            </div>
                         </div>
                         <!-- SKU List Table -->
 
                         @if (count($orders) !== 0)
                             <table id="sku-table" class="table table-bordered text-center">
-                                <thead class="table-secondary">
+                                <thead>
                                     <tr>
                                         <th>Address</th>
                                         <th>Pincode</th>
@@ -42,12 +43,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($orders as $order)
-                                        <tr>
-                                            <td>{{ $order->user_id }}</td>
-                                            <td>{{ $order->product_id }}</td>
-                                            <td>{{ $order->price }}</td>
-                                            {{--  <td>
+                                    @foreach ($orders->chunk(10) as $page)
+                                        @foreach ($page as $order)
+                                            <tr>
+                                                <td>{{ $order->user_id }}</td>
+                                                <td>{{ $order->price }}</td>
+                                                <td>
+                                                    @if ($order->product && $order->product->sku)
+                                                    {{ $order->product->sku }}
+                                                @endif
+                                                </td>
+                                                {{--  <td>
                                                 <div class="d-flex gap-2 justify-content-center">
                                                     <div>
                                                         <a href="{{ route('category.edit', $category->id) }}"
@@ -59,7 +65,11 @@
                                                     </div>
                                                 </div>
                                             </td>  --}}
+                                        @endforeach
                                         </tr>
+                                        @if (!$loop->last)
+                                            <div class="page-break"></div>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
@@ -68,33 +78,18 @@
                 </div>
             </div>
         </div>
-        {{--  <!-- Pagination Links -->
+        <iframe id="printFrame" style="display:none;" src=""></iframe>
+        <!-- Pagination Links -->
         {!! $orders->withQueryString()->links('pagination::bootstrap-5') !!}
         <script>
-            const deleteButtons = document.querySelectorAll('.delete-user');
-
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const userId = e.target.getAttribute('data-id');
-
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: 'You won\'t be able to revert this!',
-                        icon: 'warning', //question , error , warning , success , info
-
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Yes, delete it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Redirect to a route that handles user deletion
-                            window.location.href = `/category/delete/${userId}`;
-                        }
-                    });
-                });
+            document.getElementById('printButton').addEventListener('click', function() {
+                var printPageUrl = '{{ route('report.print') }}';
+                var printFrame = document.getElementById('printFrame');
+                printFrame.src = printPageUrl;
+                printFrame.onload = function() {
+                    printFrame.contentWindow.print();
+                };
             });
-        </script>  --}}
+        </script>
     </section>
 @endsection

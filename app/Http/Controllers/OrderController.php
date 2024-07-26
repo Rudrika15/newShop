@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Sku;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -14,19 +15,26 @@ class OrderController extends Controller
     {
         // Get today's date
         $today = now()->startOfDay();
-    
+
         // Fetch orders created today
-        $orders = Order::whereDate('created_at', $today)->get();
-    
-        return view('order.index', compact('orders'));
+        $skus = Sku::all();
+        $orders = Order::whereDate('created_at', $today)->paginate(5);
+
+        return view('order.index', compact('orders', 'skus'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function print()
     {
-        //
+        // Get today's date
+        $today = now()->startOfDay();
+
+        // Fetch orders created today
+        $skus = Sku::all();
+        $orders = Order::whereDate('created_at', $today)->get();
+        return view('order.printReport', compact('orders', 'skus'));
     }
 
     /**
