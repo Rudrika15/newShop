@@ -9,6 +9,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductStockController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SkuController;
+use App\Http\Controllers\SliderController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
@@ -54,6 +55,17 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/sku/delete/{id}', [SkuController::class, 'delete'])->name('sku.delete');
     Route::get('/sku/restore/{id}', [SkuController::class, 'restore'])->name('sku.restore');
     Route::get('/sku/force-delete/{id}', [SkuController::class, 'destroy'])->name('sku.destroy');
+
+    // Slider
+    Route::get('/slider/index', [SliderController::class, 'index'])->name('slider.index');
+    Route::get('/slider/trash/', [SliderController::class, 'trash'])->name('slider.trash');
+    Route::get('/slider/create', [SliderController::class, 'create'])->name('slider.create');
+    Route::post('/slider/store', [SliderController::class, 'store'])->name('slider.store');
+    Route::get('/slider/edit/{id}', [SliderController::class, 'edit'])->name('slider.edit');
+    Route::post('/slider/update/{slider}', [SliderController::class, 'update'])->name('slider.update');
+    Route::get('/slider/delete/{id}', [SliderController::class, 'delete'])->name('slider.delete');
+    Route::get('/slider/restore/{id}', [SliderController::class, 'restore'])->name('slider.restore');
+    Route::get('/slider/force-delete/{id}', [SliderController::class, 'destroy'])->name('slider.destroy');
 
     //Category
     Route::get('/category/index', [CategoryController::class, 'index'])->name('category.index');

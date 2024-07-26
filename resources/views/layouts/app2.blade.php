@@ -200,6 +200,28 @@
                     <!-- Add more menu items for SKU management here... -->
                 </ul>
             </li><!-- End SKU Management Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('slider.index') ? '' : 'collapsed' }}"
+                    data-bs-target="#slider-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-box"></i><span>Slider Management</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="slider-nav" class="nav-content collapse {{ request()->routeIs('slider.index') ? 'show' : '' }}"
+                    data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ route('slider.index') }}"
+                            class="{{ request()->routeIs('slider.index') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>Slider List</span>
+                        </a>
+                    </li>
+                    {{--  <li>
+                      <a href="{{ route('sku.create') }}">
+                          <i class="bi bi-circle"></i><span>Create SKU</span>
+                      </a>
+                  </li>  --}}
+                    <!-- Add more menu items for SKU management here... -->
+                </ul>
+            </li><!-- End SKU Management Nav -->
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('product.index') ? '' : 'collapsed' }}"
                     data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">

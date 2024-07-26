@@ -49,7 +49,7 @@ class ProductController extends Controller
         // Validate the data
         $validatedData = $request->validate([
             'title' => 'required',
-            'main_image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'main_image' => 'nullable|image|max:2048',
             'categoryid' => 'required|exists:categories,id',
             'description' => 'required',
             'base_price' => 'required|numeric',
