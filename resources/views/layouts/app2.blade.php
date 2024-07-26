@@ -204,7 +204,7 @@
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('slider.index') ? '' : 'collapsed' }}"
                     data-bs-target="#slider-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-box"></i><span>Slider Management</span><i class="bi bi-chevron-down ms-auto"></i>
+                    <i class="bi bi-images"></i><span>Slider Management</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="slider-nav" class="nav-content collapse {{ request()->routeIs('slider.index') ? 'show' : '' }}"
                     data-bs-parent="#sidebar-nav">
