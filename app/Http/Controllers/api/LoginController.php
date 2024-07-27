@@ -15,14 +15,16 @@ class LoginController extends Controller
     {
 
         $rules = array(
-            'email' => 'required',
+            'number' => 'required',
             'password' => 'required',
         );
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return $validator->errors();
         }
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('contact', $request->number)->first();
+        $user->password = Hash::make('1234');
+        $user->save();
 
         if ($user) {
 
@@ -39,5 +41,4 @@ class LoginController extends Controller
             }
         }
     }
-
 }

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('district');
             $table->string('city');
             $table->string('pincode');
+            $table->boolean('isDeliverable')->default(true);
+            $table->string('charges')->default(0);
             $table->timestamps();
         });
     }
