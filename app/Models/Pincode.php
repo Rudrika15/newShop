@@ -9,8 +9,11 @@ class Pincode extends Model
 {
     use HasFactory;
     
-    protected $fillable = ['pincode'];
-    protected $table = "pincodes";
-    
+    // protected $table = "pincodes";
+
+    protected $table = 'pincodes';
+
+    // Optionally, specify fillable fields if using mass assignment
+    protected $fillable = ['state', 'district', 'city', 'pincode', 'isDeliverable', 'deliveryCharges'];
 }
 

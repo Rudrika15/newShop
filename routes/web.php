@@ -106,5 +106,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
 
     // Pincodes
-    Route::get('/pincode/index', [PincodeController::class, 'index'])->name('pincode.index');
+ Route::get('pincode/index', [PincodeController::class, 'index'])->name('pincode.index');
+Route::get('pincodes/fetch', [PincodeController::class, 'fetchPincodes'])->name('pincodes.fetch');
+Route::post('pincodes/update', [PincodeController::class, 'updatePincode'])->name('pincodes.update');
+
 });

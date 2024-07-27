@@ -48,7 +48,7 @@ class Util
         ];
         return response($response, 200);
     }
-    public static function getPincodeResponse($data, $message = "Pincode List")
+    public static function getPincodesResponse($data, $message = "Pincode List")
     {
         $response = [
             'message' => $message,
@@ -83,6 +83,45 @@ class Util
             'message' => $message,
             'errors' => $errors
         ], $statusCode);
+    }
+
+    public static function getPincodeResponse($pincodes)
+    {
+        // Check if the input is a collection
+        if ($pincodes instanceof \Illuminate\Database\Eloquent\Collection) {
+            return $pincodes->map(function ($pincode) {
+                return [
+                    'state' => $pincode->state,
+                    'district' => $pincode->district,
+                    'city' => $pincode->city,
+                    'pincode' => $pincode->pincode,
+                    'isDeliverbale' => $pincode->isDeliverable,
+                    'deliveryCharges'=> $pincode->deliveryCharges
+                ];
+            });
+        }
+
+        // If it's a single record
+        return [
+            'state' => $pincodes->state,
+            'district' => $pincodes->district,
+            'city' => $pincodes->city,
+            'pincode' => $pincodes->pincode,
+            'isDeliverbale' => $pincodes->isDeliverable,
+            'deliveryCharges' => $pincodes->deliveryCharges
+        ];
+    }
+
+    public static function getPincodesListResponse($pincodes)
+    {
+        return $pincodes->map(function ($pincode) {
+            return [
+                'state' => $pincode->state,
+                'district' => $pincode->district,
+                'city' => $pincode->city,
+                'pincode' => $pincode->pincode,
+            ];
+        });
     }
 
 }
