@@ -116,7 +116,7 @@ class UserController extends Controller
 
         $user->update($input);
         return \redirect()->route('user.index')
-            ->with('success', 'User Password updated Successfully');
+            ->with('success', ' Password updated Successfully');
     }
 
     public function edit(Request $request, string $id)
@@ -184,4 +184,7 @@ class UserController extends Controller
         $request->session()->regenerateToken();
         return redirect()->route('login')->with('success', 'You have been logged out successfully');
     }
+
+
+
 }

@@ -1,13 +1,14 @@
 <?php
 
-use App\Http\Controllers\api\CategoryapiController;
-use App\Http\Controllers\api\LoginController;
-use App\Http\Controllers\api\MyorderController;
-use App\Http\Controllers\api\OrderapiController;
-use App\Http\Controllers\api\PincodeapiController;
-use App\Http\Controllers\api\ProductapiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\api\LoginController;
+use App\Http\Controllers\api\OrderController;
+use App\Http\Controllers\api\MyOrderController;
+use App\Http\Controllers\api\PincodeController;
+use App\Http\Controllers\api\ProductController;
+use App\Http\Controllers\api\CategoryController;
+use App\Http\Controllers\api\ChangePinController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -20,12 +21,16 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-    Route::get('/getProductList', [ProductapiController::class, 'getProductList']);
-    Route::get('/getOrderList', [OrderapiController::class, 'getOrderList']);
-    Route::get('/getPincode', [PincodeapiController::class, 'getPincode']);
-    Route::get('/getMyorderList', [MyorderController::class, 'getMyorderList']);
-    Route::get('/getCategoryList', [CategoryapiController::class, 'getCategoryfilter']);
-    Route::post('/orderSave', [OrderapiController::class, 'orderSave']);
+    Route::get('/getProductList', [ProductController::class, 'getProductList']);
+    Route::get('/getOrderList', [OrderController::class, 'getOrderList']);
+    Route::get('/getAllPincode', [PincodeController::class, 'getAllPincode']);
+    Route::get('/getMyOrderList', [MyOrderController::class, 'getMyOrderList']);
+    Route::get('/getCategoryList', [CategoryController::class, 'getCategoryfilter']);
+    Route::post('/orderSave', [OrderController::class, 'orderSave']);
+
+
+    //changePin
+    Route::post('/updatePin', [ChangePinController::class, 'updatePin'])->name('user.updatepin');
 });
 
 Route::post('/login', [LoginController::class, 'login']);

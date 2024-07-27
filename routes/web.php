@@ -6,10 +6,12 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\Product_stockController;
+use App\Http\Controllers\PincodeController;
+use App\Http\Controllers\ProductStockController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SkuController;
-use App\Http\Controllers\SkusController;
+use App\Http\Controllers\SliderController;
+// use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
@@ -17,10 +19,10 @@ Route::get('/', function () {
 });
 
 // Route::get('/demo', function () {
-//     return view('home');
+    // return view('home');
 // });
 
-
+// . 
 //All Normal Users Routes List
 Auth::routes();
 
@@ -42,6 +44,9 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/user/force-delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
     Route::get('logout', [UserController::class, 'logout'])->name('logout');
 
+    //changepin
+    Route::post('/user/updatePin/{id}', [UserController::class, 'updatePin'])->name('user.updatePin');
+
     // SKU 
     Route::get('/sku/index', [SkuController::class, 'index'])->name('sku.index');
     Route::get('/sku/trash/', [SkuController::class, 'trash'])->name('sku.trash');
@@ -52,6 +57,17 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/sku/delete/{id}', [SkuController::class, 'delete'])->name('sku.delete');
     Route::get('/sku/restore/{id}', [SkuController::class, 'restore'])->name('sku.restore');
     Route::get('/sku/force-delete/{id}', [SkuController::class, 'destroy'])->name('sku.destroy');
+
+    // Slider
+    Route::get('/slider/index', [SliderController::class, 'index'])->name('slider.index');
+    Route::get('/slider/trash/', [SliderController::class, 'trash'])->name('slider.trash');
+    Route::get('/slider/create', [SliderController::class, 'create'])->name('slider.create');
+    Route::post('/slider/store', [SliderController::class, 'store'])->name('slider.store');
+    Route::get('/slider/edit/{id}', [SliderController::class, 'edit'])->name('slider.edit');
+    Route::post('/slider/update/{slider}', [SliderController::class, 'update'])->name('slider.update');
+    Route::get('/slider/delete/{id}', [SliderController::class, 'delete'])->name('slider.delete');
+    Route::get('/slider/restore/{id}', [SliderController::class, 'restore'])->name('slider.restore');
+    Route::get('/slider/force-delete/{id}', [SliderController::class, 'destroy'])->name('slider.destroy');
 
     //Category
     Route::get('/category/index', [CategoryController::class, 'index'])->name('category.index');
@@ -65,8 +81,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/category/force-delete/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 
     //stock update 
-    Route::get('/admin/product-stock/{id}/edit', [Product_stockController::class, 'edit'])->name('product-stock.edit');
-    Route::put('/admin/product-stock/{id}', [Product_stockController::class, 'update'])->name('product-stock.update');
+    Route::get('/admin/product-stock/{id}/edit', [ProductStockController::class, 'edit'])->name('product-stock.edit');
+    Route::put('/admin/product-stock/{id}', [ProductStockController::class, 'update'])->name('product-stock.update');
     // Route::get('catalog/create', [CatalogController::class, 'index'])->name('catalog.index');
     // Route::get('catalog/post', [CatalogController::class, 'index'])->name('catalog.index');
 
@@ -87,4 +103,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     // Report
     Route::get('report/index', [OrderController::class, 'index'])->name('report.index');
     Route::get('report/printData', [OrderController::class, 'print'])->name('report.print');
+
+
+    // Pincodes
+    Route::get('/pincode/index', [PincodeController::class, 'index'])->name('pincode.index');
 });

@@ -10,6 +10,7 @@ class Pincode extends Model
     use HasFactory;
     
     protected $fillable = ['pincode'];
-    protected $table = "pincode";
+    protected $table = "pincodes";
     
 }
+

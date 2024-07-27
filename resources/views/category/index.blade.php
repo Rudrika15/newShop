@@ -1,11 +1,11 @@
 @extends('layouts.app2')
 @section('content')
     <section class="section">
-        @if ($message = Session::get('success'))
-            <div class="col-lg-6 alert alert-success" id="successMessage">
+        {{-- @if ($message = Session::get('success'))
+            <div class="col-lg-12 alert alert-success" id="successMessage">
                 <p>{{ $message }}</p>
             </div>
-        @endif
+        @endif --}}
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
@@ -14,9 +14,9 @@
                             <div class="col-lg-6">
                                 <h4 class="pt-2">
                                     @if (count($categories) > 0)
-                                        CATEGORY LIST
+                                        Category List
                                     @else
-                                        There are no data
+                                        There are no data to show
                                     @endif
                                 </h4>
                             </div>
@@ -26,7 +26,7 @@
                                 </span>
                                 <span style="float:right;"><a href="{{ route('category.create') }}"
                                         class="btn btn-primary ms-2">Add
-                                        category</a>
+                                        Category</a>
                                 </span>
                             </div>
                         </div>
