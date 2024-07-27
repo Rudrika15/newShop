@@ -23,10 +23,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/getProductList', [ProductController::class, 'getProductList']);
     Route::get('/getOrderList', [OrderController::class, 'getOrderList']);
-    Route::get('/getAllPincode', [PincodeController::class, 'getAllPincode']);
     Route::get('/getMyOrderList', [MyOrderController::class, 'getMyOrderList']);
     Route::get('/getCategoryList', [CategoryController::class, 'getCategoryfilter']);
     Route::post('/orderSave', [OrderController::class, 'orderSave']);
+
+    //pincode
+
+    Route::get('/pincodes', [PincodeController::class, 'getAllPincodes']);
+
+    Route::get('/pincode-details', [PincodeController::class, 'getPincodeDetails']);
+
 
 
     //changePin
