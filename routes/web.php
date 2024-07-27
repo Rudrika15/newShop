@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductStockController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SkuController;
 use App\Http\Controllers\SliderController;
+// use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
@@ -18,10 +19,10 @@ Route::get('/', function () {
 });
 
 // Route::get('/demo', function () {
-//     return view('home');
+    // return view('home');
 // });
 
-
+// . 
 //All Normal Users Routes List
 Auth::routes();
 
