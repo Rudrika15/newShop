@@ -16,18 +16,4 @@ class ProductController extends Controller
         return response()->json($catalogs);
     }
 
-    public function getPincode(Request $req)
-    {
-        try {
-            $code = $req->pincode;
-            $pincode = Pincode::where('pincode', '=', $code)->first();
-            if ($pincode) {
-                return response()->json($pincode);
-            } else {
-                return response()->json(["message" => "not found"]);
-            }
-        } catch (Exception $err) {
-            return response()->json($err);
-        }
-    }
 }
