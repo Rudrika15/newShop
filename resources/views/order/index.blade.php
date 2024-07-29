@@ -50,21 +50,9 @@
                                                 <td>{{ $order->price }}</td>
                                                 <td>
                                                     @if ($order->product && $order->product->sku)
-                                                    {{ $order->product->sku }}
-                                                @endif
+                                                        {{ $order->product->sku }}
+                                                    @endif
                                                 </td>
-                                                {{--  <td>
-                                                <div class="d-flex gap-2 justify-content-center">
-                                                    <div>
-                                                        <a href="{{ route('category.edit', $category->id) }}"
-                                                            class="btn btn-primary btn-sm shadow-none mb-2 ">Edit</a>
-                                                    </div>
-                                                    <div>
-                                                        <button class="delete-user btn btn-danger btn-sm shadow-none"
-                                                            data-id="{{ $category->id }}">Delete</button>
-                                                    </div>
-                                                </div>
-                                            </td>  --}}
                                         @endforeach
                                         </tr>
                                         @if (!$loop->last)

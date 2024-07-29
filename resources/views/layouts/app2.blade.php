@@ -204,9 +204,11 @@
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('slider.index') ? '' : 'collapsed' }}"
                     data-bs-target="#slider-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-images"></i><span>Slider Management</span><i class="bi bi-chevron-down ms-auto"></i>
+                    <i class="bi bi-images"></i><span>Slider Management</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
                 </a>
-                <ul id="slider-nav" class="nav-content collapse {{ request()->routeIs('slider.index') ? 'show' : '' }}"
+                <ul id="slider-nav"
+                    class="nav-content collapse {{ request()->routeIs('slider.index') ? 'show' : '' }}"
                     data-bs-parent="#sidebar-nav">
                     <li>
                         <a href="{{ route('slider.index') }}"
@@ -258,7 +260,8 @@
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('pincode.index') ? '' : 'collapsed' }}"
                     data-bs-target="#pincode-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-geo-alt-fill"></i><span>Pincode Management</span><i class="bi bi-chevron-down ms-auto"></i>
+                    <i class="bi bi-geo-alt-fill"></i><span>Pincode Management</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="pincode-nav"
                     class="nav-content collapse {{ request()->routeIs('pincode.index') ? 'show' : '' }}"

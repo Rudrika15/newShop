@@ -1,98 +1,95 @@
 @extends('layouts.app2')
 
 @section('content')
-<div class="container">
-    @if ($message = Session::get('success'))
-    <div class="col-lg-6 alert alert-success" id="successMessage">
-        <p>{{ $message }}</p>
-    </div>
-    @endif
-    <div class="row justify-content-center" style="background-color: rgb(155, 191, 212)">
-        <div class="row p-2">
-            <div class="col-lg-6">
-                <h4 class="pt-2">
-                    @if (count($catalogs) > 0)
-                    Product Trash Data
-                    @else
-                    There are no data to show
-                    @endif
-                </h4>
+    <div class="container">
+        @if ($message = Session::get('success'))
+            <div class="col-lg-6 alert alert-success" id="successMessage">
+                <p>{{ $message }}</p>
             </div>
-            <div class="col-lg-6 d-flex justify-content-end align-items-center">
-                <span style="float:right;"><a href="{{ route('product.index') }}" class="btn btn-primary shadow-none">Go
-                        Back</a></span>
+        @endif
+        <div class="row justify-content-center" style="background-color: #D6EFD8">
+            <div class="row p-2">
+                <div class="col-lg-6">
+                    <h4 class="pt-2">
+                        @if (count($catalogs) > 0)
+                            Product Trash Data
+                        @else
+                            There are no data to show
+                        @endif
+                    </h4>
+                </div>
+                <div class="col-lg-6 d-flex justify-content-end align-items-center">
+                    <span style="float:right;"><a href="{{ route('product.index') }}" class="btn btn-primary shadow-none">Go
+                            Back</a></span>
+                </div>
             </div>
-        </div>
-        @if (count($catalogs) !== 0)
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead class="table-secondary">
-                    <tr class="text-center">
-                        <th>ID</th>
-                        <th>Catalog Name</th>
-                        <th>Main Image</th>
-                        <th>Action</th>
-                        <th>Product</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($catalogs as $catalog)
-                    <tr class="text-center">
-                        <td>{{ $catalog->id }}</td>
-                        <td>{{ $catalog->title }}</td>
-                        <td>
-                            <img src="{{ asset('images/catalog/' . $catalog->main_image) }}" width="50" height="50">
-                        </td>
-                        <td>
-                            <div class="d-flex gap-2 justify-content-center">
-                                <div>
-                                    {{-- <a href="{{ route('product.restore', $catalog->id) }}"
-                                        class="btn btn-primary btn-sm shadow-none">Restore
-                                    </a> --}}
+            @if (count($catalogs) !== 0)
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-secondary">
+                            <tr class="text-center">
+                                <th>ID</th>
+                                <th>Catalog Name</th>
+                                <th>Main Image</th>
+                                <th>Product</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($catalogs as $catalog)
+                                <tr class="text-center">
+                                    <td>{{ $catalog->id }}</td>
+                                    <td>{{ $catalog->title }}</td>
+                                    <td>
+                                        <img src="{{ asset('images/catalog/' . $catalog->main_image) }}" width="50"
+                                            height="50">
+                                    </td>
 
-                                    <button class="product-restore btn btn-primary btn-sm shadow-none"
-                                        data-id="{{ $catalog->id }}">Restore</button>
-
-                                </div>
-                                <div>
-                                    <div>
-                                        <button class="delete-user btn btn-danger btn-sm shadow-none"
-                                            data-id="{{ $catalog->id }}">Delete</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="d-flex gap-2 justify-content-center flex-nowrap">
-                                @foreach ($catalog->products as $product)
-                                <div>
-                                    <a href="{{ route('product.view', $product->id) }}"
-                                        class="btn btn-primary btn-sm shadow-none">
-                                        {{ $product->slug }}
-                                    </a>
-                                </div>
-                                {{-- <div>
+                                    <td>
+                                        <div class="d-flex gap-2 justify-content-center flex-nowrap">
+                                            @foreach ($catalog->products as $product)
+                                                <div>
+                                                    <a href="{{ route('product.view', $product->id) }}"
+                                                        class="btn btn-primary btn-sm shadow-none">
+                                                        {{ $product->slug }}
+                                                    </a>
+                                                </div>
+                                                {{-- <div>
                                     <button class="delete-user btn btn-danger btn-sm shadow-none"
                                         data-id="{{ $product->id }}">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </div> --}}
-                                @endforeach
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                                            @endforeach
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2 justify-content-center">
+                                            <div>
+                                                <button class="product-restore btn btn-primary btn-sm shadow-none"
+                                                    data-id="{{ $catalog->id }}">Restore</button>
+                                            </div>
+                                            <div>
+                                                <div>
+                                                    <button class="delete-user btn btn-danger btn-sm shadow-none"
+                                                        data-id="{{ $catalog->id }}">Delete</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
         </div>
-        @endif
     </div>
-</div>
 
-{!! $catalogs->withQueryString()->links('pagination::bootstrap-5') !!}
+    {!! $catalogs->withQueryString()->links('pagination::bootstrap-5') !!}
 
-<script>
-    const deleteButtons = document.querySelectorAll('.delete-user');
+    <script>
+        const deleteButtons = document.querySelectorAll('.delete-user');
 
         deleteButtons.forEach(button => {
             button.addEventListener('click', (e) => {
@@ -117,11 +114,11 @@
                 });
             });
         });
-</script>
+    </script>
 
 
-<script>
-    const productRestore = document.querySelectorAll('.product-restore');
+    <script>
+        const productRestore = document.querySelectorAll('.product-restore');
 
         productRestore.forEach(button => {
             button.addEventListener('click', (e) => {
@@ -146,5 +143,5 @@
                 });
             });
         });
-</script>
+    </script>
 @endsection

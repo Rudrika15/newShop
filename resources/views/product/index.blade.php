@@ -1,13 +1,13 @@
 @extends('layouts.app2')
 
 @section('content')
-{{-- <div class="container-fluid mb-2">
+<div class="container-fluid mb-2">
     @if ($message = Session::get('success'))
     <div class="col-lg-6 alert alert-success" id="successMessage">
         <p>{{ $message }}</p>
     </div>
-    @endif --}}
-    <div class="row justify-content-center" style="background-color: rgb(155, 191, 212)">
+    @endif
+    <div class="row justify-content-center" style="background-color: #D6EFD8">
         <div class="row p-3">
             <div class="col-lg-6">
                 <h4 class="pt-2">
