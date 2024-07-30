@@ -16,18 +16,15 @@
                 <div class="card-body">
                     <div class="row p-3">
                         <div class="col-lg-6">
-                            {{-- <h3>
-                                @if (count($orders) > 0)
+                            <h3 id="ordersList-heading">
                                 Order List
-                                @else
-                                There are no data to show
-                                @endif
-                            </h3> --}}
-
-                            <h3>Order List</h3>
-                            <p style="color: red; font-weight: bold;">
-                                *You can change the order status by clicking on the order status field.
-                            </p>
+                            </h3>
+                        </div>
+                        <div class="col-lg-6 d-flex justify-content-end align-items-center">
+                            <div class="d-flex justify-content-end">
+                                <span class="text-danger"><strong>* You can update the Order Status by clicking on the
+                                        respective field.</strong></span>
+                            </div>
                         </div>
                         <div class="col-lg-6 d-flex justify-content-end align-items-center">
                             {{-- <span style="float:right;"><a href="{{ route('slider.trash') }}"
@@ -40,7 +37,6 @@
                         </div>
                     </div>
                     <!-- SKU List Table -->
-
                     @if (count($orders) !== 0)
                     <table id="slider-table" class="table table-bordered text-center">
                         <thead class="table-secondary">
