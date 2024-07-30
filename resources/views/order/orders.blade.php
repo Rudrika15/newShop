@@ -16,13 +16,18 @@
                 <div class="card-body">
                     <div class="row p-3">
                         <div class="col-lg-6">
-                            <h3>
+                            {{-- <h3>
                                 @if (count($orders) > 0)
                                 Order List
                                 @else
                                 There are no data to show
                                 @endif
-                            </h3>
+                            </h3> --}}
+
+                            <h3>Order List</h3>
+                            <p style="color: red; font-weight: bold;">
+                                *You can change the order status by clicking on the order status field.
+                            </p>
                         </div>
                         <div class="col-lg-6 d-flex justify-content-end align-items-center">
                             {{-- <span style="float:right;"><a href="{{ route('slider.trash') }}"
