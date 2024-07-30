@@ -111,4 +111,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('pincode/index', [PincodeController::class, 'index'])->name('pincode.index');
     Route::get('pincodes/fetch', [PincodeController::class, 'fetchPincodes'])->name('pincodes.fetch');
     Route::post('pincodes/update', [PincodeController::class, 'updatePincode'])->name('pincodes.update');
+
+    //orders
+    // Route::post('/update-order-status', [OrderController::class, 'updateOrderStatus'])->name('updateOrderStatus');
+    Route::post('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
 });

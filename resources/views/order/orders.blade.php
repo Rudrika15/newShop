@@ -55,18 +55,29 @@
                             @foreach ($orders as $order)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $order->orders->user_id ?? '-' }}</td>
+                                <td>{{ $order->orders->users->name ?? '-' }}</td>
                                 <td>{{ $order->order_id ?? '-' }}</td>
                                 <td>{{ $order->orders->payment_id ?? '-' }}</td>
                                 <td>{{ $order->product->slug ?? '-' }}</td>
                                 <td>{{ $order->quantity ?? '-' }}</td>
-                                <td>{{ $order->orderStatus ?? '-' }}</td>
+                                <td>
+                                    <select class="form-control order-status" data-order-id="{{ $order->id }}">
+                                        <option value="Confirm" {{ $order->orderStatus == 'Confirm' ? 'selected' : ''
+                                            }}>Confirm</option>
+                                        <option value="Shipped" {{ $order->orderStatus == 'Shipped' ? 'selected' : ''
+                                            }}>Shipped</option>
+                                        <option value="Out for Delivery" {{ $order->orderStatus == 'Out for Delivery' ?
+                                            'selected' : '' }}>Out for Delivery</option>
+                                        <option value="Delivered" {{ $order->orderStatus == 'Delivered' ? 'selected' :
+                                            '' }}>Delivered</option>
+                                    </select>
+                                </td>
+                                {{-- {{$order->id}} --}}
                                 <td>{{ $order->price ?? '-' }}</td>
                                 <td>{{ $order->orders->amount ?? '-' }}</td>
                             </tr>
                             @endforeach
                         </tbody>
-                    </table>
                     </table>
                     @endif
                 </div>
@@ -77,4 +88,54 @@
     {!! $orders->withQueryString()->links('pagination::bootstrap-5') !!}
 
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.order-status').forEach(function(selectElement) {
+        selectElement.addEventListener('change', function() {
+            var orderId = this.getAttribute('data-order-id');
+            var newStatus = this.value;
+
+            fetch(`/orders/${orderId}/update-status`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ orderStatus: newStatus })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    Swal.fire(
+                        'Updated!',
+                        'Order status has been updated.',
+                        'success'
+                    );
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        'There was an error updating the order status.',
+                        'error'
+                    );
+                }
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+                Swal.fire(
+                    'Error!',
+                    'There was a problem with the fetch operation.',
+                    'error'
+                );
+            });
+        });
+    });
+});
+</script>
+
 @endsection
