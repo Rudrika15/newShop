@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Sku;
 use Illuminate\Http\Request;
 
@@ -35,6 +36,15 @@ class OrderController extends Controller
         $skus = Sku::all();
         $orders = Order::whereDate('created_at', $today)->get();
         return view('order.printReport', compact('orders', 'skus'));
+    }
+
+
+    public function allOrders()
+    {
+        $orders = OrderDetail::with('product')
+        ->with('orders')
+        ->paginate(10);
+        return view('order.orders', compact('orders'));
     }
 
     /**

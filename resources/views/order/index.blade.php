@@ -15,7 +15,7 @@
                             <div class="col-lg-6">
                                 <h4 class="pt-2">
                                     @if (count($orders) > 0)
-                                        REPOERT LIST
+                                        Order List
                                     @else
                                         There are no data
                                     @endif

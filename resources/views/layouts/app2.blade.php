@@ -239,6 +239,22 @@
                 </ul>
             </li><!-- End Charts Nav -->
             <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('orders.index') ? '' : 'collapsed' }}"
+                    data-bs-target="#orders-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-box"></i><span>Order Management</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="orders-nav"
+                    class="nav-content collapse {{ request()->routeIs('orders.index') ? 'show' : '' }}"
+                    data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ route('orders.index') }}"
+                            class="{{ request()->routeIs('orders.index') ? 'active' : '' }}">
+                            <i class="bi bi-box"></i><span>Order List</span>
+                        </a>
+                    </li>
+                </ul>
+            </li><!-- End Charts Nav -->
+            <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('report.index') ? '' : 'collapsed' }}"
                     data-bs-target="#report-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-graph-up"></i><span>Reports</span><i class="bi bi-chevron-down ms-auto"></i>

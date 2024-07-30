@@ -19,7 +19,7 @@ Route::get('/', function () {
 });
 
 // Route::get('/demo', function () {
-    // return view('home');
+// return view('home');
 // });
 
 // . 
@@ -104,10 +104,11 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('report/index', [OrderController::class, 'index'])->name('report.index');
     Route::get('report/printData', [OrderController::class, 'print'])->name('report.print');
 
+    Route::get('orders/index', [OrderController::class, 'allOrders'])->name('orders.index');
 
     // Pincodes
- Route::get('pincode/index', [PincodeController::class, 'index'])->name('pincode.index');
-Route::get('pincodes/fetch', [PincodeController::class, 'fetchPincodes'])->name('pincodes.fetch');
-Route::post('pincodes/update', [PincodeController::class, 'updatePincode'])->name('pincodes.update');
 
+    Route::get('pincode/index', [PincodeController::class, 'index'])->name('pincode.index');
+    Route::get('pincodes/fetch', [PincodeController::class, 'fetchPincodes'])->name('pincodes.fetch');
+    Route::post('pincodes/update', [PincodeController::class, 'updatePincode'])->name('pincodes.update');
 });
