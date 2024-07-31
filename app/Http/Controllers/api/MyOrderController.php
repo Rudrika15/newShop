@@ -66,4 +66,69 @@ class MyOrderController extends Controller
             return response()->json(['error' => $err->getMessage()]);
         }
     }
+
+    //     public function updateCustomerAddress(Request $request)
+    // {
+    //     try {
+    //         // Validate the incoming request
+    //         $request->validate([
+    //             'order_id' => 'required|integer|exists:order_details,order_id',
+    //             'customer_address' => 'required|string|max:255',
+    //         ]);
+
+    //         // Retrieve the order by ID
+    //         $order = OrderDetail::findOrFail($request->order_id);
+
+    //         // Update the customer's address
+    //         $order->customer_address = $request->customer_address;
+    //         $order->save();
+
+    //         // Return a success response
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Customer address updated successfully',
+    //             'order_id' => $request->order_id,
+    //             'customer_address' => $order->customer_address,
+    //         ]);
+    //     } catch (Exception $err) {
+    //         // Return an error response
+    //         return response()->json(['error' => $err->getMessage()], 500);
+    //     }
+    // }
+
+    public function updateCustomerAddress(Request $request)
+    {
+        try {
+            $request->validate([
+                'order_id' => 'required|integer|exists:order_details,order_id',
+                'customer_address' => 'required|string|max:255',
+            ]);
+
+            $orderDetail = OrderDetail::findOrFail($request->order_id);
+
+            $orderDetail->customer_address = $request->customer_address;
+            $orderDetail->save();
+
+            $order = $orderDetail->order;
+
+            $user_id = $order->user_id;
+            $user_details = $order->users;
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Customer address updated successfully',
+                'order_id' => $request->order_id,
+                'customer_address' => $orderDetail->customer_address,
+                'user_id' => $user_id,
+                'user_details' => [
+                    'name' => $user_details->name,
+                    'email' => $user_details->email,
+                    'contact' => $user_details->contact,
+                ],
+            ]);
+        } catch (Exception $err) {
+            return response()->json(['error' => $err->getMessage()], 500);
+        }
+    }
+
 }

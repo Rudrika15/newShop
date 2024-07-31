@@ -14,15 +14,15 @@ class LoginController extends Controller
     public function login(Request $request)
     {
 
-        $rules = array([
-            'number' => 'required',
-            'password' => 'required',
-        ]);
-        $validator = Validator::make($request->all(), $rules);
+        // $rules = array([
+        //     'number' => 'required',
+        //     'password' => 'required',
+        // ]);
+        // $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json($validator->errors(), 400);
+        // }
         $user = User::where('contact', $request->number)->first();
         $user->password = Hash::make('1234');
         $user->save();

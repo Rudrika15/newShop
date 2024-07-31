@@ -42,7 +42,7 @@
                         <thead class="table-secondary">
                             <tr>
                                 <th>No</th>
-                                <th>User ID</th>
+                                <th>User Name</th>
                                 <th>Order ID</th>
                                 <th>Payment ID</th>
                                 <th>Product Name</th>
@@ -56,9 +56,9 @@
                             @foreach ($orders as $order)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $order->orders->users->name ?? '-' }}</td>
+                                <td>{{ $order->order->users->name ?? '-' }}</td>
                                 <td>{{ $order->order_id ?? '-' }}</td>
-                                <td>{{ $order->orders->payment_id ?? '-' }}</td>
+                                <td>{{ $order->order->payment_id ?? '-' }}</td>
                                 <td>{{ $order->product->slug ?? '-' }}</td>
                                 <td>{{ $order->quantity ?? '-' }}</td>
                                 <td>
@@ -75,7 +75,7 @@
                                 </td>
                                 {{-- {{$order->id}} --}}
                                 <td>{{ $order->price ?? '-' }}</td>
-                                <td>{{ $order->orders->amount ?? '-' }}</td>
+                                <td>{{ $order->order->amount ?? '-' }}</td>
                             </tr>
                             @endforeach
                         </tbody>

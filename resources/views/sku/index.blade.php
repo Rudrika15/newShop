@@ -35,42 +35,8 @@
                         </div>
                         <!-- SKU List Table -->
 
-                        @if (count($skus) !== 0)
-                        <table id="sku-table" class="table table-bordered text-center">
-                            <thead>
-                                <tr>
-                                    <th>Prefix</th>
-                                    <th>Color Name</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($skus as $sku)
-                                <tr>
-                                    <td>{{ $sku->prefix }}</td>
-                                    <td>{{ $sku->colorname }}</td>
-                                    <td>
-                                        <div class="d-flex gap-2 justify-content-center">
-                                            <div>
-                                                <a href="{{ route('sku.edit', $sku->id) }}"
-                                                    class="btn btn-primary btn-sm shadow-none mb-2 ">Edit</a>
-                                            </div>
-                                            <div>
-                                                <button class="delete-user btn btn-danger btn-sm shadow-none"
-                                                    data-id="{{ $sku->id }}">Delete</button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        @endif
-                    </div>
-                    <!-- SKU List Table -->
-
                     @if (count($skus) !== 0)
-                    <table id="sku-table" class="table table-bordered text-center">
+                    <table id="sku-table" class="table table-bordered text-center mt-3">
                         <thead class="table-secondary">
                             <tr>
                                 <th>Prefix</th>

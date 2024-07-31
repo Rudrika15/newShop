@@ -235,12 +235,11 @@
                     </div>
                 </div>
             </div>
-            <<<<<<< HEAD <div class="row mt-3 mb-3">
+            <div class="row mt-3 mb-3">
                 <div class="col d-flex justify-content-center">
-                    =======
+            
                     <div class="row">
                         <div class="col d-flex justify-content-center my-3">
-                            >>>>>>> a76074e9216438bd169de305a9d319891626856e
                             <button type="submit" class="btn btn-primary">Update</button>
                         </div>
                     </div>

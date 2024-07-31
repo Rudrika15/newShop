@@ -33,6 +33,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //changePin
     Route::post('/updatePin', [ChangePinController::class, 'updatePin'])->name('user.updatepin');
+
+    //updateAddress
+    // Route::post('/updateCustomerAddress', [MyOrderController::class, 'updateCustomerAddress'])->name('order.updateCustomerAddress');
+    Route::post('/update-customer-address', [MyOrderController::class, 'updateCustomerAddress']);
+
 });
 
 Route::post('/login', [LoginController::class, 'login']);

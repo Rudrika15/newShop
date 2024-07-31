@@ -17,7 +17,7 @@
                                     @if (count($orders) > 0)
                                         Order List
                                     @else
-                                        There are no data
+                                        There are no order data to show
                                     @endif
                                 </h4>
                             </div>

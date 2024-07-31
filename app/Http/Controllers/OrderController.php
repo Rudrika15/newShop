@@ -42,7 +42,7 @@ class OrderController extends Controller
     public function allOrders()
     {
         $orders = OrderDetail::with('product')
-        ->with('orders')
+        ->with('order')
         ->paginate(10);
         return view('order.orders', compact('orders'));
     }

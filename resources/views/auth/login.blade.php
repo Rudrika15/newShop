@@ -51,10 +51,10 @@
             background: -webkit-linear-gradient(#27EF9F, #0DB8DE);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: bounce 2s infinite;
+            /* animation: bounce 2s infinite; */
         }
 
-        @keyframes bounce {
+        /* @keyframes bounce {
 
             0%,
             20%,
@@ -71,7 +71,7 @@
             60% {
                 transform: translateY(-10px);
             }
-        }
+        } */
 
         .login-title {
             margin-top: 15px;
@@ -129,7 +129,7 @@
             letter-spacing: 1px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
             transition: background-color 0.3s, color 0.3s;
-            animation: pulse 2s infinite;
+           /* animation: pulse 2s infinite; */
         }
 
         @keyframes pulse {
