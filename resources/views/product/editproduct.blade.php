@@ -12,7 +12,6 @@
             </div>
         </div>
         <div class="row" style="background-color: rgb(236, 236, 236)">
-            {{-- <h1>Edit Product</h1> --}}
             <form method="POST" action="{{ route('product.update', $product->id) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -154,9 +153,7 @@
                             @else
                                 <p>No image found</p>
                             @endif
-
                         </div>
-
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-3">
@@ -164,7 +161,6 @@
                             <label for="quantity" class="form-label">Opening Stock</label>
                             <input class="form-control" type="text" name="quantity" id="quantity"
                                 value="{{ $product->productStocks->first()->quantity ?? '' }}" readonly>
-
                             <span class="text-danger">
                                 @error('quantity')
                                     {{ $message }}

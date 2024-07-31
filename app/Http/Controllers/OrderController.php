@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Sku;
 use Illuminate\Http\Request;
 
@@ -37,6 +38,27 @@ class OrderController extends Controller
         return view('order.printReport', compact('orders', 'skus'));
     }
 
+
+    public function allOrders()
+    {
+        $orders = OrderDetail::with('product')
+        ->with('orders')
+        ->paginate(10);
+        return view('order.orders', compact('orders'));
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $order = OrderDetail::find($id);
+        if ($order) {
+            $order->orderStatus = $request->input('orderStatus');
+            $order->save();
+
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+        }
+    }
     /**
      * Store a newly created resource in storage.
      */

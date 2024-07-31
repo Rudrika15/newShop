@@ -15,15 +15,12 @@ class PincodeController extends Controller
     public function getAllPincodes(Request $request)
     {
         try {
-            // Fetch all pincodes
-            $pincodes = Pincode::all();
+            $pincodes = Pincode::take(50000)->get();
 
-            // Return response in JSON format
             return response()->json([
                 'data' => Util::getPincodesListResponse($pincodes)
             ]);
         } catch (\Exception $e) {
-            // Return a 500 error with the exception message
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -31,14 +28,12 @@ class PincodeController extends Controller
     public function getPincodeDetails(Request $request)
     {
         try {
-            // Fetch pincode from request body
             $code = $request->input('pincode');
 
             if (!$code) {
                 return response()->json(['message' => 'Pincode parameter is required'], 400);
             }
 
-            // Fetch all records matching the pincode
             $pincodes = Pincode::where('pincode', $code)->get();
 
             if ($pincodes->isNotEmpty()) {

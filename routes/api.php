@@ -15,7 +15,6 @@ use App\Http\Controllers\api\ChangePinController;
 // })->middleware('auth:sanctum');
 
 
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -29,12 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/order-save', [MyOrderController::class, 'orderSave']);
 
     //pincode
-
     Route::get('/pincodes', [PincodeController::class, 'getAllPincodes']);
-
     Route::get('/pincode-details', [PincodeController::class, 'getPincodeDetails']);
-
-
 
     //changePin
     Route::post('/updatePin', [ChangePinController::class, 'updatePin'])->name('user.updatepin');
