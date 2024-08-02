@@ -59,7 +59,7 @@
 
             function generateTable(pincodes) {
                 let tableHtml = '<table id="pincode-table" class="table table-bordered text-center">';
-                tableHtml += '<thead class="table-secondary">';
+                tableHtml += '<thead >';
                 tableHtml +=
                     '<tr><th>No</th><th>State</th><th>District</th><th>City</th><th>Pincode</th><th>Is Deliverable</th><th>Delivery Charges</th></tr>';
                 tableHtml += '</thead><tbody>';

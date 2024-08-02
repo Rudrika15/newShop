@@ -38,15 +38,6 @@ h6 {
   font-family: "Nunito", sans-serif;
 }
 
-
-/*--------------------------------------------------------------
-# conatiner
---------------------------------------------------------------*/
-
-.contianer .row{
-  background-color: rgb(155, 191, 212);
-}
-
 /*--------------------------------------------------------------
 # Main
 --------------------------------------------------------------*/
@@ -107,9 +98,6 @@ h6 {
 .back-to-top.active {
   visibility: visible;
   opacity: 1;
-}
-.card-body{
-  background-color: #D6EFD8;
 }
 
 /*--------------------------------------------------------------
@@ -230,9 +218,9 @@ h6 {
 
 /* Card */
 .card {
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   border: none;
-  /* border-radius: 0px 20px  ; */
+  border-radius: 5px;
   box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
 }
 
@@ -242,7 +230,6 @@ h6 {
   background-color: #fff;
   color: #798eb3;
   padding: 15px;
-  font-weight: bold;
 }
 
 .card-title {
@@ -260,7 +247,7 @@ h6 {
 }
 
 .card-body {
-  padding: 0 20px 4px 20px;
+  padding: 0 20px 20px 20px;
 }
 
 .card-img-overlay {
@@ -394,7 +381,7 @@ h6 {
   z-index: 997;
   height: 60px;
   box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
-  background-color: #9CDBA6;
+  background-color: #fff;
   padding-left: 20px;
   /* Toggle Sidebar Button */
   /* Search Bar */
@@ -623,7 +610,7 @@ h6 {
   scrollbar-width: thin;
   scrollbar-color: #aab7cf transparent;
   box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
-  background-color: #9CDBA6;
+  background-color: #fff;
 }
 
 @media (max-width: 1199px) {
@@ -697,9 +684,9 @@ h6 {
   align-items: center;
   font-size: 15px;
   font-weight: 600;
-  color: #899bbd;
+  color: #4154f1;
   transition: 0.3;
-  background: #9CDBA6;
+  background: #f6f9ff;
   padding: 10px 15px;
   border-radius: 4px;
 }
@@ -707,25 +694,25 @@ h6 {
 .sidebar-nav .nav-link i {
   font-size: 16px;
   margin-right: 10px;
-  color: #899bbd;
+  color: #4154f1;
 }
 
 .sidebar-nav .nav-link.collapsed {
-  color: #fafafa;
-  background: #9CDBA6;
+  color: #012970;
+  background: #fff;
 }
 
 .sidebar-nav .nav-link.collapsed i {
-  color: #fafafa;
+  color: #899bbd;
 }
 
 .sidebar-nav .nav-link:hover {
-  color: #fafafa;
-  background: #9CDBA6;
+  color: #4154f1;
+  background: #f6f9ff;
 }
 
 .sidebar-nav .nav-link:hover i {
-  color: #fafafa;
+  color: #4154f1;
 }
 
 .sidebar-nav .nav-link .bi-chevron-down {
@@ -748,7 +735,7 @@ h6 {
   align-items: center;
   font-size: 14px;
   font-weight: 600;
-  color: #899bbd;
+  color: #012970;
   transition: 0.3;
   padding: 10px 0 10px 40px;
   transition: 0.3s;
@@ -763,11 +750,11 @@ h6 {
 
 .sidebar-nav .nav-content a:hover,
 .sidebar-nav .nav-content a.active {
-  color: #899bbd;
+  color: #4154f1;
 }
 
 .sidebar-nav .nav-content a.active i {
-  background-color: #899bbd;
+  background-color: #4154f1;
 }
 
 /*--------------------------------------------------------------
@@ -932,8 +919,6 @@ h6 {
 .dashboard .recent-sales {
   font-size: 14px;
 }
-
-
 
 .dashboard .recent-sales .table thead {
   background: #f6f6fe;

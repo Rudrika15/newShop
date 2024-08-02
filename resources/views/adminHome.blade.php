@@ -88,37 +88,42 @@
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Recent Orders</h5>
-                                    <table class="table table-bordered text-center">
-                                        <thead>
-                                            <tr>
-                                                <th>Order ID</th>
-                                                <th>Customer Name</th>
-                                                <th>Order Date</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>#1234</td>
-                                                <td>John Doe</td>
-                                                <td>2023-02-20</td>
-                                                <td>$100.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>#1235</td>
-                                                <td>Jane Doe</td>
-                                                <td>2023-02-19</td>
-                                                <td>$50.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>#1236</td>
-                                                <td>Bob Smith</td>
-                                                <td>2023-02-18</td>
-                                                <td>$200.00</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <h5 class="card-title">Recent Ordersss</h5>
+                                    @if (count($orders) !== 0)
+                                        <table id="slider-table" class="table table-bordered text-center">
+                                            <thead class="table-secondary">
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>User Name</th>
+                                                    <th>Address</th>
+                                                    <th>Payment ID</th>
+                                                    <th>Product Name</th>
+                                                    <th>Quantity</th>
+                                                    <th>Order Status</th>
+                                                    <th>Price</th>
+                                                    <th>Total Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($orders as $order)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $order->order->users->name ?? '-' }}</td>
+                                                        <td>{{ $order->customer_address ?? '-' }}</td>
+                                                        <td>{{ $order->order->payment_id ?? '-' }}</td>
+                                                        <td>{{ $order->product->slug ?? '-' }}</td>
+                                                        <td>{{ $order->quantity ?? '-' }}</td>
+                                                        <td>
+                                                            {{ $order->orderStatus ?? '-' }}
+                                                        </td>
+                                                        {{-- {{$order->id}} --}}
+                                                        <td>{{ $order->price ?? '-' }}</td>
+                                                        <td>{{ $order->order->amount ?? '-' }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @endif
                                 </div>
                             </div>
                         </div>

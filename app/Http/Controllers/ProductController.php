@@ -119,6 +119,14 @@ class ProductController extends Controller
                 $stock->product_id = $product->id;
                 $stock->quantity = $request->sku['quantity'][$i];
                 $stock->save();
+
+                // save product transaction
+
+                $transaction = new Stock_Transaction();
+                $transaction->product_id = $product->id;
+                $transaction->quantity = $request->sku['quantity'][$i];
+                $transaction->remarks = 'Initial Stock';
+                $transaction->save();
             }
 
             DB::commit();
@@ -258,8 +266,9 @@ class ProductController extends Controller
             Stock_Transaction::create([
                 'product_id' => $product->id,
                 'type' => $request->type, // or 'subtract' based on your needs
-                'quantity' => $productstock,
-                'remarks' => $request->remarks,
+                'quantity' => $request->newstock,
+                'remarks' => 'stock added',
+
             ]);
         }
         return redirect()->route('product.index')->with('success', 'Product Updated Successfully');

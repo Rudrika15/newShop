@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Catalog;
+use App\Models\OrderDetail;
 use App\Models\Product_stock;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -24,8 +25,12 @@ class UserController extends Controller
                 $query->where('quantity', '<=', 10);
             }]);
         }])->paginate(5);
+        $orders = OrderDetail::with('product')
+            ->with('order')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
-        return view('adminHome', compact('catalogs'));
+        return view('adminHome', compact('catalogs', 'orders'));
     }
     //user show
     public function index(Request $request)
@@ -36,6 +41,7 @@ class UserController extends Controller
                 ->orWhere('email', 'like', '%' . $request->input('search') . '%')
                 ->orWhere('contact', 'like', '%' . $request->input('search') . '%');
         })
+            ->where('status', 'Active')
             ->orderBy('created_at', 'desc')->paginate(5);
 
         return view('user.index', compact('users'));
@@ -53,7 +59,7 @@ class UserController extends Controller
     //trash user data
     public function trashUser()
     {
-        $users = User::onlyTrashed()->paginate(5);
+        $users = User::where('status', 'Deleted')->paginate(5);
 
         return view('user.trashuser', compact('users'));
     }
@@ -111,10 +117,26 @@ class UserController extends Controller
     {
         $request->validate([
             'password' => 'required|confirmed|min:6',
+            'password_confirmation' => 'required|min:6|same:password',
+            'oldpassword' => 'required|min:6',
         ]);
-        $input = $request->all();
+        $oldpassword = $request->oldpassword;
+        $password = $request->password;
 
-        $user->update($input);
+        $userId = Auth::user()->id;
+
+
+        $user = User::find($userId);
+        if (Hash::check($oldpassword, $user->password)) {
+            $user->password =   $password;
+            $user->save();
+        } else {
+            return \redirect()->route('user.index')
+                ->with('success', 'Old password is incorrect');
+        }
+
+
+
         return \redirect()->route('user.index')
             ->with('success', ' Password updated Successfully');
     }
@@ -149,7 +171,9 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if ($user) {
-            $user->delete(); // Soft delete the user
+
+            $user->status = 'Deleted';
+            $user->save();
             return redirect()->back()->with('success', 'User deleted successfully');
         }
         return redirect()->back()->with('success', 'User not found');
@@ -158,9 +182,11 @@ class UserController extends Controller
     //restore
     public function restore($id)
     {
-        $user = User::withTrashed()->find($id);
+        $user = User::where('status', 'Deleted')->find($id);
         if ($user) {
-            $user->restore();
+            $user->status = 'Active';
+            $user->save();
+
             return redirect()->back()->with('success', 'User restored successfully');
         }
         return redirect()->back()->with('success', 'User not found');
@@ -169,9 +195,9 @@ class UserController extends Controller
     // permanently delete
     public function destroy($id)
     {
-        $user = User::withTrashed()->find($id);
+        $user = User::where('status', 'Deleted')->find($id);
         if ($user) {
-            $user->forceDelete();
+            $user->delete();
             return redirect()->back()->with('success', 'User permanently deleted successfully');
         }
     }
@@ -184,7 +210,4 @@ class UserController extends Controller
         $request->session()->regenerateToken();
         return redirect()->route('login')->with('success', 'You have been logged out successfully');
     }
-
-
-
 }

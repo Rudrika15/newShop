@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <div class="row p-2" style="background-color: #D6EFD8">
+        <div class="row p-2">
             <div class="col-md-6">
                 <h4 class="pt-2">Create Product</h4>
             </div>

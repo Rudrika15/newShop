@@ -7,7 +7,7 @@
                 <p>{{ $message }}</p>
             </div>
         @endif
-        <div class="row justify-content-center" style="background-color: #D6EFD8">
+        <div class="row justify-content-center">
             <div class="row p-2">
                 <div class="col-lg-6">
                     <h4 class="pt-2">

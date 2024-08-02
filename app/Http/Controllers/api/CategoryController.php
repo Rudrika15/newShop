@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    
     public function getCategoryfilter(Request $req)
     {
         $data = $req->categoryname;

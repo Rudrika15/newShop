@@ -2,25 +2,33 @@
 
 @section('content')
     <div class="conatinter">
-        <div class="col-lg-10 d-flex justify-content-end align-items-center">
-            <span style="float:right;"><a href="{{ route('slider.index') }}" class="btn btn-primary">Back</a></span>
-        </div>
+
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Slider Create</div>
+                    <div class="d-flex justify-content-between  mb-3">
+                        <div class="p-2 fs-4"> Slider Create</div>
+
+                        <div class="p-2 ">
+                            <a href="{{ route('slider.index') }}" class="btn btn-primary">Back</a>
+                        </div>
+
+                    </div>
                     <div class="card-body py-3">
                         <form method="POST" action="{{ route('slider.store') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="row mb-3">
-                                <label for="sliderName" class="col-md-4 col-form-label text-md-end">Slider Name</label>
+                                <label for="sliderName" class="col-form-label ">Slider Name</label>
 
-                                <div class="col-md-6">
-                                    <input id="sliderName" type="text"
-                                        class="form-control @error('sliderName') is-invalid @enderror" name="sliderName"
-                                        value="{{ old('sliderName') }}">
-
-                                    @error('sliderName')
+                                <div class="col-md-12">
+                                    <select id="sliderName" class="form-control @error('sliderName') is-invalid @enderror"
+                                        name="catalogId">
+                                        <option disabled selected>Select</option>
+                                        @foreach ($catalogs as $catalog)
+                                            <option value="{{ $catalog->id }}">{{ $catalog->title }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('catalogId')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

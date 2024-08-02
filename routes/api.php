@@ -37,7 +37,8 @@ Route::middleware('auth:sanctum')->group(function () {
     //updateAddress
     // Route::post('/updateCustomerAddress', [MyOrderController::class, 'updateCustomerAddress'])->name('order.updateCustomerAddress');
     Route::post('/update-customer-address', [MyOrderController::class, 'updateCustomerAddress']);
-
+    //get slider
 });
 
+Route::get('/getSlider', [ProductController::class, 'getSlider']);
 Route::post('/login', [LoginController::class, 'login']);

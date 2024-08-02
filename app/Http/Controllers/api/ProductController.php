@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Catalog;
 use App\Models\Pincode;
 use App\Models\Product;
+use App\Models\Slider;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -48,6 +49,16 @@ class ProductController extends Controller
             return response()->json(['error' => $err->getMessage()]);
         }
     }
-
-
+    public function  getSlider()
+    {
+        $imgPath = asset('sliders/');
+        $sliders = Slider::where('status', 'Active')->get();
+        $response = [
+            'status' => true,
+            'message' => 'Slider List',
+            'imgPath' => $imgPath,
+            'data' => $sliders
+        ];
+        return response()->json($response);
+    }
 }

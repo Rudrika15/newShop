@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Myorder;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Product_stock;
+use App\Models\Stock_Transaction;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +42,7 @@ class MyOrderController extends Controller
                 'price' => 'required',
                 'amount' => 'required',
                 'payment_id' => 'required',
+
             ]);
             $id = Auth::user()->id;
 
@@ -48,6 +51,7 @@ class MyOrderController extends Controller
             $order->user_id = $id;
             $order->amount = $request->amount;
             $order->payment_id = $request->payment_id;
+
             $order->save();
 
             $order_id = $order->id;
@@ -55,10 +59,22 @@ class MyOrderController extends Controller
             foreach ($request->product_id as $key => $value) {
                 $order_detail = new OrderDetail();
                 $order_detail->order_id = $order_id;
+                $order_detail->customer_address =  $request->customer_address;
                 $order_detail->product_id = $value;
                 $order_detail->quantity = $request->quantity[$key];
                 $order_detail->price = $request->price[$key];
                 $order_detail->save();
+
+                $stock = new  Stock_Transaction();
+                $stock->product_id = $value;
+                $stock->quantity = $request->quantity[$key] * -1;
+                $stock->type = 'out';
+                $stock->remarks = 'selled' . $order_id;
+                $stock->save();
+
+                $productStock = Product_stock::find($value);
+                $productStock->quantity = $productStock->quantity - $request->quantity[$key];
+                $productStock->save();
             }
 
             return Util::getCreateResponse($order, 'Order created successfully');
@@ -67,68 +83,29 @@ class MyOrderController extends Controller
         }
     }
 
-    //     public function updateCustomerAddress(Request $request)
-    // {
-    //     try {
-    //         // Validate the incoming request
-    //         $request->validate([
-    //             'order_id' => 'required|integer|exists:order_details,order_id',
-    //             'customer_address' => 'required|string|max:255',
-    //         ]);
 
-    //         // Retrieve the order by ID
-    //         $order = OrderDetail::findOrFail($request->order_id);
-
-    //         // Update the customer's address
-    //         $order->customer_address = $request->customer_address;
-    //         $order->save();
-
-    //         // Return a success response
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'Customer address updated successfully',
-    //             'order_id' => $request->order_id,
-    //             'customer_address' => $order->customer_address,
-    //         ]);
-    //     } catch (Exception $err) {
-    //         // Return an error response
-    //         return response()->json(['error' => $err->getMessage()], 500);
-    //     }
-    // }
 
     public function updateCustomerAddress(Request $request)
     {
         try {
             $request->validate([
-                'order_id' => 'required|integer|exists:order_details,order_id',
+                'id' => 'required',
                 'customer_address' => 'required|string|max:255',
             ]);
 
-            $orderDetail = OrderDetail::findOrFail($request->order_id);
+            $orderDetail = OrderDetail::findOrFail($request->id);
 
             $orderDetail->customer_address = $request->customer_address;
             $orderDetail->save();
 
-            $order = $orderDetail->order;
-
-            $user_id = $order->user_id;
-            $user_details = $order->users;
 
             return response()->json([
                 'success' => true,
                 'message' => 'Customer address updated successfully',
-                'order_id' => $request->order_id,
-                'customer_address' => $orderDetail->customer_address,
-                'user_id' => $user_id,
-                'user_details' => [
-                    'name' => $user_details->name,
-                    'email' => $user_details->email,
-                    'contact' => $user_details->contact,
-                ],
+                'data' => $orderDetail
             ]);
         } catch (Exception $err) {
             return response()->json(['error' => $err->getMessage()], 500);
         }
     }
-
 }
