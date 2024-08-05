@@ -36,7 +36,7 @@
                             <!-- SKU List Table -->
 
                             @if (count($skus) !== 0)
-                                <table id="sku-table" class="table table-bordered text-center">
+                                <table id="sku-table" class="table table-bordered  text-center mt-3">
                                     <thead>
                                         <tr>
                                             <th>Prefix</th>
@@ -69,38 +69,36 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!-- Pagination Links -->
-        {!! $skus->withQueryString()->links('pagination::bootstrap-5') !!}
+                <!-- Pagination Links -->
+                {!! $skus->withQueryString()->links('pagination::bootstrap-5') !!}
 
-        <script>
-            const deleteButtons = document.querySelectorAll('.delete-user');
+                <script>
+                    const deleteButtons = document.querySelectorAll('.delete-user');
 
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const userId = e.target.getAttribute('data-id');
+                    deleteButtons.forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const userId = e.target.getAttribute('data-id');
 
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: 'You can revert this action from trash!',
-                        icon: 'warning', //question , error , warning , success , info
+                            Swal.fire({
+                                title: 'Are you sure?',
+                                text: 'You can revert this action from trash!',
+                                icon: 'warning', //question , error , warning , success , info
 
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Yes, delete it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Redirect to a route that handles user deletion
-                            window.location.href = `/sku/delete/${userId}`;
-                            Swal.fire('Deleted!', 'Moved to trash Successfully.', 'success');
-                        }
+                                showCancelButton: true,
+                                confirmButtonColor: '#d33',
+                                cancelButtonColor: '#3085d6',
+                                confirmButtonText: 'Yes, delete it!'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Redirect to a route that handles user deletion
+                                    window.location.href = `/sku/delete/${userId}`;
+                                    Swal.fire('Deleted!', 'Moved to trash Successfully.', 'success');
+                                }
+                            });
+                        });
                     });
-                });
-            });
-        </script>
+                </script>
 
     </section>
 @endsection

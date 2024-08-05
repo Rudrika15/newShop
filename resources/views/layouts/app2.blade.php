@@ -102,7 +102,7 @@
                             <a class="dropdown-item d-flex align-items-center"
                                 href="{{ route('user.password', auth()->user()->id) }}">
                                 <i class="bi bi-gear"></i>
-                                <span>Forgot Password</span>
+                                <span>Change Password</span>
                             </a>
                         </li>
 
@@ -136,7 +136,16 @@
                     <span>Dashboard</span>
                 </a>
 
-            </li><!-- End Dashboard Nav -->
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('admin.home') ? '' : 'collapsed' }}"
+                    href="{{ route('user.stricker') }}">
+                    <i class="bi bi-grid"></i>
+                    <span>Stricker</span>
+                </a>
+
+            </li>
+            <!-- End Dashboard Nav -->
 
 
             <li class="nav-item">
@@ -216,14 +225,10 @@
                             <i class="bi bi-circle"></i><span>Slider List</span>
                         </a>
                     </li>
-                    {{--  <li>
-                      <a href="{{ route('sku.create') }}">
-                          <i class="bi bi-circle"></i><span>Create SKU</span>
-                      </a>
-                  </li>  --}}
-                    <!-- Add more menu items for SKU management here... -->
+
                 </ul>
-            </li><!-- End SKU Management Nav -->
+            </li>
+            <!-- End SKU Management Nav -->
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('product.index') ? '' : 'collapsed' }}"
                     data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
@@ -256,7 +261,7 @@
                     </li>
                 </ul>
             </li><!-- End Charts Nav -->
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('report.index') ? '' : 'collapsed' }}"
                     data-bs-target="#report-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-graph-up"></i><span>Reports</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -271,7 +276,7 @@
                         </a>
                     </li>
                 </ul>
-            </li><!-- End Reports Nav -->
+            </li><!-- End Reports Nav --> --}}
 
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('pincode.index') ? '' : 'collapsed' }}"

@@ -59,7 +59,7 @@
 
             function generateTable(pincodes) {
                 let tableHtml = '<table id="pincode-table" class="table table-bordered text-center">';
-                tableHtml += '<thead class="table-secondary">';
+                tableHtml += '<thead >';
                 tableHtml +=
                     '<tr><th>No</th><th>State</th><th>District</th><th>City</th><th>Pincode</th><th>Is Deliverable</th><th>Delivery Charges</th></tr>';
                 tableHtml += '</thead><tbody>';
@@ -76,7 +76,7 @@
                             <option value="NO" ${pincode.isDeliverable === 'NO' ? 'selected' : ''}>NO</option>
                         </select>
                     </td>
-                    <td contenteditable="true" class="editable" data-id="${pincode.id}" data-field="deliveryCharges">${pincode.deliveryCharges ?? '-'}</td>
+                    <td contenteditable="true" class="editable" data-id="${pincode.id}" data-field="charges">${pincode.charges ?? '-'}</td>
                 </tr>`;
                 });
                 tableHtml += '</tbody></table>';
@@ -98,11 +98,14 @@
                 let id = $(this).data('id');
                 let field = $(this).data('field');
                 let value = $(this).text();
+                console.log("value", value);
 
-                // Validate if the value is a number
-                if (isNaN(value) || value.trim() === '') {
-                    Swal.fire('Error!', 'Please enter a valid number.', 'error');
-                    return;
+                if (field == 'charges') {
+                    // Validate if the value is a number
+                    if (isNaN(value) || value.trim() === '') {
+                        Swal.fire('Error!', 'Please enter a valid number.', 'error');
+                        return;
+                    }
                 }
 
                 $.ajax({
@@ -138,6 +141,7 @@
                         value: value
                     },
                     success: function(response) {
+                    
                         Swal.fire('Success!', response.message, 'success');
                     },
                     error: function(response) {

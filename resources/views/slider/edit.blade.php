@@ -6,7 +6,7 @@
             <span style="float:right;"><a href="{{ route('slider.index') }}" class="btn btn-primary">Back</a></span>
         </div>
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">Slider Edit</div>
                     <div class="card-body py-3">

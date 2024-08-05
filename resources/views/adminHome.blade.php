@@ -89,35 +89,143 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Recent Orders</h5>
-                                    <table class="table table-bordered text-center">
+                                    @if (count($orders) !== 0)
+                                        <table id="slider-table" class="table table-bordered text-center">
+                                            <thead class="">
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>User Name</th>
+                                                    <th>Address</th>
+                                                    <th>Payment ID</th>
+                                                    <th>Product Name</th>
+                                                    <th>Quantity</th>
+                                                    <th>Order Status</th>
+                                                    <th>Price</th>
+                                                    <th>Total Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($orders as $order)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $order->order->users->name ?? '-' }}</td>
+                                                        <td>{{ $order->customer_address ?? '-' }}</td>
+                                                        <td>{{ $order->order->payment_id ?? '-' }}</td>
+                                                        <td>{{ $order->product->slug ?? '-' }}</td>
+                                                        <td>{{ $order->quantity ?? '-' }}</td>
+                                                        <td>
+                                                            {{ $order->orderStatus ?? '-' }}
+                                                        </td>
+                                                        {{-- {{$order->id}} --}}
+                                                        <td>{{ $order->price ?? '-' }}</td>
+                                                        <td>{{ $order->order->amount ?? '-' }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        {!! $orders->withQueryString()->links('pagination::bootstrap-5') !!}
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {{-- tabs --}}
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                                data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
+                                aria-selected="true">User</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
+                                data-bs-target="#profile-tab-pane" type="button" role="tab"
+                                aria-controls="profile-tab-pane" aria-selected="false">Catelog</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
+                            tabindex="0">
+                            <div class="">
+
+                                <div class="pt-2">
+                                    <form action="{{ route('admin.home') }}" method="get">
+                                        <label for="">Find User</label>
+                                        <div class="input-group mb-3">
+                                            <input type="date" name="from" class="form-control shadow-none"
+                                                id="">
+                                            <input type="date" name="to" class="form-control shadow-none"
+                                                id="">
+                                            <button class="btn btn-primary shadow-none" type="submit">Search</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table">
                                         <thead>
                                             <tr>
-                                                <th>Order ID</th>
-                                                <th>Customer Name</th>
-                                                <th>Order Date</th>
-                                                <th>Total</th>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Email</th>
+                                                <th scope="col">Contact</th>
+                                                <th scope="col">Total Orders</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>#1234</td>
-                                                <td>John Doe</td>
-                                                <td>2023-02-20</td>
-                                                <td>$100.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>#1235</td>
-                                                <td>Jane Doe</td>
-                                                <td>2023-02-19</td>
-                                                <td>$50.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>#1236</td>
-                                                <td>Bob Smith</td>
-                                                <td>2023-02-18</td>
-                                                <td>$200.00</td>
-                                            </tr>
+                                            @if($userReports)
+                                            @foreach ($userReports as $user)
+                                                <tr>
+                                                    <td>{{ $user->users->name }}</td>
+                                                    <td>{{ $user->users->email }}</td>
+                                                    <td>{{ $user->users->contact }}</td>
+                                                    <td>{{ $user->total_orders }}</td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
+                                        @endif
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab"
+                            tabindex="0">
+                            <div class="">
+
+                                <div class="pt-2">
+                                    <form action="{{ route('admin.home') }}" method="get">
+                                        <label for="">Find User</label>
+                                        <div class="input-group mb-3">
+                                            <input type="date" name="from" class="form-control shadow-none"
+                                                id="">
+                                            <input type="date" name="to" class="form-control shadow-none"
+                                                id="">
+                                            <button class="btn btn-primary shadow-none" type="submit">Search</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Email</th>
+                                                <th scope="col">Contact</th>
+                                                <th scope="col">Total Orders</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if($userReports)
+                                            @foreach ($userReports as $user)
+                                                <tr>
+                                                    <td>{{ $user->users->name }}</td>
+                                                    <td>{{ $user->users->email }}</td>
+                                                    <td>{{ $user->users->contact }}</td>
+                                                    <td>{{ $user->total_orders }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        @endif
                                     </table>
                                 </div>
                             </div>

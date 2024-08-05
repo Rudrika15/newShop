@@ -3,6 +3,7 @@
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
@@ -26,9 +27,43 @@ Route::get('/', function () {
 //All Normal Users Routes List
 Auth::routes();
 
+Route::get('view', function () {
+    Artisan::call('view:clear');
+    return redirect()->back();
+});
+
+Route::get('cache', function () {
+    Artisan::call('cache:clear');
+    return redirect()->back();
+});
+
+Route::get('route', function () {
+    Artisan::call('route:clear');
+    return redirect()->back();
+});
+
 //All Admin Routes List
 
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
+
+    Route::get('view', function () {
+        Artisan::call('view:clear');
+        return redirect()->back();
+    });
+
+    Route::get('cache', function () {
+        Artisan::call('cache:clear');
+        return redirect()->back();
+    });
+
+    Route::get('route', function () {
+        Artisan::call('route:clear');
+        return redirect()->back();
+    });
+
+
+
+
     Route::get('/admin/home/dashboard', [UserController::class, 'adminHome'])->name('admin.home');
     Route::get('/user/index', [UserController::class, 'index'])->name('user.index');
     Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
@@ -115,4 +150,6 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     //orders
     // Route::post('/update-order-status', [OrderController::class, 'updateOrderStatus'])->name('updateOrderStatus');
     Route::post('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+    Route::get('/sticker', [UserController::class, 'stricker'])->name('user.stricker');
+    Route::get('/stricker/print', [UserController::class, 'strickerPrint'])->name('stricker.print');
 });

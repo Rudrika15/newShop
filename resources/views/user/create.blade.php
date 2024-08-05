@@ -6,7 +6,7 @@
             <span style="float:right;"><a href="{{ route('user.index') }}" class="btn btn-primary">Back</a></span>
         </div>
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">User Create</div>
                     <div class="card-body">

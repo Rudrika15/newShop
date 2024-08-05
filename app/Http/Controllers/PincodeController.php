@@ -38,6 +38,6 @@ class PincodeController extends Controller
         $pincode->{$request->field} = $request->value;
         $pincode->save();
 
-        return response()->json(['message' => 'Pincode updated successfully.']);
+        return response()->json(['message' => 'Pincode updated successfully.', 'pincode' => $pincode]);
     }
 }

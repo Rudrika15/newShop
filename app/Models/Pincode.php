@@ -8,12 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Pincode extends Model
 {
     use HasFactory;
-    
+
     // protected $table = "pincodes";
 
     protected $table = 'pincodes';
 
     // Optionally, specify fillable fields if using mass assignment
-    protected $fillable = ['state', 'district', 'city', 'pincode', 'isDeliverable', 'deliveryCharges'];
+    protected $fillable = ['state', 'district', 'city', 'pincode', 'isDeliverable', 'charges'];
 }
-

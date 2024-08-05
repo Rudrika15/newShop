@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Catalog;
 use App\Models\Slider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SliderController extends Controller
 {
@@ -12,15 +14,9 @@ class SliderController extends Controller
      */
     public function index()
     {
-        $sliders = Slider::paginate(5);
+        //
+        $sliders = Slider::where('status', 'Active')->orderBy('created_at', 'desc')->paginate(10);
         return view('slider.index', compact('sliders'));
-    }
-
-    public function trash()
-    {
-        $sliders = Slider::onlyTrashed()->paginate(5);
-
-        return view('slider.trash', compact('sliders'));
     }
 
     /**
@@ -28,7 +24,8 @@ class SliderController extends Controller
      */
     public function create()
     {
-        return view('slider.create');
+        $catalogs = Catalog::all();
+        return view('slider.create', compact('catalogs'));
     }
 
     /**
@@ -36,30 +33,34 @@ class SliderController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'sliderName' => 'required|string|max:255',
-            'sliderImage' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        $validator = Validator::make($request->all(), [
+        
+            'sliderImage' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+        $validator->validate();
 
-        $sliders = new Slider();
-        $sliders->sliderName = $request->sliderName;
+        $sliderImage  =  $request->sliderImage;
+        $catalogId = $request->catalogId;
+
+        $slider = new Slider();
+        $slider->catalogid = $catalogId;
 
         if ($request->hasFile('sliderImage')) {
             $image = $request->file('sliderImage');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/slider'), $imageName);
-            $sliders->sliderImage = $imageName;
+            $imageName = time() . '.' . $image->extension();
+            $image->move(public_path('slider'), $imageName);
+            $sliderImage = $imageName;
         }
 
-        $sliders->save();
-
+        $slider->image = $sliderImage;
+        $slider->save();
         return redirect()->route('slider.index')->with('success', 'Slider created successfully');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Slider $slider)
     {
         //
     }
@@ -67,73 +68,44 @@ class SliderController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Slider $slider)
     {
-        $sliders = Slider::find($id);
-
-        return view('slider.edit', compact('sliders'));
+        //
     }
-
+    public function delete($id)
+    {
+        $slider = Slider::find($id);
+        $slider->status = "Deleted";
+        $slider->save();
+        return redirect()->route('slider.index')->with('success', 'Slider deleted successfully');
+    }
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Slider $slider)
     {
-        $request->validate([
-            'sliderName' => 'required|string|max:255',
-            'sliderImage' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ]);
-
-        $sliders = Slider::find($id);
-        if (!$sliders) {
-            return redirect()->route('slider.index')->with('error', 'Slider not found');
-        }
-
-        $sliders->sliderName = $request->sliderName;
-
-        if ($request->hasFile('sliderImage')) {
-            // Delete the old image if exists
-            if ($sliders->sliderImage && file_exists(public_path('images/slider/' . $sliders->sliderImage))) {
-                unlink(public_path('images/slider/' . $sliders->sliderImage));
-            }
-
-            $image = $request->file('sliderImage');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/slider'), $imageName);
-            $sliders->sliderImage = $imageName;
-        }
-
-        $sliders->save();
-
-        return redirect()->route('slider.index')->with('success', 'Slider updated successfully');
+        //
     }
-
-
+    public function trash()
+    {
+        $sliders = Slider::where('status', 'Deleted')->paginate(5);
+        return view('slider.trash', compact('sliders'));
+    }
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(string $id)
+    public  function restore($id)
     {
-        $sliders = Slider::find($id);
-
-        $sliders->delete();
-
-        return redirect()->back()->with('success', 'Slider deleted successfully');
+        $slider = Slider::find($id);
+        $slider->status = "Active";
+        $slider->save();
+        return redirect()->route('slider.trash')->with('success', 'Slider restored successfully');
     }
-    public function restore(string $id)
+    public function destroy($id)
     {
-        $sliders = Slider::onlyTrashed()->where('id', $id)->first();
-
-        $sliders->restore();
-
-        return redirect()->back()->with('success', 'Slider restored successfully');
-    }
-    public function destroy(string $id)
-    {
-        $sliders = Slider::onlyTrashed()->where('id', $id)->first();
-
-        $sliders->forceDelete();
-
-        return redirect()->back()->with('success', 'Slider permanently deleted successfully');
+        //
+        $slider = Slider::find($id);
+        $slider->delete();
+        return redirect()->route('slider.index')->with('success', 'Slider deleted successfully');
     }
 }

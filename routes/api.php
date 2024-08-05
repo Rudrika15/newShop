@@ -29,10 +29,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //pincode
     Route::get('/pincodes', [PincodeController::class, 'getAllPincodes']);
+    Route::post('/checkPincode', [PincodeController::class, 'checkPincode']);
     Route::get('/pincode-details', [PincodeController::class, 'getPincodeDetails']);
 
     //changePin
     Route::post('/updatePin', [ChangePinController::class, 'updatePin'])->name('user.updatepin');
+
+    //updateAddress
+    // Route::post('/updateCustomerAddress', [MyOrderController::class, 'updateCustomerAddress'])->name('order.updateCustomerAddress');
+    Route::post('/update-customer-address', [MyOrderController::class, 'updateCustomerAddress']);
+    //get slider
 });
 
+Route::get('/getSlider', [ProductController::class, 'getSlider']);
 Route::post('/login', [LoginController::class, 'login']);
