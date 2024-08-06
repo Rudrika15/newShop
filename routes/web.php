@@ -152,4 +152,9 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
     Route::get('/sticker', [UserController::class, 'stricker'])->name('user.stricker');
     Route::get('/stricker/print', [UserController::class, 'strickerPrint'])->name('stricker.print');
+    
+    // reports
+    Route::get('/reports/index', [UserController::class, 'reports'])->name('reports.index');
+    
+
 });

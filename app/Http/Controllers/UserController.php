@@ -23,8 +23,7 @@ class UserController extends Controller
     public function adminHome(Request $request)
     {
 
-        $from = $request->input('from');
-        $to = $request->input('to');
+
 
         // Your existing queries
         $catalogs = Catalog::with(['products' => function ($query) {
@@ -48,27 +47,9 @@ class UserController extends Controller
             ->get();
 
         // Query to get user with the highest orders in the specified date range
-        if ($from && $to) {
-            $userReports = Order::whereDate('created_at', '>=', $from)
-                ->with('users')
-                ->whereDate('created_at', '<=', $to)
-                ->groupBy('user_id')
-                ->select('user_id', DB::raw('COUNT(*) as total_orders'))
-                ->orderBy('total_orders', 'desc')
-                ->get();
 
-            // $catalogReport = OrderDetail::with('product', function ($query) use ($from, $to) {
-            //     $query->with()
-            // })
-        } else {
-            $userReports =Order::with('users')
-            ->groupBy('user_id')
-            ->select('user_id', DB::raw('COUNT(*) as total_orders'))
-            ->orderBy('total_orders', 'desc')
-            ->get();
-        }
 
-        return view('adminHome', compact('catalogs', 'orders', 'userReports'));
+        return view('adminHome', compact('catalogs', 'orders'));
     }
     public function stricker()
     {
@@ -319,5 +300,66 @@ class UserController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login')->with('success', 'You have been logged out successfully');
+    }
+
+    public function reports(Request $request)
+    {
+        $from = $request->input('from');
+        $to = $request->input('to');
+        $fromC = $request->input('fromC');
+        $toC = $request->input('toC');
+
+        if ($from && $to) {
+            $userReports = Order::whereDate('created_at', '>=', $from)
+                ->whereDate('created_at', '<=', $to)
+                ->with('users')
+                ->groupBy('user_id')
+                ->select('user_id', DB::raw('COUNT(*) as total_orders'))
+                ->orderBy('total_orders', 'desc')
+                ->get();
+
+
+            $catalogReport = OrderDetail::select('product_id', DB::raw('COUNT(*) as total_sales'))
+                ->groupBy('product_id')
+                ->whereHas('product.catalog', function ($query) use ($from, $to) {
+                    $query->whereDate('created_at', '>=', $from)
+                        ->whereDate('created_at', '<=', $to);
+                })->orderBy('total_sales', 'desc')->get();
+        } else {
+            $userReports = Order::with('users')
+                ->groupBy('user_id')
+                ->select('user_id', DB::raw('COUNT(*) as total_orders'))
+                ->orderBy('total_orders', 'desc')
+                ->get();
+
+            $catalogReport = OrderDetail::select('product_id', DB::raw('COUNT(*) as total_sales'))
+                ->groupBy('product_id')
+                ->orderBy('total_sales', 'desc')
+                ->with('product.catalog')
+                ->whereHas('product.catalog')
+                ->get();
+        }
+        if ($fromC && $toC) {
+
+            $catalogReport = OrderDetail::select('product_id', DB::raw('COUNT(*) as total_sales'))
+                ->whereHas('produc t', function ($query) use ($fromC, $toC) {
+                    $query->whereDate('created_at', '>=', $fromC)
+                        ->whereDate('created_at', '<=', $toC);
+                })
+                ->groupBy('product_id')
+                ->orderBy('total_sales', 'desc')
+                ->with('product.catalog')
+                ->get();
+        } else {
+
+            $catalogReport = OrderDetail::select('product_id', DB::raw('COUNT(*) as total_sales'))
+                ->groupBy('product_id')
+                ->orderBy('total_sales', 'desc')
+                ->with('product.catalog')
+                ->whereHas('product.catalog')
+                ->get();
+        }
+
+        return view('reports.index', compact('userReports', 'catalogReport'));
     }
 }

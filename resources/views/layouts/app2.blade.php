@@ -140,8 +140,8 @@
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('admin.home') ? '' : 'collapsed' }}"
                     href="{{ route('user.stricker') }}">
-                    <i class="bi bi-grid"></i>
-                    <span>Stricker</span>
+                    <i class="bi bi-stickies"></i>
+                    <span>Stickers</span>
                 </a>
 
             </li>
@@ -295,6 +295,15 @@
                     </li>
                 </ul>
             </li><!-- End Pincode Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('admin.home') ? '' : 'collapsed' }}"
+                    href="{{ route('reports.index') }}">
+                    <i class="bi bi-file-earmark-bar-graph"></i>
+                    <span>Reports</span>
+                </a>
+
+            </li>
 
         </ul>
 

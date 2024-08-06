@@ -109,4 +109,51 @@ class MyOrderController extends Controller
             return response()->json(['error' => $err->getMessage()], 500);
         }
     }
+    public function cancelOrder(Request $request ,$id)
+    {
+        try {
+        
+
+            $orderDetail = OrderDetail::findOrFail($id);
+
+            $orderDetail->orderStatus = 'cancelled';
+            $orderDetail->save();   
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Order cancelled successfully',
+                'data' => $orderDetail
+            ]);
+        } catch (Exception $err) {
+            return response()->json(['error' => $err->getMessage()], 500);
+        }
+    }
+    public function addAddress(Request $request)
+    {
+        try {
+            $request->validate([
+                'id' => 'required|exists:order_details,order_id',
+                'customer_address' => 'required|string|max:255',
+            ]);
+    
+            // Retrieve all OrderDetail records associated with the given order_id
+            $orderDetails = OrderDetail::where('order_id', $request->id)->get();
+    
+            // Iterate over each OrderDetail record and update the customer_address
+            foreach ($orderDetails as $orderDetail) {
+                $orderDetail->customer_address = $request->customer_address;
+                $orderDetail->save();
+            }
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Customer address updated successfully',
+                'data' => $orderDetails
+            ]);
+        } catch (Exception $err) {
+            return response()->json(['error' => $err->getMessage()], 500);
+        }
+    }
+    
+    
 }

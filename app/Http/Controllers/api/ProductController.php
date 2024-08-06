@@ -46,22 +46,30 @@ class ProductController extends Controller
         try {
             $imgPath = asset('images/product/');
             $products = Product::where('catalogid', '=', $id)->get();
-    
+            
             foreach ($products as $product) {
                 // Get stock information for each product
-                $stock = Product_stock::where('product_id', '=', $product->id)->pluck('quantity');
-                // Append stock information to each product
-                $product->stock = $stock;
+                $stock = Product_stock::where('product_id', '=', $product->id)->first();
+                
+                // Check if stock data exists and structure it as an object
+                if ($stock) {
+                    $product->stock = [
+                        'quantity' => $stock->quantity
+                    ];
+                } else {
+                    $product->stock = null; // or you can set it to an empty object: (object)[]
+                }
             }
-    
+            
             $response = [
                 'status' => true,
                 'message' => 'Product Detail',
                 'imgPath' => $imgPath,
                 'data' => $products
             ];
-    
+            
             return response()->json($response);
+            
         } catch (Exception $err) {
             return response()->json(['error' => $err->getMessage()]);
         }
