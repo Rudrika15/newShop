@@ -41,6 +41,7 @@
                 <h2 class="text-center">Hello, Admin</h2>
                 <!-- ======= Dashboard ======= -->
                 <section id="dashboard" class="dashboard">
+                    @if ($catalogs == null)
                     <div class="row">
                         <!-- Out-of-Stock Products -->
                         <div class="col-lg-12">
@@ -83,6 +84,7 @@
                             {!! $catalogs->withQueryString()->links('pagination::bootstrap-5') !!}
                         </div>
                     </div>
+                    @endif
                     <div class="row">
                         <!-- Recent Orders -->
                         <div class="col-lg-12">
@@ -123,7 +125,6 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
-                                        {!! $orders->withQueryString()->links('pagination::bootstrap-5') !!}
                                     @endif
                                 </div>
                             </div>

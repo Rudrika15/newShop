@@ -153,11 +153,12 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     //orders
     // Route::post('/update-order-status', [OrderController::class, 'updateOrderStatus'])->name('updateOrderStatus');
     Route::post('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
-    Route::get('/sticker', [UserController::class, 'stricker'])->name('user.stricker');
-    Route::get('/stricker/print', [UserController::class, 'strickerPrint'])->name('stricker.print');
+    Route::get('/sticker', [UserController::class, 'sticker'])->name('user.sticker');
+    Route::get('/sticker/print', [UserController::class, 'stickerPrint'])->name('sticker.print');
     
     // reports
-    Route::get('/reports/index', [UserController::class, 'reports'])->name('reports.index');
+    Route::get('/reports/users/index', [UserController::class, 'reportsUser'])->name('reports.index');
+    Route::get('/reports/catalog/index', [UserController::class, 'reportsCatalog'])->name('reports.catalog.index');
     
 
 });

@@ -44,12 +44,24 @@
                         <div class="col-md-6">
                             <label for="categoryid" class="form-label">Category</label>
                             <select id="categoryid" name="categoryid" class="form-select">
-                                <option value="">Select</option>
+                                <option disabled selected>Select</option>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}"
-                                        {{ old('categoryid') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->categoryname }}</option>
+                                    @if ($category->is_parent == 1)
+                                        <option value="{{ $category->id }}"
+                                            {{ old('categoryid') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->categoryname }}
+                                        </option>
+                                        @if ($category->children->isNotEmpty())
+                                            @foreach ($category->children as $child)
+                                                <option value="{{ $child->id }}"
+                                                    {{ old('categoryid') == $child->id ? 'selected' : '' }}>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp; - {{ $child->categoryname }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    @endif
                                 @endforeach
+
                             </select>
                             <span class="text-danger">
                                 @error('categoryid')
@@ -81,7 +93,7 @@
                             @enderror
                         </span>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="base_price" class="form-label">Base Price</label>
                             <input class="form-control" type="text" name="base_price" id="base_price"
                                 value="{{ old('base_price') }}">
@@ -91,7 +103,7 @@
                                 @enderror
                             </span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="discount_amt" class="form-label">Discount Amount</label>
                             <input class="form-control" type="text" name="discount_amt" id="discount_amt"
                                 value="{{ old('discount_amt') }}">
@@ -103,7 +115,7 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="tax_price" class="form-label">Tax Price</label>
                             <input class="form-control" type="text" name="tax_price" id="tax_price"
                                 value="{{ old('tax_price') }}">
@@ -113,7 +125,7 @@
                                 @enderror
                             </span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="mrp" class="form-label">MRP</label>
                             <input class="form-control" type="text" name="mrp" id="mrp"
                                 value="{{ old('mrp') }}">
@@ -127,84 +139,48 @@
                 </div>
                 <div id="additional-blocks">
                     <div class="col-md-12 d-flex justify-content-end">
-                        <button type="button" id="add-block" class="btn btn-secondary shadow-none me-5">Add
-                            Block
-                            {{--  {{ count(old('sku')['slug'] ?? []) }}  --}}
-                        </button>
+                        <button type="button" id="add-block" class="btn btn-secondary shadow-none me-5">Add Block</button>
                     </div>
+
                     <div class="row border border-dark p-3 m-3 single-product">
                         <div class="row mb-3">
                             <div class="col-md-5">
                                 <label for="slug" class="form-label">Slug</label>
-                                <input class="form-control" type="text" name="sku[slug][]" id="slug"
-                                    value={{ old('sku')['slug'][0] ?? '' }}>
-                                <span class="text-danger">
-                                    @error('slug')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
+                                <input class="form-control slug" type="text" name="sku[slug][]" id="slug">
+                                <span class="text-danger"></span>
                             </div>
                             <div class="col-md-2">
                                 <label for="quantity" class="form-label">Opening Stock</label>
-                                <input class="form-control " type="text" name="sku[quantity][]" id="quantity"
-                                    value={{ old('sku')['quantity'][0] ?? '' }}>
-                                <span class="text-danger">
-                                    @error('quantity')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
+                                <input class="form-control" type="text" name="sku[quantity][]" id="quantity">
+                                <span class="text-danger"></span>
                             </div>
                             <div class="col-md-5">
                                 <label for="image" class="form-label">Image</label>
-                                <input class="form-control" type="file" name="sku[image][]" id="image"
-                                    value={{ old('sku')['image'][0] ?? '' }}>
-                                <span class="text-danger">
-                                    @error('image')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                                <img id="imagePreview" src="" alt="Selected Image"
-                                    style="display: none; margin-top: 10px; max-width: 25%;">
+                                <input class="form-control image-input" type="file" name="sku[image][]" id="image">
+                                <span class="text-danger"></span>
+                                <img class="image-preview" src="" alt="Selected Image" style="display: none; margin-top: 10px; max-width: 100%;">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="sku" class="form-label">SKU</label>
-                                <select id="sku" name="sku[sku][]" class="form-select sku-input">
+                                <select class="form-select sku-input" name="sku[sku][]">
                                     <option value="">Select</option>
                                     @foreach ($skus as $sku)
-                                        <option value="{{ $sku->prefix }}" data-color="{{ $sku->colorname }}">
-                                            {{ $sku->prefix }}
-                                        </option>
+                                        <option value="{{ $sku->prefix }}" data-color="{{ $sku->colorname }}">{{ $sku->prefix }}</option>
                                     @endforeach
                                 </select>
-                                <span class="text-danger">
-                                    @error('sku.sku.0')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
+                                <span class="text-danger"></span>
                             </div>
                             <div class="col-md-3">
                                 <label for="color" class="form-label">Color</label>
-                                <input class="form-control color-input" type="text" name="sku[color][]"
-                                    id="color" readonly>
-                                <span class="text-danger">
-                                    @error('color')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
+                                <input class="form-control color-input" type="text" name="sku[color][]" id="color" readonly>
+                                <span class="text-danger"></span>
                             </div>
-
-
                             <div class="col-md-3">
                                 <label for="size" class="form-label">Size</label>
-                                <input class="form-control " type="text" name="sku[size][]" id="size"
-                                    value={{ old('sku')['size'][0] ?? '' }}>
-                                <span class="text-danger">
-                                    @error('size')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
+                                <input class="form-control" type="text" name="sku[size][]" id="size">
+                                <span class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -212,67 +188,45 @@
 
                 @if (!empty(old('sku')['slug']) && count(old('sku')['slug']) > 1)
                     @for ($i = 1; $i < count(old('sku')['slug']); $i++)
-                        @if (
-                            !empty(old('sku')['slug'][$i]) &&
-                                !empty(old('sku')['quantity'][$i]) &&
-                                !empty(old('sku')['sku'][$i]) &&
-                                !empty(old('sku')['color'][$i]))
+                        @if (!empty(old('sku')['slug'][$i]) && !empty(old('sku')['quantity'][$i]) && !empty(old('sku')['sku'][$i]) && !empty(old('sku')['color'][$i]))
                             <div class="row border border-dark p-3 m-3 dynamic-block single-product">
                                 <div class="row mb-3">
                                     <div class="col-md-5">
                                         <label for="slug" class="form-label">Slug</label>
-                                        <input class="form-control " type="text"
-                                            name="sku[slug][{{ $i }}]" id="slug"
-                                            value="{{ old('sku')['slug'][$i] ?? '' }}">
+                                        <input class="form-control slug" type="text" name="sku[slug][{{ $i }}]" id="slug" value="{{ old('sku')['slug'][$i] ?? '' }}">
                                         <span class="text-danger"></span>
                                     </div>
                                     <div class="col-md-2">
                                         <label for="quantity" class="form-label">Opening Stock</label>
-                                        <input class="form-control" type="text"
-                                            name="sku[quantity][{{ $i }}]" id="quantity"
-                                            value="{{ old('sku')['quantity'][$i] ?? '' }}">
+                                        <input class="form-control" type="text" name="sku[quantity][{{ $i }}]" id="quantity" value="{{ old('sku')['quantity'][$i] ?? '' }}">
                                         <span class="text-danger"></span>
                                     </div>
                                     <div class="col-md-4">
                                         <label for="image" class="form-label">Image</label>
-                                        <input class="form-control" type="file"
-                                            name="sku[image][{{ $i }}]" id="image"
-                                            value="{{ old('sku')['image'][$i] ?? '' }}">
+                                        <input class="form-control image-input" type="file" name="sku[image][{{ $i }}]" id="image">
                                         <span class="text-danger"></span>
-                                        <img id="imagePreview" src="" alt="Selected Image"
-                                            style="display: none; margin-top: 10px; max-width: 100%;">
+                                        <img class="image-preview" src="" alt="Selected Image" style="display: none; margin-top: 10px; max-width: 100%;">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-4">
                                         <label for="sku" class="form-label">SKU</label>
-                                        <select id="sku" name="sku[sku][]" class="form-select sku-input">
+                                        <select class="form-select sku-input" name="sku[sku][]">
                                             <option value="">Select</option>
                                             @foreach ($skus as $sku)
-                                                <option value="{{ $sku->prefix }}" data-color="{{ $sku->colorname }}"
-                                                    {{ isset(old('sku')['sku'][0]) && old('sku')['sku'][0] == $sku->prefix ? 'selected' : '' }}>
+                                                <option value="{{ $sku->prefix }}" data-color="{{ $sku->colorname }}" {{ old('sku')['sku'][$i] == $sku->prefix ? 'selected' : '' }}>
                                                     {{ $sku->prefix }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <span class="text-danger">
-                                            @error('sku')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
+                                        <span class="text-danger"></span>
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="color" class="form-label color-input">Color</label>
-                                        <input class="form-control" type="text" name="sku[color][]" id="color"
-                                            value="{{ old('sku')['color'][0] ?? '' }}" readonly>
-                                        <span class="text-danger">
-                                            @error('color')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
+                                        <label for="color" class="form-label">Color</label>
+                                        <input class="form-control color-input" type="text" name="sku[color][]" id="color" value="{{ old('sku')['color'][$i] ?? '' }}" readonly>
+                                        <span class="text-danger"></span>
                                     </div>
                                 </div>
-
                                 <div class="row mb-3">
                                     <div class="col-md-12 d-flex justify-content-end">
                                         <button type="button" class="btn btn-danger remove-block">Remove Block</button>
@@ -286,109 +240,111 @@
                     <div class="col-md-12 d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
-
                 </div>
             </form>
         </div>
     </div>
-    <script>
-        document.getElementById('add-block').addEventListener('click', function() {
-            var newBlock = document.createElement('div');
-            newBlock.classList.add('row', 'border', 'border-dark', 'p-3', 'm-3', 'dynamic-block', 'single-product');
-            newBlock.innerHTML = `
-                <div class="row mb-3">
-                    <div class="col-md-5">
-                        <label for="slug" class="form-label">Slug</label>
-                        <input class="form-control " type="text" name="sku[slug][]" id="slug">
-                        <span class="text-danger"></span>
-                    </div>
-                    <div class="col-md-2">
-                        <label for="quantity" class="form-label">Opening Stock</label>
-                        <input class="form-control" type="text" name="sku[quantity][]" id="quantity">
-                        <span class="text-danger"></span>
-                    </div>
-                     <div class="col-md-4">
-                        <label for="image" class="form-label">Image</label>
-                        <input class="form-control" type="file" name="sku[image][]" id="image">
-                        <span class="text-danger"></span>
-                         <img id="imagePreview" src="" alt="Selected Image" style="display: none; margin-top: 10px; max-width: 100%;">
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <label for="sku" class="form-label">SKU</label>
-                        <select id="sku" name="sku[sku][]" class="form-select sku-input" >
-                                    <option value="">Select</option>
-                                    @foreach ($skus as $sku)
-                                        <option value="{{ $sku->prefix }}" data-color="{{ $sku->colorname }}" >{{ $sku->prefix }}</option>
-                                    @endforeach
-                                </select>
-                        <span class="text-danger">
-                            @error('sku')
-                                {{ $message }}
-                            @enderror
-                        </span>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="color" class="form-label">Color</label>
-                        <input class="form-control color-input" type="text" name="sku[color][]" id="color" readonly>
-                        <span class="text-danger"></span>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="size" class="form-label">Size</label>
-                        <input class="form-control " type="text" name="sku[size][]" id="size">
-                        <span class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-12 d-flex justify-content-end">
-                        <button type="button" class="btn btn-danger remove-block">Remove Block</button>
-                    </div>
-                </div>
-            `;
-            document.getElementById('additional-blocks').appendChild(newBlock);
-        });
 
-        document.addEventListener('click', function(event) {
-            if (event.target && event.target.classList.contains('remove-block')) {
-                event.target.closest('.dynamic-block').remove();
-            }
-        });
+    @section('script')
+        <script>
+            // Add Block
+            document.getElementById('add-block').addEventListener('click', function() {
+                var newBlock = document.createElement('div');
+                newBlock.classList.add('row', 'border', 'border-dark', 'p-3', 'm-3', 'dynamic-block', 'single-product');
+                newBlock.innerHTML = `
+                    <div class="row mb-3">
+                        <div class="col-md-5">
+                            <label for="slug" class="form-label">Slug</label>
+                            <input class="form-control slug" type="text" name="sku[slug][]" id="slug">
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="quantity" class="form-label">Opening Stock</label>
+                            <input class="form-control" type="text" name="sku[quantity][]" id="quantity">
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="image" class="form-label">Image</label>
+                            <input class="form-control image-input" type="file" name="sku[image][]" id="image">
+                            <span class="text-danger"></span>
+                            <img class="image-preview" src="" alt="Selected Image" style="display: none; margin-top: 10px; max-width: 100%;">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="sku" class="form-label">SKU</label>
+                            <select class="form-select sku-input" name="sku[sku][]">
+                                <option value="">Select</option>
+                                @foreach ($skus as $sku)
+                                    <option value="{{ $sku->prefix }}" data-color="{{ $sku->colorname }}">{{ $sku->prefix }}</option>
+                                @endforeach
+                            </select>
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="color" class="form-label">Color</label>
+                            <input class="form-control color-input" type="text" name="sku[color][]" id="color" readonly>
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="size" class="form-label">Size</label>
+                            <input class="form-control" type="text" name="sku[size][]" id="size">
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12 d-flex justify-content-end">
+                            <button type="button" class="btn btn-danger remove-block">Remove Block</button>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('additional-blocks').appendChild(newBlock);
+            });
 
-        // image code
-        document.getElementById('image').addEventListener('change', function(event) {
-            const imagePreview = document.getElementById('imagePreview');
-            const file = event.target.files[0];
-
-            if (file) {
-                const reader = new FileReader();
-
-                reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                    imagePreview.style.display = 'block';
+            // Remove Block
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-block')) {
+                    e.target.closest('.dynamic-block').remove();
                 }
+            });
 
-                reader.readAsDataURL(file);
-            } else {
-                imagePreview.style.display = 'none';
-            }
-        });
+            // Convert Spaces to Dashes
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('slug')) {
+                    var slug = e.target.value;
+                    slug = slug.replace(/\s+/g, '-').toLowerCase();
+                    e.target.value = slug;
+                }
+            });
 
-        function previewImage(event) {
-            var reader = new FileReader();
-            reader.onload = function() {
-                var output = document.getElementById('thumbnail');
-                output.src = reader.result;
-                output.style.display = 'block';
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        }
-    </script>
-@endsection
-@section('script')
-    <script>
-        $(document).on('change', '.sku-input', function() {
-            $(this).parents('.single-product').find('.color-input').val($(this).find(':selected').data('color'));
-        })
-    </script>
+            // Handle Image Preview
+            document.addEventListener('change', function(e) {
+                if (e.target.classList.contains('image-input')) {
+                    var input = e.target;
+                    var preview = input.closest('.single-product').querySelector('.image-preview');
+                    var file = input.files[0];
+                    if (file) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            preview.src = e.target.result;
+                            preview.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        preview.src = '';
+                        preview.style.display = 'none';
+                    }
+                }
+            });
+
+            // Update Color Based on SKU Selection
+            document.addEventListener('change', function(e) {
+                if (e.target.classList.contains('sku-input')) {
+                    var selectedOption = e.target.options[e.target.selectedIndex];
+                    var colorInput = e.target.closest('.single-product').querySelector('.color-input');
+                    colorInput.value = selectedOption.getAttribute('data-color');
+                }
+            });
+        </script>
+    @endsection
 @endsection

@@ -44,7 +44,12 @@
                                 <tbody>
                                     @foreach ($categories as $category)
                                         <tr>
-                                            <td>{{ $category->categoryname }}</td>
+                                            <td>
+                                                {{ $category->categoryname }} 
+                                                @if($category->is_parent == 1 && $category->children)
+                                                <b> => </b>{{ $category->children->categoryname }}
+                                                @endif
+                                            </td>
                                             {{--  <td>{{ $category->parent }}</td>  --}}
                                             <td>
                                                 <div class="d-flex gap-2 justify-content-center">

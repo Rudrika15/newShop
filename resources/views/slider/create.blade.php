@@ -18,31 +18,38 @@
                         <form method="POST" action="{{ route('slider.store') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="row mb-3">
-                                <label for="sliderName" class="col-form-label ">Slider Name</label>
-
-                                <div class="col-md-12">
-                                    <select id="sliderName" class="form-control @error('sliderName') is-invalid @enderror"
-                                        name="catalogId">
-                                        <option disabled selected>Select</option>
-                                        @foreach ($catalogs as $catalog)
-                                            <option value="{{ $catalog->id }}">{{ $catalog->title }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('catalogId')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                                <div class="row mb-3">
+                                    <label for="sliderImage" class="form-label">Slider Image</label>
+                                    <input class="form-control mb-2" type="file" name="sliderImage" id="sliderImage">
+                                    <span class="text-danger">
+                                        @error('sliderImage')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="sliderImage" class="form-label">Slider Image</label>
-                                <input class="form-control mb-2" type="file" name="sliderImage" id="sliderImage">
-                                <span class="text-danger">
-                                    @error('sliderImage')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
+
+                                <div class="row mb-3">
+                                    <label for="check">
+                                        <input type="checkbox" name="isNavigate" class="form-check-input" id="check"> Is Navigate
+                                    </label>
+                                </div>
+
+
+                                <div id="navDiv" class="d-none">
+
+                                    <label for="sliderName" class="col-form-label ">Slider Name</label>
+
+                                    <div class="col-md-12">
+                                        <select id="sliderName"
+                                            class="form-control @error('sliderName') is-invalid @enderror" name="catalogId">
+                                            <option disabled selected>Select</option>
+                                            @foreach ($catalogs as $catalog)
+                                                <option value="{{ $catalog->id }}">{{ $catalog->title }}</option>
+                                            @endforeach
+                                        </select>
+                                       
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row d-flex justify-content-center">
@@ -59,3 +66,16 @@
         </div>
     </div>
 @endsection
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#check').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#navDiv').removeClass('d-none');
+            } else {
+                $('#navDiv').addClass('d-none');
+            }
+        })
+    });
+</script>

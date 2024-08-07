@@ -56,6 +56,7 @@ class LoginController extends Controller
         
         try {
             $userId = Auth::user()->id;
+            
             $user = User::find($userId)->first();
             
             if (!$user) {

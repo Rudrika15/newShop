@@ -40,7 +40,6 @@
                             <table id="slider-table" class="table table-bordered text-center">
                                 <thead>
                                     <tr>
-                                        <th>Slider Name</th>
                                         <th>Slider Image</th>
                                         <th>Action</th>
                                     </tr>
@@ -48,7 +47,6 @@
                                 <tbody>
                                     @foreach ($sliders as $slider)
                                         <tr>
-                                            <td>{{ $slider->catalog->title ?? '-' }}</td>
                                             {{-- <td>{{ $slider->sliderImage ?? '-' }}</td> --}}
 
                                             <td><img src="{{ asset('slider/' . $slider->image) }}" width="50"
@@ -57,10 +55,6 @@
 
                                             <td>
                                                 <div class="d-flex gap-2 justify-content-center">
-                                                    <div>
-                                                        <a href="{{ route('slider.edit', $slider->id) }}"
-                                                            class="btn btn-primary btn-sm shadow-none mb-2 ">Edit</a>
-                                                    </div>
                                                     <div>
                                                         <button class="delete-user btn btn-danger btn-sm shadow-none"
                                                             data-id="{{ $slider->id }}">Delete</button>

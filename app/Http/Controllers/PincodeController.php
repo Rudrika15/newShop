@@ -19,15 +19,23 @@ class PincodeController extends Controller
      * Fetch pincodes for AJAX request.
      */
     public function fetchPincodes(Request $request)
-    {
-        if ($request->ajax()) {
-            $pincodes = Pincode::paginate(50);
-            return response()->json([
-                'pincodes' => $pincodes,
-                'pagination' => (string) $pincodes->links('pagination::bootstrap-5'),
-            ]);
-        }
+{
+    if ($request->ajax()) {
+        $query = $request->get('query', '');
+
+        $pincodes = Pincode::where('state', 'like', "%{$query}%")
+            ->orWhere('district', 'like', "%{$query}%")
+            ->orWhere('city', 'like', "%{$query}%")
+            ->orWhere('pincode', 'like', "%{$query}%")
+            ->paginate(500);
+
+        return response()->json([
+            'pincodes' => $pincodes,
+            'pagination' => (string) $pincodes->links('pagination::bootstrap-5'),
+        ]);
     }
+}
+
 
     /**
      * Update the specified pincode field.

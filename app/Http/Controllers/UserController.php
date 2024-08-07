@@ -22,10 +22,6 @@ class UserController extends Controller
     //admin home page
     public function adminHome(Request $request)
     {
-
-
-
-        // Your existing queries
         $catalogs = Catalog::with(['products' => function ($query) {
             $query->whereNull('deleted_at')->with(['productStocks' => function ($query) {
                 $query->where('quantity', '<=', 10);
@@ -35,7 +31,9 @@ class UserController extends Controller
         $orders = OrderDetail::with('product')
             ->with('order')
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->latest()
+            ->take(10)
+            ->get();
 
         $catalogs = Catalog::with(['products' => function ($query) {
             $query->whereNull('deleted_at')->withCount('productStocks');
@@ -51,19 +49,19 @@ class UserController extends Controller
 
         return view('adminHome', compact('catalogs', 'orders'));
     }
-    public function stricker()
+    public function sticker()
     {
-        $strickers =  OrderDetail::all();
+        $stickers =  OrderDetail::all();
 
-        return view('stricker.index', compact('strickers'));
+        return view('sticker.index', compact('stickers'));
     }
 
-    public function strickerPrint(Request $request)
+    public function stickerPrint(Request $request)
     {
         $from = $request->from;
         $to = $request->to;
 
-        $strickers = OrderDetail::whereDate('created_at', '>=', $from)
+        $stickers = OrderDetail::whereDate('created_at', '>=', $from)
             ->whereDate('created_at', '<=', $to)
             ->pluck('customer_address');
 
@@ -99,12 +97,12 @@ class UserController extends Controller
 
         $columnCounter = 0;
         $html .= '<tr>';
-        foreach ($strickers as $stricker) {
+        foreach ($stickers as $sticker) {
             if ($columnCounter == 2) {
                 $html .= '</tr><tr>';
                 $columnCounter = 0;
             }
-            $html .= '<td><div class="address">' . $stricker . '<br/>3636001</div></td>';
+            $html .= '<td><div class="address">' . $sticker . '<br/>3636001</div></td>';
             $columnCounter++;
         }
 
@@ -309,13 +307,11 @@ class UserController extends Controller
         return redirect()->route('login')->with('success', 'You have been logged out successfully');
     }
 
-    public function reports(Request $request)
+    public function reportsUser(Request $request)
     {
         $from = $request->input('from');
         $to = $request->input('to');
-        $fromC = $request->input('fromC');
-        $toC = $request->input('toC');
-
+      
         if ($from && $to) {
             $userReports = Order::whereDate('created_at', '>=', $from)
                 ->whereDate('created_at', '<=', $to)
@@ -326,12 +322,7 @@ class UserController extends Controller
                 ->get();
 
 
-            $catalogReport = OrderDetail::select('product_id', DB::raw('COUNT(*) as total_sales'))
-                ->groupBy('product_id')
-                ->whereHas('product.catalog', function ($query) use ($from, $to) {
-                    $query->whereDate('created_at', '>=', $from)
-                        ->whereDate('created_at', '<=', $to);
-                })->orderBy('total_sales', 'desc')->get();
+           
         } else {
             $userReports = Order::with('users')
                 ->groupBy('user_id')
@@ -339,13 +330,18 @@ class UserController extends Controller
                 ->orderBy('total_orders', 'desc')
                 ->get();
 
-            $catalogReport = OrderDetail::select('product_id', DB::raw('COUNT(*) as total_sales'))
-                ->groupBy('product_id')
-                ->orderBy('total_sales', 'desc')
-                ->with('product.catalog')
-                ->whereHas('product.catalog')
-                ->get();
+           
         }
+        
+
+        return view('reports.index-user', compact('userReports'));
+    }
+    public function reportsCatalog(Request $request)
+    {
+        $fromC = $request->input('fromC');
+        $toC = $request->input('toC');
+
+    
         if ($fromC && $toC) {
 
             $catalogReport = OrderDetail::select('product_id', DB::raw('COUNT(*) as total_sales'))
@@ -367,6 +363,6 @@ class UserController extends Controller
                 ->get();
         }
 
-        return view('reports.index', compact('userReports', 'catalogReport'));
+        return view('reports.index-catalog', compact( 'catalogReport'));
     }
 }

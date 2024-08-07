@@ -25,7 +25,7 @@
                         <!-- SKU List Table -->
                         <div class="container">
                             <div class="row">
-                                <form action="{{ route('stricker.print') }}" method="get">
+                                <form action="{{ route('sticker.print') }}" method="get">
                                     
                                     <div class="form-group mb-3">
                                         <label for="categoryname" class="mt-2">Start date</label>

@@ -137,14 +137,7 @@
                 </a>
 
             </li>
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.home') ? '' : 'collapsed' }}"
-                    href="{{ route('user.stricker') }}">
-                    <i class="bi bi-stickies"></i>
-                    <span>Stickers</span>
-                </a>
-
-            </li>
+            
             <!-- End Dashboard Nav -->
 
 
@@ -296,13 +289,36 @@
                 </ul>
             </li><!-- End Pincode Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.home') ? '' : 'collapsed' }}"
-                    href="{{ route('reports.index') }}">
-                    <i class="bi bi-file-earmark-bar-graph"></i>
-                    <span>Reports</span>
-                </a>
 
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('report.index') ? '' : 'collapsed' }}"
+                    data-bs-target="#report" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-file-earmark-bar-graph"></i><span>Reports</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="report"
+                    class="nav-content collapse {{ request()->routeIs('report.index') ? 'show' : '' }}"
+                    data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ route('user.sticker') }}"
+                            class="{{ request()->routeIs('user.sticker') ? 'active' : '' }}">
+                            <i class="bi bi-geo-alt-fill"></i><span>Address Sticker</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('reports.index') }}"
+                            class="{{ request()->routeIs('reports.index') ? 'active' : '' }}">
+                            <i class="bi bi-geo-alt-fill"></i><span>User Report</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('reports.catalog.index') }}"
+                            class="{{ request()->routeIs('reports.catalog.index') ? 'active' : '' }}">
+                            <i class="bi bi-geo-alt-fill"></i><span>Catelog Report</span>
+                        </a>
+                    </li>
+                    
+                </ul>
             </li>
 
         </ul>

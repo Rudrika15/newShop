@@ -10,7 +10,7 @@
     <div class="container">
         <div class="row py-5">
             <div class="col-12">
-                <h1>Term and Condition</h1>
+                Term and Condition
             </div>
             <div class="col-12">
                 <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>

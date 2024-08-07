@@ -28,6 +28,12 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Search Box -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12">
+                                <input type="text" id="search" class="form-control" placeholder="Search Pincodes">
+                            </div>
+                        </div>
                         <!-- Pincode List Table -->
                         <div id="pincode-table-container">
                             <!-- Data will be loaded here via AJAX -->
@@ -47,9 +53,10 @@
         $(document).ready(function() {
             fetchPincodes();
 
-            function fetchPincodes(page = 1) {
+            function fetchPincodes(page = 1, query = '') {
                 $.ajax({
-                    url: '{{ route('pincodes.fetch') }}?page=' + page,
+                    url: '{{ route('pincodes.fetch') }}',
+                    data: { page: page, query: query },
                     success: function(data) {
                         $('#pincode-table-container').html(generateTable(data.pincodes));
                         $('#pagination-links').html(data.pagination);
@@ -86,7 +93,13 @@
             $(document).on('click', '.pagination a', function(event) {
                 event.preventDefault();
                 let page = $(this).attr('href').split('page=')[1];
-                fetchPincodes(page);
+                let query = $('#search').val();
+                fetchPincodes(page, query);
+            });
+
+            $(document).on('input', '#search', function() {
+                let query = $(this).val();
+                fetchPincodes(1, query);
             });
 
             $(document).on('input', '.editable', function() {
@@ -98,7 +111,6 @@
                 let id = $(this).data('id');
                 let field = $(this).data('field');
                 let value = $(this).text();
-                console.log("value", value);
 
                 if (field == 'charges') {
                     // Validate if the value is a number
@@ -141,7 +153,6 @@
                         value: value
                     },
                     success: function(response) {
-                    
                         Swal.fire('Success!', response.message, 'success');
                     },
                     error: function(response) {
