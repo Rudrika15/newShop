@@ -47,6 +47,7 @@
                                             <td>{{ $item->contact }}</td>
                                             <td>{{ $item->type }}</td>
                                             <td>
+                                                @if($item->type != 'admin')
                                                 <div class="d-flex gap-2 justify-content-center">
                                                     <div>
                                                         <a href="{{ route('user.edit', $item->id) }}"
@@ -56,7 +57,12 @@
                                                         <button class="delete-user btn btn-danger shadow-none"
                                                             data-id="{{ $item->id }}">Delete</button>
                                                     </div>
+                                                    <div>
+                                                        <a href="{{ route('user.resetPassword') }}/{{ $item->id }}" class="btn btn-primary shadow-none mb-2 " title="Reset Password to Default(123456)">Reset Password</a>
+                                                    </div>
+
                                                 </div>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

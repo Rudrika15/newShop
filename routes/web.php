@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CmsController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
@@ -81,6 +82,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     //changepin
     Route::post('/user/updatePin/{id}', [UserController::class, 'updatePin'])->name('user.updatePin');
+    // reset password
+    Route::get('/user/resetPassword/{id?}', [UserController::class, 'resetPassword'])->name('user.resetPassword');
 
     // SKU 
     Route::get('/sku/index', [SkuController::class, 'index'])->name('sku.index');
@@ -158,3 +161,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     
 
 });
+Route::get('/about',[CmsController::class, 'about'])->name('about');
+Route::get('/terms',[CmsController::class, 'terms'])->name('terms');
+Route::get('/policy',[CmsController::class, 'privacy'])->name('policy');
+Route::get('/refund',[CmsController::class, 'refund'])->name('refund');

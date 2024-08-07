@@ -173,13 +173,13 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'contact' => 'required',
-            'password' => 'required',
+         
         ]);
         $input = ([
             'name' => $request->name,
             'email' => $request->email,
             'contact' => $request->contact,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make('123456'),
         ]);
 
         $user->create($input);
@@ -232,6 +232,13 @@ class UserController extends Controller
             ->with('success', ' Password updated Successfully');
     }
 
+    public function resetPassword($id)
+    {
+        $user = User::find($id);
+        $user->password = Hash::make('123456');
+        return redirect()->back()->with('success', 'Password reset successfully');
+    }
+
     public function edit(Request $request, string $id)
     {
         $user = User::find($id);
@@ -247,7 +254,7 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'contact' => 'required',
-            'password' => 'nullable|confirmed|min:6',
+           
         ]);
         $input = $request->all();
 

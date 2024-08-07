@@ -20,6 +20,9 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    Route::post('/change-password', [LoginController::class, 'changePassword']);
+
+
     Route::get('/getProductList', [ProductController::class, 'getProductList']);
     Route::get('/getProductDetail/{id}', [ProductController::class, 'getProductDetail']);
     Route::get('/getOrderList', [OrderController::class, 'getOrderList']);
