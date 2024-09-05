@@ -15,11 +15,11 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row p-3">
-                            
+
                         </div>
                         <!-- SKU List Table -->
 
-                        
+
                         <!-- SKU List Table -->
 
                         @if (count($catalogReport) !== 0)
@@ -27,7 +27,7 @@
                                 <h3>Catelog Reports</h3>
                                 <div class="pt-2">
                                     <form action="{{ route('reports.index') }}" method="get">
-                                        <label for="">Find User</label>
+                                        <label for="">Find catalog</label>
                                         <div class="input-group mb-3">
                                             <input type="date" name="fromC" class="form-control shadow-none"
                                                 id="">
@@ -52,8 +52,13 @@
                                             @if ($catalogReport)
                                                 @foreach ($catalogReport as $catelog)
                                                     <tr>
-                                                        <td><img src="{{ asset('images/catalog')}}/{{$catelog->product->catalog->main_image}}" width="80" alt=""></td>
-                                                        <td>{{ $catelog->product->slug }}</td>
+                                                        <td><img src="{{ asset('images/catalog') }}/{{ $catelog->product->catalog->main_image }}"
+                                                                width="80" alt=""></td>
+                                                        <td>
+                                                            {{ $catelog->product->slug }}
+                                                            <br />
+                                                            {{ $catelog->product->sku }}
+                                                        </td>
                                                         <td>{{ $catelog->product->color }}</td>
                                                         <td>{{ $catelog->product->catalog->title }}</td>
                                                         <td>{{ $catelog->total_sales }}</td>

@@ -28,7 +28,7 @@
                     <table class="table table-bordered">
                         <thead class="table-secondary">
                             <tr class="text-center">
-                                <th>ID</th>
+                                <th>Sr. no</th>
                                 <th>Catalog Name</th>
                                 <th>Main Image</th>
                                 <th>Product</th>
@@ -36,9 +36,12 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $i = 1;
+                            @endphp
                             @foreach ($catalogs as $catalog)
                                 <tr class="text-center">
-                                    <td>{{ $catalog->id }}</td>
+                                    <td>{{ $i++ }}</td>
                                     <td>{{ $catalog->title }}</td>
                                     <td>
                                         <img src="{{ asset('images/catalog/' . $catalog->main_image) }}" width="50"

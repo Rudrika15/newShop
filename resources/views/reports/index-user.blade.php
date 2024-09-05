@@ -15,7 +15,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row p-3">
-                            
+
                         </div>
                         <!-- SKU List Table -->
 
@@ -25,17 +25,26 @@
                                 <div class="pt-2">
                                     <form action="{{ route('reports.index') }}" method="get">
                                         <label for="">Find User</label>
-                                        <div class="input-group mb-3">
-                                            <input type="date" name="from" class="form-control shadow-none"
-                                                id="">
-                                            <input type="date" name="to" class="form-control shadow-none"
-                                                id="">
-                                            <button class="btn btn-primary shadow-none" type="submit">Search</button>
+                                        <div class="row">
+                                            <div class="col">
+                                                <input type="date" name="from" class="form-control shadow-none"
+                                                    id="">
+
+                                            </div>
+                                            <div class="col">
+
+                                                <input type="date" name="to" class="form-control shadow-none"
+                                                    id="">
+                                            </div>
+                                            <div class="col">
+
+                                                <button class="btn btn-primary shadow-none" type="submit">Search</button>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
-                                <div class="table-responsive">
-                                    <table class="table table-borderless">
+                                <div class="table-responsive pt-5">
+                                    <table class="table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Name</th>
@@ -61,7 +70,7 @@
 
                             </div>
                         @endif
-                       
+
                     </div>
 
                 </div>

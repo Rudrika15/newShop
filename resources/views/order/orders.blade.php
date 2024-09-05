@@ -38,7 +38,7 @@
                         </div>
                         <form action="{{ route('orders.index') }}" method="get">
                             <div class="row py-3">
-                                <div class="col-md-3">
+                                <div class="col">
                                     <select name="orderStatus" class="form-select">
                                         <option disabled {{ request('orderStatus') == null ? 'selected' : '' }}>select order
                                             status</option>
@@ -55,17 +55,22 @@
                                             {{ request('orderStatus') == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col">
                                     <input type="text" placeholder="Enter Product Name" name="productName"
                                         class="form-control" value="{{ request('productName') }}" />
                                 </div>
-                                <div class="col-md-3">
-                                        <input type="text" placeholder="Enter Name" name="userName" class="form-control"
-                                            value="{{ request('userName') }}" />
-                                    
+                                <div class="col">
+                                    <input type="text" placeholder="Enter Name" name="userName" class="form-control"
+                                        value="{{ request('userName') }}" />
+
+                                </div>
+                                <div class="col">
+                                    <input type="date" placeholder="Enter Name" name="date" class="form-control"
+                                        value="{{ request('date') }}" />
+
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col">
                                     <input type="submit" class="btn btn-primary shadow-none" value="Filter" />
                                     <a href="{{ route('orders.index') }}" class="btn btn-primary shadow-none">Reset</a>
                                 </div>
@@ -85,17 +90,25 @@
                                         <th>Order Status</th>
                                         <th>Price</th>
                                         <th>Total Amount</th>
+                                        <th>Order Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($orders as $order)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $order->order->users->name ?? '-' }}</td>
-                                            <td style="width: 300px">{{ nl2br($order->customer_address ?? '-') }}</td>
+                                            <td>{{ $order->order->users->name ?? '-' }}
+                                                <br />
+                                                {{ $order->order->users->contact ?? '-' }}
+                                            </td>
+                                            <td style="width: 200px">{{ nl2br($order->customer_address ?? '-') }}</td>
                                             <td>{{ $order->order->payment_id ?? '-' }}</td>
-                                            <td>{{ $order->product->slug ?? '-' }}</td>
-                                            <td>{{ $order->quantity ?? '-' }}</td>
+                                            <td>
+                                                {{ $order->product->slug ?? '-' }}
+                                                <br />
+                                                {{ $order->product->sku ?? '-' }}
+                                            </td>
+                                            <td style="width: 50px">{{ $order->quantity ?? '-' }}</td>
                                             <td style="width: 120px">
                                                 <select class="form-control order-status"
                                                     data-order-id="{{ $order->id }}">
@@ -118,6 +131,12 @@
                                             </td>
                                             <td>{{ $order->price ?? '-' }}</td>
                                             <td>{{ $order->order->amount ?? '-' }}</td>
+                                            <td>
+                                                @php
+                                                    $date = date('d-M-Y', strtotime($order->created_at));
+                                                @endphp
+                                                {{ $date ?? '-' }}
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

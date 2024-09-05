@@ -42,55 +42,64 @@
                 <!-- ======= Dashboard ======= -->
                 <section id="dashboard" class="dashboard">
                     @if ($catalogs == null)
-                    <div class="row">
-                        <!-- Out-of-Stock Products -->
-                        <div class="col-lg-12">
-                            <div class="card-body mb-2">
-                                <h5 class="card-title">Out-of-Stock Products</h5>
-                                <table class="table table-bordered text-center">
-                                    <thead>
-                                        <tr>
-                                            <th>Catalog Name</th>
-                                            <th>Product Name</th>
-                                            <th>Quantity</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($catalogs as $catalog)
-                                            @foreach ($catalog->products as $product)
-                                                @foreach ($product->productStocks as $stock)
-                                                    @if ($stock->quantity <= 10)
-                                                        <tr>
-                                                            <td>{{ $catalog->title }}</td>
-                                                            <td>{{ $product->slug }}</td>
-                                                            <td>{{ $stock->quantity }}</td>
-                                                            <td>
-                                                                <div class="d-flex gap-2 justify-content-center">
-                                                                    <div>
-                                                                        <a href="{{ route('product-stock.edit', $stock->id) }}"
-                                                                            class="btn btn-primary btn-sm shadow-none mb-2">Edit</a>
+                        <div class="row">
+                            <!-- Out-of-Stock Products -->
+                            <div class="col-lg-12">
+                                <div class="card-body mb-2">
+                                    <h5 class="card-title">Out-of-Stock Products</h5>
+                                    <table class="table table-bordered text-center">
+                                        <thead>
+                                            <tr>
+                                                <th>Catalog Name</th>
+                                                <th>Product Name</th>
+                                                <th>Quantity</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($catalogs as $catalog)
+                                                @foreach ($catalog->products as $product)
+                                                    @foreach ($product->productStocks as $stock)
+                                                        @if ($stock->quantity <= 10)
+                                                            <tr>
+                                                                <td>{{ $catalog->title }}</td>
+                                                                <td>{{ $product->slug }}
+                                                                    <br />
+                                                                    {{ $product->sku }}
+                                                                </td>
+                                                                <td>{{ $stock->quantity }}</td>
+                                                                <td>
+                                                                    <div class="d-flex gap-2 justify-content-center">
+                                                                        <div>
+                                                                            <a href="{{ route('product-stock.edit', $stock->id) }}"
+                                                                                class="btn btn-primary btn-sm shadow-none mb-2">Edit</a>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                        @endif
+                                                    @endforeach
                                                 @endforeach
                                             @endforeach
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {!! $catalogs->withQueryString()->links('pagination::bootstrap-5') !!}
                             </div>
-                            {!! $catalogs->withQueryString()->links('pagination::bootstrap-5') !!}
                         </div>
-                    </div>
                     @endif
                     <div class="row">
                         <!-- Recent Orders -->
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Recent Orders</h5>
+                                    <div class="d-flex justify-content-between">
+
+                                        <h5 class="my-3">Recent Orders</h5>
+                                        <div>
+                                            <a href="{{ route('admin.home') }}" class="btn btn-primary my-3 ">Refresh</a>
+                                        </div>
+                                    </div>
                                     @if (count($orders) !== 0)
                                         <table id="slider-table" class="table table-bordered text-center">
                                             <thead class="">
@@ -104,16 +113,23 @@
                                                     <th>Order Status</th>
                                                     <th>Price</th>
                                                     <th>Total Amount</th>
+                                                    <th>Order Date</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($orders as $order)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $order->order->users->name ?? '-' }}</td>
+                                                        <td>{{ $order->order->users->name ?? '-' }}
+                                                            <br />
+                                                            {{ $order->order->users->contact ?? '-' }}
+                                                        </td>
                                                         <td>{{ $order->customer_address ?? '-' }}</td>
                                                         <td>{{ $order->order->payment_id ?? '-' }}</td>
-                                                        <td>{{ $order->product->slug ?? '-' }}</td>
+                                                        <td>{{ $order->product->slug ?? '-' }}
+                                                            <br />
+                                                            {{ $order->product->sku ?? '-' }}
+                                                        </td>
                                                         <td>{{ $order->quantity ?? '-' }}</td>
                                                         <td>
                                                             {{ $order->orderStatus ?? '-' }}
@@ -121,6 +137,12 @@
                                                         {{-- {{$order->id}} --}}
                                                         <td>{{ $order->price ?? '-' }}</td>
                                                         <td>{{ $order->order->amount ?? '-' }}</td>
+                                                        <td>
+                                                            @php
+                                                                $date = date('d-M-Y', strtotime($order->created_at));
+                                                            @endphp
+                                                            {{ $date ?? '-' }}
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -132,7 +154,7 @@
                     </div>
 
 
-                   
+
                 </section>
             </div>
         </div>

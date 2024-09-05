@@ -60,10 +60,11 @@ class UserController extends Controller
     {
         $from = $request->from;
         $to = $request->to;
-
+//print sku also
         $stickers = OrderDetail::whereDate('created_at', '>=', $from)
             ->whereDate('created_at', '<=', $to)
-            ->pluck('customer_address');
+            ->pluck('customer_address')
+            ;
 
         $html = '<!DOCTYPE html>
     <html lang="en">

@@ -59,7 +59,11 @@ class OrderController extends Controller
                 $q->where('name', 'like', '%' . $request->userName . '%');
             });
         }
-
+        if ($request->has('date')) {
+            $query->whereHas('order',  function ($q) use ($request) {
+                $q->where('created_at', 'like', '%' . $request->date . '%');
+            });
+        }
         $orders = $query->orderBy('created_at', 'desc')->paginate(10);
 
         return view('order.orders', compact('orders'));
