@@ -46,9 +46,14 @@
                                         <tr>
                                             <td>
                                                 {{ $category->categoryname }} 
-                                                @if($category->is_parent == 1 && $category->children)
-                                                <b> => </b>{{ $category->children->categoryname }}
+                                                @if($category->is_parent && $category->children->isNotEmpty())
+                                                    <b> => </b>
+                                                    @foreach($category->children as $child)
+                                                        {{ $child->categoryname }}
+                                                        @if (!$loop->last) <b> => </b> @endif
+                                                    @endforeach
                                                 @endif
+                                                
                                             </td>
                                             {{--  <td>{{ $category->parent }}</td>  --}}
                                             <td>

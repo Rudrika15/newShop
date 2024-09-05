@@ -36,10 +36,45 @@
                             </span> --}}
                             </div>
                         </div>
-                        <!-- SKU List Table -->
+                        <form action="{{ route('orders.index') }}" method="get">
+                            <div class="row py-3">
+                                <div class="col-md-3">
+                                    <select name="orderStatus" class="form-select">
+                                        <option disabled {{ request('orderStatus') == null ? 'selected' : '' }}>select order
+                                            status</option>
+                                        <option value="Confirm" {{ request('orderStatus') == 'Confirm' ? 'selected' : '' }}>
+                                            Confirm</option>
+                                        <option value="Shipped" {{ request('orderStatus') == 'Shipped' ? 'selected' : '' }}>
+                                            Shipped</option>
+                                        <option value="Out for Delivery"
+                                            {{ request('orderStatus') == 'Out for Delivery' ? 'selected' : '' }}>Out for
+                                            Delivery</option>
+                                        <option value="Delivered"
+                                            {{ request('orderStatus') == 'Delivered' ? 'selected' : '' }}>Delivered</option>
+                                        <option value="Cancelled"
+                                            {{ request('orderStatus') == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" placeholder="Enter Product Name" name="productName"
+                                        class="form-control" value="{{ request('productName') }}" />
+                                </div>
+                                <div class="col-md-3">
+                                        <input type="text" placeholder="Enter Name" name="userName" class="form-control"
+                                            value="{{ request('userName') }}" />
+                                    
+                                </div>
+
+                                <div class="col-md-3">
+                                    <input type="submit" class="btn btn-primary shadow-none" value="Filter" />
+                                    <a href="{{ route('orders.index') }}" class="btn btn-primary shadow-none">Reset</a>
+                                </div>
+                            </div>
+                        </form>
+
                         @if (count($orders) !== 0)
                             <table id="slider-table" class="table table-bordered text-center">
-                                <thead class="table-secondary">
+                                <thead>
                                     <tr>
                                         <th>No</th>
                                         <th>User Name</th>
@@ -57,11 +92,11 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $order->order->users->name ?? '-' }}</td>
-                                            <td>{{ $order->customer_address ?? '-' }}</td>
+                                            <td style="width: 300px">{{ nl2br($order->customer_address ?? '-') }}</td>
                                             <td>{{ $order->order->payment_id ?? '-' }}</td>
                                             <td>{{ $order->product->slug ?? '-' }}</td>
                                             <td>{{ $order->quantity ?? '-' }}</td>
-                                            <td>
+                                            <td style="width: 120px">
                                                 <select class="form-control order-status"
                                                     data-order-id="{{ $order->id }}">
                                                     <option value="Confirm"
@@ -76,9 +111,11 @@
                                                     <option value="Delivered"
                                                         {{ $order->orderStatus == 'Delivered' ? 'selected' : '' }}>
                                                         Delivered</option>
+                                                    <option value="Cancelled"
+                                                        {{ $order->orderStatus == 'cancelled' ? 'selected' : '' }}>
+                                                        Cancelled</option>
                                                 </select>
                                             </td>
-                                            {{-- {{$order->id}} --}}
                                             <td>{{ $order->price ?? '-' }}</td>
                                             <td>{{ $order->order->amount ?? '-' }}</td>
                                         </tr>
@@ -86,6 +123,7 @@
                                 </tbody>
                             </table>
                         @endif
+
                     </div>
                 </div>
             </div>

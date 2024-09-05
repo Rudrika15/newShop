@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <div class="row p-2">
+        <div class="row p-2" style="background-color: #fff">
             <div class="col-md-6">
                 <h4 class="pt-2">Create Product</h4>
             </div>
@@ -11,7 +11,7 @@
                         class="btn btn-primary shadow-none">Back</a></span>
             </div>
         </div>
-        <div class="row" style="background-color: rgb(236 236 236)">
+        <div class="row" style="background-color: #fff">
             <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row border border-dark p-3 m-3">
@@ -127,7 +127,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="mrp" class="form-label">MRP</label>
-                            <input class="form-control" type="text" name="mrp" id="mrp"
+                            <input class="form-disabled form-control" type="text" readonly name="mrp" id="mrp"
                                 value="{{ old('mrp') }}">
                             <span class="text-danger">
                                 @error('mrp')
@@ -246,8 +246,27 @@
     </div>
 
     @section('script')
+    <script>
+        // Get references to the input fields
+        const basePriceInput = document.getElementById('base_price');
+        const discountAmtInput = document.getElementById('discount_amt');
+        const taxPriceInput = document.getElementById('tax_price');
+        const mrpInput = document.getElementById('mrp');
+    
+function calculateMRP() {
+            const basePrice = parseFloat(basePriceInput.value) || 0;
+            const discountAmt = parseFloat(discountAmtInput.value) || 0;
+            const taxPrice = parseFloat(taxPriceInput.value) || 0;
+            const mrp = basePrice - discountAmt + taxPrice;
+            
+            mrpInput.value = mrp.toFixed(2); // Ensure two decimal places
+        }
+    
+        basePriceInput.addEventListener('input', calculateMRP);
+        discountAmtInput.addEventListener('input', calculateMRP);
+        taxPriceInput.addEventListener('input', calculateMRP);
+    </script>
         <script>
-            // Add Block
             document.getElementById('add-block').addEventListener('click', function() {
                 var newBlock = document.createElement('div');
                 newBlock.classList.add('row', 'border', 'border-dark', 'p-3', 'm-3', 'dynamic-block', 'single-product');

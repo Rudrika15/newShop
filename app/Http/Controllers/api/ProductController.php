@@ -22,7 +22,7 @@ class ProductController extends Controller
             $imgPath = asset('images/catalog/');
 
             foreach ($catalogs as $catalog) {
-                $products = Product::where('catalogid', '=', $catalog->id)->get();
+                $products = Product::where('catalogid', '=', $catalog->id)->where('is_active', 'Yes')->get();
                 $colors = [];
 
                 foreach ($products as $product) {
@@ -45,7 +45,7 @@ class ProductController extends Controller
     {
         try {
             $imgPath = asset('images/product/');
-            $products = Product::where('catalogid', '=', $id)->get();
+            $products = Product::where('catalogid', '=', $id)->where('is_active', 'Yes')->get();
             
             foreach ($products as $product) {
                 // Get stock information for each product

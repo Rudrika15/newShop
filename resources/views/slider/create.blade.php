@@ -47,7 +47,7 @@
                                                 <option value="{{ $catalog->id }}">{{ $catalog->title }}</option>
                                             @endforeach
                                         </select>
-                                       
+                                        <input type="hidden" name="title" id="title"/>
                                     </div>
                                 </div>
                             </div>
@@ -68,6 +68,14 @@
 @endsection
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('sliderName').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex].text;
+            document.getElementById('title').value = selectedOption;
+        });
+    });
+</script>
 <script>
     $(document).ready(function() {
         $('#check').on('change', function() {

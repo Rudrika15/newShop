@@ -44,7 +44,7 @@ class SliderController extends Controller
 
         $slider = new Slider();
         $slider->catalogid = $catalogId;
-
+        $slider->title =$request->title;
         if ($request->hasFile('sliderImage')) {
             $image = $request->file('sliderImage');
             $imageName = time() . '.' . $image->extension();

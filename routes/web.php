@@ -17,7 +17,7 @@ use App\Http\Controllers\SliderController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
-    return view('welcome');
+   return redirect()->route('login');
 });
 
 // Route::get('/demo', function () {
@@ -137,6 +137,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('catalog/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
     Route::get('catalog/restore/{id}', [ProductController::class, 'restore'])->name('product.restore');
     Route::get('catalog/force-delete/{id}', [ProductController::class, 'destory'])->name('product.destory');
+    Route::get('deleteProduct/{id}', [ProductController::class, 'deleteProduct'])->name('product.deleteProduct');
+    Route::get('restoreProduct/{id}', [ProductController::class, 'restoreProduct'])->name('product.restoreProduct');
 
     // Report
     Route::get('report/index', [OrderController::class, 'index'])->name('report.index');

@@ -170,7 +170,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email',
-            'contact' => 'required',
+            'contact' => 'required|min:10|max:10',
          
         ]);
         $input = ([

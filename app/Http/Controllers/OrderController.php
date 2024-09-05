@@ -39,13 +39,32 @@ class OrderController extends Controller
     }
 
 
-    public function allOrders()
+    public function allOrders(Request $request)
     {
-        $orders = OrderDetail::with('product')
-        ->with('order')
-        ->paginate(10);
+
+        $query = OrderDetail::with('product', 'order');
+
+        if ($request->has('orderStatus') && $request->orderStatus != 'select order status') {
+            $query->where('orderStatus', $request->orderStatus);
+        }
+
+
+        if ($request->has('productName')) {
+            $query->whereHas('product', function ($q) use ($request) {
+                $q->where('slug', 'like', '%' . $request->productName . '%');
+            });
+        }
+        if ($request->has('userName')) {
+            $query->whereHas('order.users', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->userName . '%');
+            });
+        }
+
+        $orders = $query->orderBy('created_at', 'desc')->paginate(10);
+
         return view('order.orders', compact('orders'));
     }
+
 
     public function updateStatus(Request $request, $id)
     {

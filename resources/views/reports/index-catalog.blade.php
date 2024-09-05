@@ -15,13 +15,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row p-3">
-                            <div class="col-lg-6">
-                                <h2>
-                                    Reports
-
-                                </h2>
-                            </div>
-
+                            
                         </div>
                         <!-- SKU List Table -->
 
