@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Catalog;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Product;
 use App\Models\Product_stock;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -22,11 +23,7 @@ class UserController extends Controller
     //admin home page
     public function adminHome(Request $request)
     {
-        $catalogs = Catalog::with(['products' => function ($query) {
-            $query->whereNull('deleted_at')->with(['productStocks' => function ($query) {
-                $query->where('quantity', '<=', 10);
-            }]);
-        }])->paginate(5);
+        $catalogs = Product::whereNull('deleted_at')->paginate(5);
 
         $orders = OrderDetail::with('product')
             ->with('order')
@@ -35,10 +32,7 @@ class UserController extends Controller
             ->take(10)
             ->get();
 
-        $catalogs = Catalog::with(['products' => function ($query) {
-            $query->whereNull('deleted_at')->withCount('productStocks');
-        }])->paginate(5);
-
+      
         $ordersCount = OrderDetail::with('product')
             ->with('order')
             ->orderBy('created_at', 'desc')

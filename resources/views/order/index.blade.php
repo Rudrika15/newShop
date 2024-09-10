@@ -26,13 +26,10 @@
                                 <span style="float:right;">
                                     <a id="printButton" class="btn btn-primary btn-print">Print This Page</a>
                                 </span>
-                                {{--  <span style="float:right;"><a href="{{ route('report.index') }}"
-                                        class="btn btn-primary ms-2">Back</a>
-                                </span>  --}}
+                               
                             </div>
                         </div>
-                        <!-- SKU List Table -->
-
+                       
                         @if (count($orders) !== 0)
                             <table id="sku-table" class="table table-bordered text-center">
                                 <thead>

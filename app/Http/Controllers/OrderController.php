@@ -47,8 +47,12 @@ class OrderController extends Controller
         if ($request->has('orderStatus') && $request->orderStatus != 'select order status') {
             $query->where('orderStatus', $request->orderStatus);
         }
-
-
+        //find by userId form order table
+        if ($request->has('userId')) {
+            $query->whereHas('order', function ($q) use ($request) {
+                $q->where('user_id', $request->userId);
+            });
+        }
         if ($request->has('productName')) {
             $query->whereHas('product', function ($q) use ($request) {
                 $q->where('slug', 'like', '%' . $request->productName . '%');

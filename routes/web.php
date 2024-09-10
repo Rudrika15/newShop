@@ -144,7 +144,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('report/index', [OrderController::class, 'index'])->name('report.index');
     Route::get('report/printData', [OrderController::class, 'print'])->name('report.print');
 
-    Route::get('orders/index', [OrderController::class, 'allOrders'])->name('orders.index');
+    Route::get('orders/index/{id?}', [OrderController::class, 'allOrders'])->name('orders.index');
 
     // Pincodes
 

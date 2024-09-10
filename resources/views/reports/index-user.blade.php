@@ -56,12 +56,19 @@
                                         <tbody>
                                             @if ($userReports)
                                                 @foreach ($userReports as $user)
-                                                    <tr>
-                                                        <td>{{ $user->users->name }}</td>
-                                                        <td>{{ $user->users->email }}</td>
-                                                        <td>{{ $user->users->contact }}</td>
-                                                        <td>{{ $user->total_orders }}</td>
-                                                    </tr>
+                                                <tr>
+                                                    <td>{{ $user->users->name }}</td>
+                                                    <td>{{ $user->users->email }}</td>
+                                                    <td>{{ $user->users->contact }}</td>
+                                                    <td>{{ $user->total_orders }}</td>
+                                                   <td>
+
+                                                    <a href="{{ route('orders.index', ['userId' => $user->users->id]) }}">
+                                                        View Orders
+                                                    </a>
+                                                    
+                                                </td>
+                                                        </tr>
                                                 @endforeach
                                             @endif
                                         </tbody>

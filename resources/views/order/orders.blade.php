@@ -81,7 +81,8 @@
                             <table id="slider-table" class="table table-bordered text-center">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
+                                        <th>Sr no</th>
+                                        <th>Order date</th>
                                         <th>User Name</th>
                                         <th>Address</th>
                                         <th>Payment ID</th>
@@ -90,13 +91,14 @@
                                         <th>Order Status</th>
                                         <th>Price</th>
                                         <th>Total Amount</th>
-                                        <th>Order Date</th>
+                                        <th>Update Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($orders as $order)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
+                                            <td>{{ date('d-M-Y', strtotime($order->created_at)) }}</td>
                                             <td>{{ $order->order->users->name ?? '-' }}
                                                 <br />
                                                 {{ $order->order->users->contact ?? '-' }}
@@ -133,7 +135,7 @@
                                             <td>{{ $order->order->amount ?? '-' }}</td>
                                             <td>
                                                 @php
-                                                    $date = date('d-M-Y', strtotime($order->created_at));
+                                                    $date = date('d-M-Y', strtotime($order->updated_at));
                                                 @endphp
                                                 {{ $date ?? '-' }}
                                             </td>

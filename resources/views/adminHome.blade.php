@@ -41,53 +41,52 @@
                 <h2 class="text-center">Hello, Admin</h2>
                 <!-- ======= Dashboard ======= -->
                 <section id="dashboard" class="dashboard">
-                    @if ($catalogs == null)
-                        <div class="row">
-                            <!-- Out-of-Stock Products -->
-                            <div class="col-lg-12">
-                                <div class="card-body mb-2">
-                                    <h5 class="card-title">Out-of-Stock Products</h5>
-                                    <table class="table table-bordered text-center">
-                                        <thead>
+
+                    <div class="row">
+                        <!-- Out-of-Stock Products -->
+                        <div class="col-lg-12">
+                            <div class="card-body mb-2">
+                                <h5 class="card-title">Update stock</h5>
+                                <table class="table table-bordered text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>Catalog Name</th>
+                                            <th>Product Name</th>
+                                            <th>Quantity</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($catalogs as $catalog)
                                             <tr>
-                                                <th>Catalog Name</th>
-                                                <th>Product Name</th>
-                                                <th>Quantity</th>
-                                                <th>Action</th>
+                                                <td>{{ $catalog->catalog->title  }}</td>
+                                                <td>
+                                                    {{ $catalog->slug }}
+                                                    <br>
+                                                    {{ $catalog->sku }}
+                                                </td>
+                                    
+                                                <td>
+                                                    @if ($catalog->getStoke) 
+                                                        {{ $catalog->getStoke->quantity ?? 'N/A' }} 
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('product.edit', $catalog->id) }}" class="btn btn-primary">Edit</a>
+                                                </td>
+
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($catalogs as $catalog)
-                                                @foreach ($catalog->products as $product)
-                                                    @foreach ($product->productStocks as $stock)
-                                                        @if ($stock->quantity <= 10)
-                                                            <tr>
-                                                                <td>{{ $catalog->title }}</td>
-                                                                <td>{{ $product->slug }}
-                                                                    <br />
-                                                                    {{ $product->sku }}
-                                                                </td>
-                                                                <td>{{ $stock->quantity }}</td>
-                                                                <td>
-                                                                    <div class="d-flex gap-2 justify-content-center">
-                                                                        <div>
-                                                                            <a href="{{ route('product-stock.edit', $stock->id) }}"
-                                                                                class="btn btn-primary btn-sm shadow-none mb-2">Edit</a>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        @endif
-                                                    @endforeach
-                                                @endforeach
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                                {!! $catalogs->withQueryString()->links('pagination::bootstrap-5') !!}
+                                        @endforeach
+                                    </tbody>
+                                    
+                                </table>
                             </div>
+                            {!! $catalogs->withQueryString()->links('pagination::bootstrap-5') !!}
                         </div>
-                    @endif
+                    </div>
+
                     <div class="row">
                         <!-- Recent Orders -->
                         <div class="col-lg-12">
