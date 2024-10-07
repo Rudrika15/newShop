@@ -166,7 +166,7 @@
 <body>
 
     <!-- Header Section -->
-    <nav class="navbar navbar-expand-lg navbar-light position-sticky top-0 z-index-999">
+    <nav class="navbar navbar-expand-lg navbar-light position-sticky top-0 " style="z-index: 999;">
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="{{ asset('images/logo.jpeg') }}" alt="Logo">
