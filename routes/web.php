@@ -15,10 +15,7 @@ use App\Http\Controllers\SkuController;
 use App\Http\Controllers\SliderController;
 // use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserController;
-
-Route::get('/', function () {
-    return view('HomePage');
-});
+use App\Http\Controllers\visitor\VisitorController;
 
 Route::get('/login', function () {
     return redirect()->route('login');
@@ -169,3 +166,9 @@ Route::get('/about', [CmsController::class, 'about'])->name('about');
 Route::get('/terms', [CmsController::class, 'terms'])->name('terms');
 Route::get('/policy', [CmsController::class, 'privacy'])->name('policy');
 Route::get('/refund', [CmsController::class, 'refund'])->name('refund');
+
+
+Route::get('/',[VisitorController::class, 'home'])->name('home');
+Route::get('/product',[VisitorController::class, 'product'])->name('product');
+Route::get('/product-detail/{id}',[VisitorController::class, 'productdetail'])->name('product.detail');
+Route::get('/contact',[VisitorController::class, 'contact'])->name('contact');
