@@ -45,4 +45,24 @@ class PincodeController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    public function checkPincode(Request $request)
+    {
+        try {
+            $code = $request->input('pincode');
+            if (!$code) {
+                return response()->json(['message' => 'Pincode parameter is required'], 400);
+            }
+
+            $pincodes = Pincode::where('pincode', $code)->get();
+            return response()->json([
+                'data' => $pincodes,
+                'message' => 'Pincode found',
+                'status'=>true,
+            ]);
+           
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+
+    }
 }

@@ -2,13 +2,23 @@
 
 @section('content')
     <div class="container">
-        <div class="col-lg-10 d-flex justify-content-end align-items-center mb-2">
-            <span style="float:right;"><a href="{{ route('category.index') }}" class="btn btn-primary">Back</a></span>
+        <div class="col-lg-10 ">
+
         </div>
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Category Create</div>
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between  mb-3">
+                            <div class="p-2 fs-4"> Category Create</div>
+
+                            <div class="p-2 ">
+                                <a href="{{ route('category.index') }}" class="btn btn-primary">Back</a>
+                            </div>
+
+                        </div>
+
+                    </div>
                     <div class="card-body ">
                         <form method="POST" action="{{ route('category.store') }}">
                             @csrf

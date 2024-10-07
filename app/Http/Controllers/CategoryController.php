@@ -13,7 +13,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::paginate(5);
-
+// return $categories= Category::with('children')->get();
         return view('category.index', compact('categories'));
     }
 

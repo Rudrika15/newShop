@@ -28,6 +28,12 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Search Box -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12">
+                                <input type="text" id="search" class="form-control" placeholder="Search Pincodes">
+                            </div>
+                        </div>
                         <!-- Pincode List Table -->
                         <div id="pincode-table-container">
                             <!-- Data will be loaded here via AJAX -->
@@ -47,9 +53,10 @@
         $(document).ready(function() {
             fetchPincodes();
 
-            function fetchPincodes(page = 1) {
+            function fetchPincodes(page = 1, query = '') {
                 $.ajax({
-                    url: '{{ route('pincodes.fetch') }}?page=' + page,
+                    url: '{{ route('pincodes.fetch') }}',
+                    data: { page: page, query: query },
                     success: function(data) {
                         $('#pincode-table-container').html(generateTable(data.pincodes));
                         $('#pagination-links').html(data.pagination);
@@ -59,7 +66,7 @@
 
             function generateTable(pincodes) {
                 let tableHtml = '<table id="pincode-table" class="table table-bordered text-center">';
-                tableHtml += '<thead class="table-secondary">';
+                tableHtml += '<thead >';
                 tableHtml +=
                     '<tr><th>No</th><th>State</th><th>District</th><th>City</th><th>Pincode</th><th>Is Deliverable</th><th>Delivery Charges</th></tr>';
                 tableHtml += '</thead><tbody>';
@@ -76,7 +83,7 @@
                             <option value="NO" ${pincode.isDeliverable === 'NO' ? 'selected' : ''}>NO</option>
                         </select>
                     </td>
-                    <td contenteditable="true" class="editable" data-id="${pincode.id}" data-field="deliveryCharges">${pincode.deliveryCharges ?? '-'}</td>
+                    <td contenteditable="true" class="editable" data-id="${pincode.id}" data-field="charges">${pincode.charges ?? '-'}</td>
                 </tr>`;
                 });
                 tableHtml += '</tbody></table>';
@@ -86,7 +93,13 @@
             $(document).on('click', '.pagination a', function(event) {
                 event.preventDefault();
                 let page = $(this).attr('href').split('page=')[1];
-                fetchPincodes(page);
+                let query = $('#search').val();
+                fetchPincodes(page, query);
+            });
+
+            $(document).on('input', '#search', function() {
+                let query = $(this).val();
+                fetchPincodes(1, query);
             });
 
             $(document).on('input', '.editable', function() {
@@ -99,10 +112,12 @@
                 let field = $(this).data('field');
                 let value = $(this).text();
 
-                // Validate if the value is a number
-                if (isNaN(value) || value.trim() === '') {
-                    Swal.fire('Error!', 'Please enter a valid number.', 'error');
-                    return;
+                if (field == 'charges') {
+                    // Validate if the value is a number
+                    if (isNaN(value) || value.trim() === '') {
+                        Swal.fire('Error!', 'Please enter a valid number.', 'error');
+                        return;
+                    }
                 }
 
                 $.ajax({

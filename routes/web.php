@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CmsController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
@@ -14,11 +15,11 @@ use App\Http\Controllers\SkuController;
 use App\Http\Controllers\SliderController;
 // use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\visitor\VisitorController;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/login', function () {
+    return redirect()->route('login');
 });
-
 // Route::get('/demo', function () {
 // return view('home');
 // });
@@ -81,6 +82,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     //changepin
     Route::post('/user/updatePin/{id}', [UserController::class, 'updatePin'])->name('user.updatePin');
+    // reset password
+    Route::get('/user/resetPassword/{id?}', [UserController::class, 'resetPassword'])->name('user.resetPassword');
 
     // SKU 
     Route::get('/sku/index', [SkuController::class, 'index'])->name('sku.index');
@@ -134,12 +137,14 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('catalog/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
     Route::get('catalog/restore/{id}', [ProductController::class, 'restore'])->name('product.restore');
     Route::get('catalog/force-delete/{id}', [ProductController::class, 'destory'])->name('product.destory');
+    Route::get('deleteProduct/{id}', [ProductController::class, 'deleteProduct'])->name('product.deleteProduct');
+    Route::get('restoreProduct/{id}', [ProductController::class, 'restoreProduct'])->name('product.restoreProduct');
 
     // Report
     Route::get('report/index', [OrderController::class, 'index'])->name('report.index');
     Route::get('report/printData', [OrderController::class, 'print'])->name('report.print');
 
-    Route::get('orders/index', [OrderController::class, 'allOrders'])->name('orders.index');
+    Route::get('orders/index/{id?}', [OrderController::class, 'allOrders'])->name('orders.index');
 
     // Pincodes
 
@@ -150,4 +155,20 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     //orders
     // Route::post('/update-order-status', [OrderController::class, 'updateOrderStatus'])->name('updateOrderStatus');
     Route::post('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+    Route::get('/sticker', [UserController::class, 'sticker'])->name('user.sticker');
+    Route::get('/sticker/print', [UserController::class, 'stickerPrint'])->name('sticker.print');
+
+    // reports
+    Route::get('/reports/users/index', [UserController::class, 'reportsUser'])->name('reports.index');
+    Route::get('/reports/catalog/index', [UserController::class, 'reportsCatalog'])->name('reports.catalog.index');
 });
+Route::get('/about', [CmsController::class, 'about'])->name('about');
+Route::get('/terms', [CmsController::class, 'terms'])->name('terms');
+Route::get('/policy', [CmsController::class, 'privacy'])->name('policy');
+Route::get('/refund', [CmsController::class, 'refund'])->name('refund');
+
+
+Route::get('/',[VisitorController::class, 'home'])->name('home');
+Route::get('/product',[VisitorController::class, 'product'])->name('product');
+Route::get('/product-detail/{id}',[VisitorController::class, 'productdetail'])->name('product.detail');
+Route::get('/contact',[VisitorController::class, 'contact'])->name('contact');

@@ -39,13 +39,40 @@ class OrderController extends Controller
     }
 
 
-    public function allOrders()
+    public function allOrders(Request $request)
     {
-        $orders = OrderDetail::with('product')
-        ->with('order')
-        ->paginate(10);
+
+        $query = OrderDetail::with('product', 'order');
+
+        if ($request->has('orderStatus') && $request->orderStatus != 'select order status') {
+            $query->where('orderStatus', $request->orderStatus);
+        }
+        //find by userId form order table
+        if ($request->has('userId')) {
+            $query->whereHas('order', function ($q) use ($request) {
+                $q->where('user_id', $request->userId);
+            });
+        }
+        if ($request->has('productName')) {
+            $query->whereHas('product', function ($q) use ($request) {
+                $q->where('slug', 'like', '%' . $request->productName . '%');
+            });
+        }
+        if ($request->has('userName')) {
+            $query->whereHas('order.users', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->userName . '%');
+            });
+        }
+        if ($request->has('date')) {
+            $query->whereHas('order',  function ($q) use ($request) {
+                $q->where('created_at', 'like', '%' . $request->date . '%');
+            });
+        }
+        $orders = $query->orderBy('created_at', 'desc')->paginate(10);
+
         return view('order.orders', compact('orders'));
     }
+
 
     public function updateStatus(Request $request, $id)
     {

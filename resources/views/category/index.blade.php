@@ -44,7 +44,17 @@
                                 <tbody>
                                     @foreach ($categories as $category)
                                         <tr>
-                                            <td>{{ $category->categoryname }}</td>
+                                            <td>
+                                                {{ $category->categoryname }} 
+                                                @if($category->is_parent && $category->children->isNotEmpty())
+                                                    <b> => </b>
+                                                    @foreach($category->children as $child)
+                                                        {{ $child->categoryname }}
+                                                        @if (!$loop->last) <b> => </b> @endif
+                                                    @endforeach
+                                                @endif
+                                                
+                                            </td>
                                             {{--  <td>{{ $category->parent }}</td>  --}}
                                             <td>
                                                 <div class="d-flex gap-2 justify-content-center">

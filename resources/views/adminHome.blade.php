@@ -41,11 +41,12 @@
                 <h2 class="text-center">Hello, Admin</h2>
                 <!-- ======= Dashboard ======= -->
                 <section id="dashboard" class="dashboard">
+
                     <div class="row">
                         <!-- Out-of-Stock Products -->
                         <div class="col-lg-12">
                             <div class="card-body mb-2">
-                                <h5 class="card-title">Out-of-Stock Products</h5>
+                                <h5 class="card-title">Update stock</h5>
                                 <table class="table table-bordered text-center">
                                     <thead>
                                         <tr>
@@ -57,72 +58,102 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($catalogs as $catalog)
-                                            @foreach ($catalog->products as $product)
-                                                @foreach ($product->productStocks as $stock)
-                                                    @if ($stock->quantity <= 10)
-                                                        <tr>
-                                                            <td>{{ $catalog->title }}</td>
-                                                            <td>{{ $product->slug }}</td>
-                                                            <td>{{ $stock->quantity }}</td>
-                                                            <td>
-                                                                <div class="d-flex gap-2 justify-content-center">
-                                                                    <div>
-                                                                        <a href="{{ route('product-stock.edit', $stock->id) }}"
-                                                                            class="btn btn-primary btn-sm shadow-none mb-2">Edit</a>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
+                                            <tr>
+                                                <td>{{ $catalog->catalog->title  }}</td>
+                                                <td>
+                                                    {{ $catalog->slug }}
+                                                    <br>
+                                                    {{ $catalog->sku }}
+                                                </td>
+                                    
+                                                <td>
+                                                    @if ($catalog->getStoke) 
+                                                        {{ $catalog->getStoke->quantity ?? 'N/A' }} 
+                                                    @else
+                                                        N/A
                                                     @endif
-                                                @endforeach
-                                            @endforeach
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('product.edit', $catalog->id) }}" class="btn btn-primary">Edit</a>
+                                                </td>
+
+                                            </tr>
                                         @endforeach
                                     </tbody>
+                                    
                                 </table>
                             </div>
                             {!! $catalogs->withQueryString()->links('pagination::bootstrap-5') !!}
                         </div>
                     </div>
+
                     <div class="row">
                         <!-- Recent Orders -->
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Recent Orders</h5>
-                                    <table class="table table-bordered text-center">
-                                        <thead>
-                                            <tr>
-                                                <th>Order ID</th>
-                                                <th>Customer Name</th>
-                                                <th>Order Date</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>#1234</td>
-                                                <td>John Doe</td>
-                                                <td>2023-02-20</td>
-                                                <td>$100.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>#1235</td>
-                                                <td>Jane Doe</td>
-                                                <td>2023-02-19</td>
-                                                <td>$50.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>#1236</td>
-                                                <td>Bob Smith</td>
-                                                <td>2023-02-18</td>
-                                                <td>$200.00</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <div class="d-flex justify-content-between">
+
+                                        <h5 class="my-3">Recent Orders</h5>
+                                        <div>
+                                            <a href="{{ route('admin.home') }}" class="btn btn-primary my-3 ">Refresh</a>
+                                        </div>
+                                    </div>
+                                    @if (count($orders) !== 0)
+                                        <table id="slider-table" class="table table-bordered text-center">
+                                            <thead class="">
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>User Name</th>
+                                                    <th>Address</th>
+                                                    <th>Payment ID</th>
+                                                    <th>Product Name</th>
+                                                    <th>Quantity</th>
+                                                    <th>Order Status</th>
+                                                    <th>Price</th>
+                                                    <th>Total Amount</th>
+                                                    <th>Order Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($orders as $order)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $order->order->users->name ?? '-' }}
+                                                            <br />
+                                                            {{ $order->order->users->contact ?? '-' }}
+                                                        </td>
+                                                        <td>{{ $order->customer_address ?? '-' }}</td>
+                                                        <td>{{ $order->order->payment_id ?? '-' }}</td>
+                                                        <td>{{ $order->product->slug ?? '-' }}
+                                                            <br />
+                                                            {{ $order->product->sku ?? '-' }}
+                                                        </td>
+                                                        <td>{{ $order->quantity ?? '-' }}</td>
+                                                        <td>
+                                                            {{ $order->orderStatus ?? '-' }}
+                                                        </td>
+                                                        {{-- {{$order->id}} --}}
+                                                        <td>{{ $order->price ?? '-' }}</td>
+                                                        <td>{{ $order->order->amount ?? '-' }}</td>
+                                                        <td>
+                                                            @php
+                                                                $date = date('d-M-Y', strtotime($order->created_at));
+                                                            @endphp
+                                                            {{ $date ?? '-' }}
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
+
+
+
                 </section>
             </div>
         </div>

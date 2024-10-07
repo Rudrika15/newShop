@@ -38,9 +38,8 @@
 
                         @if (count($sliders) !== 0)
                             <table id="slider-table" class="table table-bordered text-center">
-                                <thead class="table-secondary">
+                                <thead>
                                     <tr>
-                                        <th>Slider Name</th>
                                         <th>Slider Image</th>
                                         <th>Action</th>
                                     </tr>
@@ -48,19 +47,14 @@
                                 <tbody>
                                     @foreach ($sliders as $slider)
                                         <tr>
-                                            <td>{{ $slider->sliderName ?? '-' }}</td>
                                             {{-- <td>{{ $slider->sliderImage ?? '-' }}</td> --}}
 
-                                            <td><img src="{{ asset('images/slider/' . $slider->sliderImage) }}"
-                                                    width="50" height="50"></td>
+                                            <td><img src="{{ asset('slider/' . $slider->image) }}" width="50"
+                                                    height="50"></td>
 
 
                                             <td>
                                                 <div class="d-flex gap-2 justify-content-center">
-                                                    <div>
-                                                        <a href="{{ route('slider.edit', $slider->id) }}"
-                                                            class="btn btn-primary btn-sm shadow-none mb-2 ">Edit</a>
-                                                    </div>
                                                     <div>
                                                         <button class="delete-user btn btn-danger btn-sm shadow-none"
                                                             data-id="{{ $slider->id }}">Delete</button>

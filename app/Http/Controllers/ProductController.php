@@ -119,6 +119,14 @@ class ProductController extends Controller
                 $stock->product_id = $product->id;
                 $stock->quantity = $request->sku['quantity'][$i];
                 $stock->save();
+
+                // save product transaction
+
+                $transaction = new Stock_Transaction();
+                $transaction->product_id = $product->id;
+                $transaction->quantity = $request->sku['quantity'][$i];
+                $transaction->remarks = 'Initial Stock';
+                $transaction->save();
             }
 
             DB::commit();
@@ -185,12 +193,19 @@ class ProductController extends Controller
         return redirect()->route('product.index')->with('success', 'Catalog Updated Successfully');
     }
 
-    public function edit(string $id)
+    public function edit ($id)
     {
-        $product = Product::with('productStocks')->findOrFail($id);
-        $categories = Category::all();
-        $skus = Sku::all();
-        return view('product.editproduct', compact('product', 'categories', 'skus'));
+        // $product = Product::with('productStocks')->findOrFail($id);
+        // $categories = Category::all();
+        // $skus = Sku::all();
+        // return view('product.editproduct', compact('product', 'categories', 'skus'));
+        $product = Product::findOrFail($id);
+        $stock = Product_Stock::where('product_id', $product->id)->first();
+        $catalog = Catalog::find($product->catalogid);
+        return view('product.editproduct', compact('product', 'catalog', 'stock'));
+
+       
+
     }
 
 
@@ -201,67 +216,42 @@ class ProductController extends Controller
     {
         // return $request;
         $request->validate([
-            // 'sku' => 'required',
-            // 'categoryid' => 'required',
-            'slug' => 'required',
-            'color' => 'required',
-            'size' => '',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            // 'opening_stock' => 'required',
-            'description' => 'required',
+      
             'base_price' => 'required',
             'tax_price' => 'required',
             'discount_amt' => 'required',
             'mrp' => 'required',
-            'is_active' => 'required',
         ]);
 
-        $input = $request->all();
-        // dd($input);
-        // Move old image to deleted folder
-        if ($image = $request->file('image')) {
+    
+        $product = Product::find($product->id);
+        
 
-            if ($product->image) {
-                $existingImage = public_path('images/product/' . $product->image);
-                if (file_exists($existingImage)) {
-                    // Delete the existing image
-                    unlink($existingImage);
-                }
-
-                $destinationPath = 'images/product';
-                // $oldImagePath = 'images/product' . $product->image;
-                $productImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
-                $image->move($destinationPath, $productImage);
-                $input['image'] = $productImage;
-            } else {
-                // unset($input['image']);
-            }
+        $product->base_price = $request->base_price;
+        $product->tax_price = $request->tax_price;
+        $product->discount_amt = $request->discount_amt;
+        $product->mrp = $request->mrp;
+        if($request->hasFile('image')){
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->extension();
+            $image->move(public_path('images/product'), $imageName);
+            $product->image = $imageName;
         }
-        $product->update($input);
+        $product->save();
+        if(isset($request->newStock) && $request->newStock > 0)
+        {
+        $stock = new Stock_Transaction();
+        $stock->product_id = $product->id;
+        $stock->quantity = $request->newStock;
+        $stock->type = 'in';
+        $stock->remarks = 'Stock Update';
+        $stock->save();
 
-        // Update quantity if newstock is provided
-        if ($request->filled('newstock')) {
-            $newStock = intval($request->newstock);
-
-            // Update product stock
-            $productstock = $product->productStocks->first()->quantity += $newStock;
-
-            //   return $productstock;
-
-            $pstock = Product_stock::find($request->pstockid);
-            //    return $pstock;
-            $pstock->quantity = $productstock;
-
-            $pstock->save();
-
-            //Save stock transaction (assuming you have a StockTransaction model and table)
-            Stock_Transaction::create([
-                'product_id' => $product->id,
-                'type' => $request->type, // or 'subtract' based on your needs
-                'quantity' => $productstock,
-                'remarks' => $request->remarks,
-            ]);
+        $productStock = Product_stock::where('product_id', $product->id)->first();
+        $productStock->quantity = $productStock->quantity + $request->newStock;
+        $productStock->save();
         }
+       
         return redirect()->route('product.index')->with('success', 'Product Updated Successfully');
     }
     /**
@@ -315,5 +305,19 @@ class ProductController extends Controller
             ->findOrFail($id);
 
         return view('product.productview', compact('product'));
+    }
+    public function deleteProduct($id)
+    {
+        $product = Product::find($id);
+        $product->is_active = 'No';
+        $product->save();
+        return redirect()->back()->with('success', 'Product Deleted Successfully');
+    }
+    public function restoreProduct($id)
+    {
+        $product = Product::find($id);
+        $product->is_active = 'Yes';
+        $product->save();
+        return redirect()->back()->with('success', 'Product Deleted Successfully');
     }
 }

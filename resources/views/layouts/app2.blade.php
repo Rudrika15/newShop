@@ -102,7 +102,7 @@
                             <a class="dropdown-item d-flex align-items-center"
                                 href="{{ route('user.password', auth()->user()->id) }}">
                                 <i class="bi bi-gear"></i>
-                                <span>Forgot Password</span>
+                                <span>Change Password</span>
                             </a>
                         </li>
 
@@ -136,7 +136,9 @@
                     <span>Dashboard</span>
                 </a>
 
-            </li><!-- End Dashboard Nav -->
+            </li>
+            
+            <!-- End Dashboard Nav -->
 
 
             <li class="nav-item">
@@ -216,14 +218,10 @@
                             <i class="bi bi-circle"></i><span>Slider List</span>
                         </a>
                     </li>
-                    {{--  <li>
-                      <a href="{{ route('sku.create') }}">
-                          <i class="bi bi-circle"></i><span>Create SKU</span>
-                      </a>
-                  </li>  --}}
-                    <!-- Add more menu items for SKU management here... -->
+
                 </ul>
-            </li><!-- End SKU Management Nav -->
+            </li>
+            <!-- End SKU Management Nav -->
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('product.index') ? '' : 'collapsed' }}"
                     data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
@@ -256,7 +254,7 @@
                     </li>
                 </ul>
             </li><!-- End Charts Nav -->
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('report.index') ? '' : 'collapsed' }}"
                     data-bs-target="#report-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-graph-up"></i><span>Reports</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -271,7 +269,7 @@
                         </a>
                     </li>
                 </ul>
-            </li><!-- End Reports Nav -->
+            </li><!-- End Reports Nav --> --}}
 
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('pincode.index') ? '' : 'collapsed' }}"
@@ -291,6 +289,38 @@
                 </ul>
             </li><!-- End Pincode Nav -->
 
+
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('report.index') ? '' : 'collapsed' }}"
+                    data-bs-target="#report" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-file-earmark-bar-graph"></i><span>Reports</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="report"
+                    class="nav-content collapse {{ request()->routeIs('report.index') ? 'show' : '' }}"
+                    data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ route('user.sticker') }}"
+                            class="{{ request()->routeIs('user.sticker') ? 'active' : '' }}">
+                            <i class="bi bi-geo-alt-fill"></i><span>Address Sticker</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('reports.index') }}"
+                            class="{{ request()->routeIs('reports.index') ? 'active' : '' }}">
+                            <i class="bi bi-geo-alt-fill"></i><span>User Report</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('reports.catalog.index') }}"
+                            class="{{ request()->routeIs('reports.catalog.index') ? 'active' : '' }}">
+                            <i class="bi bi-geo-alt-fill"></i><span>Catelog Report</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </li>
+
         </ul>
 
     </aside><!-- End Sidebar-->
@@ -302,10 +332,12 @@
     </main><!-- End #main -->
 
     <!-- ======= Footer ======= -->
+    <?php
+$year = date('Y');
+    ?>
     <footer id="footer" class="footer">
         <div class="copyright">
-            &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-        </div>
+             <span>Developed by <a target="_blank" href="https://flipcodesolutions.com/">Flipcode solutions</span> || &copy; <?php print $year; ?> All rights reserved.        </div>
         <div class="credits">
             <!-- All the links in the footer should remain intact. -->
             <!-- You can delete the links only if you purchased the pro version. -->
