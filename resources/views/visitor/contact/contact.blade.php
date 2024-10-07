@@ -32,7 +32,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Address</h5>
                         <h6 class="card-subtitle mb-2 text-muted">
-                            ms the trend
+                            m j dreams
                             <br>
                             opp.ajay arcade,
                             <br>

@@ -75,14 +75,26 @@
                 <!-- Contact Section -->
                 <div class="col-md-4 footer-section">
                     <h5>Contact Us</h5>
-                    <p>Email: support@mysite.com</p>
-                    <p>Phone: +123 456 7890</p>
-                    <p>Address: 123 Business Avenue, City, Country</p>
+                    <p>Email: msthetrendushaben@gmail.com
+                    </p>
+                    <p>Phone: 8866 232839
+                    </p>
+                    <p>Address: m j dreams
+                        <br>
+                        opp.ajay arcade,
+                        <br>
+                        Jawahar Road,
+                        <br>
+                        Surendranagar 363001
+                    </p>
                 </div>
             </div>
             <!-- Footer Bottom -->
-            <div class="footer-bottom text-center">
-                <p>&copy; 2024 New Shop. All rights reserved.</p>
+            <div class="footer-bottom ">
+                <div class="d-flex justify-content-between">
+                    <p>&copy; <?php print $date = date('Y'); ?> m j dreams. All rights reserved.</p>
+                    <p>Developed by <a href="https://flipcodesolutions.com" target="_blank">Flipcode solutions</a></p>
+                </div>
             </div>
         </div>
     </footer>
