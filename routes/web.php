@@ -17,9 +17,12 @@ use App\Http\Controllers\SliderController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
-   return redirect()->route('login');
+    return view('HomePage');
 });
 
+Route::get('/login', function () {
+    return redirect()->route('login');
+});
 // Route::get('/demo', function () {
 // return view('home');
 // });
@@ -157,14 +160,12 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
     Route::get('/sticker', [UserController::class, 'sticker'])->name('user.sticker');
     Route::get('/sticker/print', [UserController::class, 'stickerPrint'])->name('sticker.print');
-    
+
     // reports
     Route::get('/reports/users/index', [UserController::class, 'reportsUser'])->name('reports.index');
     Route::get('/reports/catalog/index', [UserController::class, 'reportsCatalog'])->name('reports.catalog.index');
-    
-
 });
-Route::get('/about',[CmsController::class, 'about'])->name('about');
-Route::get('/terms',[CmsController::class, 'terms'])->name('terms');
-Route::get('/policy',[CmsController::class, 'privacy'])->name('policy');
-Route::get('/refund',[CmsController::class, 'refund'])->name('refund');
+Route::get('/about', [CmsController::class, 'about'])->name('about');
+Route::get('/terms', [CmsController::class, 'terms'])->name('terms');
+Route::get('/policy', [CmsController::class, 'privacy'])->name('policy');
+Route::get('/refund', [CmsController::class, 'refund'])->name('refund');
