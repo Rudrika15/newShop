@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+@section('title', 'MS Online - Home')
 
 <head>
     <meta charset="UTF-8">
@@ -171,7 +172,8 @@
             <a class="navbar-brand" href="#">
                 <img src="{{ asset('images/logo.jpeg') }}" alt="Logo">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
@@ -200,13 +202,17 @@
     <div class="main-content">
         <div class="container-fluid p-0">
             <div class="">
-                <div class="text-white" style="position: absolute; top: 80%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+                <div class="text-white"
+                    style="position: absolute; top: 80%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
                     <h1 class="text-center mb-4">Welcome to New Shop</h1>
-                    <p class="text-center">We are a leading company providing the best services for our clients. Our goal is to deliver on-time and quality results.</p>
+                    <p class="text-center">We are a leading company providing the best services for our clients. Our
+                        goal is to deliver on-time and quality results.</p>
                 </div>
                 <div class="mb-2 main-slider" style="height: auto;">
-                    <img src="{{ asset('images/product/stefan-stefancik--g7axSVst6Y-unsplash.jpg') }}" class="img-fluid" alt="">
-                    <img src="{{ asset('images/product/v2osk-1Z2niiBPg5A-unsplash.jpg') }}" class="img-fluid" alt="">
+                    <img src="{{ asset('images/product/stefan-stefancik--g7axSVst6Y-unsplash.jpg') }}" class="img-fluid"
+                        alt="">
+                    <img src="{{ asset('images/product/v2osk-1Z2niiBPg5A-unsplash.jpg') }}" class="img-fluid"
+                        alt="">
                 </div>
             </div>
         </div>

@@ -1,4 +1,7 @@
 @extends('visitor.layouts.app')
+
+@section('title', 'Products')
+
 @section('content')
     <nav aria-label="breadcrumb" style="background-color: #1582d4;height: 50px; padding-top: 10px ;padding-left:40%">
         <ol class="breadcrumb">

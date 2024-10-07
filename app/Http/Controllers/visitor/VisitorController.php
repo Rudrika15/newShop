@@ -10,18 +10,24 @@ use Illuminate\Http\Request;
 class VisitorController extends Controller
 {
     //
-    public function home() {
+    public function home()
+    {
         return view('visitor.home.home');
     }
-    public function product() {
+
+    public function product()
+    {
         $data =  Catalog::all();
-        return view('visitor.product.product',compact('data'));
-    }   
-    public function productdetail($id)
-    {   
-        $data =  Product::where('catalogid', $id)->get();
-        return view('visitor.product.productdetail',compact('data'));
+        return view('visitor.product.product', compact('data'));
     }
+
+    public function productdetail($id)
+    {
+        $catalogs = Catalog::where('id', $id)->first();
+        $products =  Product::where('catalogid', $id)->get();
+        return view('visitor.product.productdetail', compact('catalogs', 'products'));
+    }
+
     public function contact()
     {
         return view('visitor.contact.contact');

@@ -1,5 +1,6 @@
 @extends('visitor.layouts.app')
 
+@section('title', 'Home')
 @section('content')
     <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
