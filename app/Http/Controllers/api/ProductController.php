@@ -87,7 +87,8 @@ class ProductController extends Controller
         ];
         return response()->json($response);
     }
-      public function getVersion()
+
+    public function getVersion()
     {
         $version  = Version::orderBy('id', 'desc')->first();
         $response = [

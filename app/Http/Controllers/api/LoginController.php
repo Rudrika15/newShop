@@ -31,18 +31,21 @@ class LoginController extends Controller
             }
 
             $token = $user->createToken('my-app-token')->plainTextToken;
+            $message = "User login successfully";
             $user = [
+
                 'name' => $user->name,
                 'email' => $user->email,
                 'contact' => $user->contact,
+                'type' => $user->type,
+                'token' => $token
+
             ];
 
-            return Util::getSuccessResponse($user, $token, "User login successfully");
+            return Util::getSuccessResponse($user, $token, $message);
         } catch (\Illuminate\Database\QueryException $e) {
-            // Handle database query exceptions
             return response()->json(['error' => 'Database query error'], 500);
         } catch (\Exception $e) {
-            // Handle general exceptions
             return response()->json(['error' => 'An error occurred during login. Please try again.'], 500);
         }
     }
@@ -53,12 +56,12 @@ class LoginController extends Controller
             'old_password' => 'required',
             'new_password' => 'required',
         ]);
-        
+
         try {
             $userId = Auth::user()->id;
-            
+
             $user = User::find($userId)->first();
-            
+
             if (!$user) {
                 return response()->json(['error' => 'User not found'], 404);
             }

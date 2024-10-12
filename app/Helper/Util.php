@@ -5,7 +5,11 @@ namespace App\Helper;
 class Util
 {
 
+<<<<<<< HEAD
     public static function getSuccessResponse($data,$token,$message = "")
+=======
+    public static function getSuccessResponse($data, $token, $message = "data fetched successfully")
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
     {
         $response = [
             'message' => $message,
@@ -96,7 +100,11 @@ class Util
                     'city' => $pincode->city,
                     'pincode' => $pincode->pincode,
                     'isDeliverbale' => $pincode->isDeliverable,
+<<<<<<< HEAD
                     'deliveryCharges'=> $pincode->deliveryCharges
+=======
+                    'deliveryCharges' => $pincode->deliveryCharges
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
                 ];
             });
         }
@@ -123,5 +131,8 @@ class Util
             ];
         });
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
 }

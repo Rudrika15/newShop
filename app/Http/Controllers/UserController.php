@@ -32,7 +32,11 @@ class UserController extends Controller
             ->take(10)
             ->get();
 
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
         $ordersCount = OrderDetail::with('product')
             ->with('order')
             ->orderBy('created_at', 'desc')
@@ -54,11 +58,19 @@ class UserController extends Controller
     {
         $from = $request->from;
         $to = $request->to;
+<<<<<<< HEAD
 //print sku also
         $stickers = OrderDetail::whereDate('created_at', '>=', $from)
             ->whereDate('created_at', '<=', $to)
             ->pluck('customer_address')
             ;
+=======
+
+        //print sku also
+        $stickers = OrderDetail::whereDate('created_at', '>=', $from)
+            ->whereDate('created_at', '<=', $to)
+            ->pluck('customer_address');
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
 
         $html = '<!DOCTYPE html>
     <html lang="en">
@@ -166,7 +178,11 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'contact' => 'required|min:10|max:10',
+<<<<<<< HEAD
          
+=======
+
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
         ]);
         $input = ([
             'name' => $request->name,
@@ -247,7 +263,11 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'contact' => 'required',
+<<<<<<< HEAD
            
+=======
+
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
         ]);
         $input = $request->all();
 
@@ -306,7 +326,11 @@ class UserController extends Controller
     {
         $from = $request->input('from');
         $to = $request->input('to');
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
         if ($from && $to) {
             $userReports = Order::whereDate('created_at', '>=', $from)
                 ->whereDate('created_at', '<=', $to)
@@ -315,19 +339,27 @@ class UserController extends Controller
                 ->select('user_id', DB::raw('COUNT(*) as total_orders'))
                 ->orderBy('total_orders', 'desc')
                 ->get();
+<<<<<<< HEAD
 
 
            
+=======
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
         } else {
             $userReports = Order::with('users')
                 ->groupBy('user_id')
                 ->select('user_id', DB::raw('COUNT(*) as total_orders'))
                 ->orderBy('total_orders', 'desc')
                 ->get();
+<<<<<<< HEAD
 
            
         }
         
+=======
+        }
+
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
 
         return view('reports.index-user', compact('userReports'));
     }
@@ -336,7 +368,11 @@ class UserController extends Controller
         $fromC = $request->input('fromC');
         $toC = $request->input('toC');
 
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
         if ($fromC && $toC) {
 
             $catalogReport = OrderDetail::select('product_id', DB::raw('COUNT(*) as total_sales'))
@@ -358,6 +394,10 @@ class UserController extends Controller
                 ->get();
         }
 
+<<<<<<< HEAD
         return view('reports.index-catalog', compact( 'catalogReport'));
+=======
+        return view('reports.index-catalog', compact('catalogReport'));
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
     }
 }

@@ -17,7 +17,10 @@ return new class extends Migration
             $table->bigInteger('product_id');
             $table->bigInteger('quantity');
             $table->bigInteger('orderStatus');
+<<<<<<< HEAD
             $table->string('customer_address');
+=======
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
             $table->timestamps();
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');

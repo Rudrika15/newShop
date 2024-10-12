@@ -15,11 +15,20 @@ use App\Http\Controllers\SkuController;
 use App\Http\Controllers\SliderController;
 // use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserController;
+<<<<<<< HEAD
 use App\Http\Controllers\visitor\VisitorController;
 
 Route::get('/login', function () {
     return redirect()->route('login');
 });
+=======
+use App\Http\Controllers\VersionController;
+
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
 // Route::get('/demo', function () {
 // return view('home');
 // });
@@ -161,14 +170,28 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     // reports
     Route::get('/reports/users/index', [UserController::class, 'reportsUser'])->name('reports.index');
     Route::get('/reports/catalog/index', [UserController::class, 'reportsCatalog'])->name('reports.catalog.index');
+<<<<<<< HEAD
+=======
+
+    Route::get('/version/index', [VersionController::class, 'index'])->name('version.index');
+    Route::get('/version/create', [VersionController::class, 'create'])->name('version.create');
+    Route::post('/version/store', [VersionController::class, 'store'])->name('version.store');
+    Route::get('/version/edit/{id}', [VersionController::class, 'edit'])->name('version.edit');
+    Route::post('/version/update', [VersionController::class, 'update'])->name('version.update');
+    Route::get('/version/delete/{id}', [VersionController::class, 'destroy'])->name('version.delete');
+    
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
 });
 Route::get('/about', [CmsController::class, 'about'])->name('about');
 Route::get('/terms', [CmsController::class, 'terms'])->name('terms');
 Route::get('/policy', [CmsController::class, 'privacy'])->name('policy');
 Route::get('/refund', [CmsController::class, 'refund'])->name('refund');
+<<<<<<< HEAD
 
 
 Route::get('/',[VisitorController::class, 'home'])->name('home');
 Route::get('/product',[VisitorController::class, 'product'])->name('product');
 Route::get('/product-detail/{id}',[VisitorController::class, 'productdetail'])->name('product.detail');
 Route::get('/contact',[VisitorController::class, 'contact'])->name('contact');
+=======
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44

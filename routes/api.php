@@ -1,5 +1,9 @@
 <?php
 
+<<<<<<< HEAD
+=======
+use App\Http\Controllers\api\AdminController;
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\LoginController;
@@ -44,8 +48,73 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cancel-order/{id}', [MyOrderController::class, 'cancelOrder']);
     Route::post('/addAddress', [MyOrderController::class, 'addAddress']);
     //get slider
+<<<<<<< HEAD
+=======
+
+
+
+    /////////////////////////////admin side///////////////////////////////////////
+
+    ///user routes
+    Route::post('/user-create', [AdminController::class, 'userCreate']);
+    Route::get('/user-list', [AdminController::class, 'getAllUsers']);
+    Route::get('/user-trash', [AdminController::class, 'getTrashUsers']);
+    Route::delete('/user-delete/{id}', [AdminController::class, 'deleteUser']);
+    Route::put('/user-restore/{id}', [AdminController::class, 'restoreUser']);
+    Route::delete('/user-hard-delete/{id}', [AdminController::class, 'hardDeleteUser']);
+    Route::get('/user-show/{id}', [AdminController::class, 'showUser']);
+    Route::patch('/user-update/{id}', [AdminController::class, 'updateUser']);
+    Route::patch('/user-reset-password/{id}', [AdminController::class, 'resetPassword']);
+    //user route end
+    //sku route
+    Route::get('/sku-list', [AdminController::class, 'getAllSkus']);
+    Route::post('/sku-create', [AdminController::class, 'storeSku']);
+    Route::get('/sku-show/{id}', [AdminController::class, 'showSku']);
+    Route::post('/sku-update/{id}', [AdminController::class, 'updateSku']);
+    Route::delete('/sku-delete/{id}', [AdminController::class, 'deleteSku']);
+    //sku route end
+    // category route
+    Route::get('/category-list', [AdminController::class, 'getAllCategories']);
+    Route::post('/category-store', [AdminController::class, 'storeCategory']);
+    Route::get('/category-show/{id}', [AdminController::class, 'showCategory']);
+    Route::delete('/category-delete/{id}', [AdminController::class, 'deleteCategory']);
+    Route::post('/category-update/{id}', [AdminController::class, 'updateCategory']);
+    Route::get('/category-trash', [AdminController::class, 'getTrashCategories']);
+    Route::post('/category-restore/{id}', [AdminController::class, 'restoreCategory']);
+    Route::post('/category-hard-delete/{id}', [AdminController::class, 'hardDeleteCategory']);
+    // category route end
+
+    //slider route
+    Route::get('/slider-list', [AdminController::class, 'getAllSliders']);
+    Route::get('/slider-trash', [AdminController::class, 'getTrashSlider']);
+    Route::post('/slider-restore/{id}', [AdminController::class, 'restoreSlider']);
+    Route::post('/slider-hard-delete/{id}', [AdminController::class, 'hardDeleteSlider']);
+    Route::post('/slider-soft-delete/{id}', [AdminController::class, 'softDeleteSlider']);
+    Route::post('/slider-update/{id}', [AdminController::class, 'updateSlider']);
+    Route::get('/slider-show/{id}', [AdminController::class, 'showSlider']);
+    Route::post('/slider-create', [AdminController::class, 'store']);
+    //slider route end
+
+    //stricker print
+    Route::post('sticker-print', [AdminController::class, 'stickerPrint']);
+    //stricker print end
+
+    //order route
+    Route::get('/order-list', [AdminController::class, 'getAllOrders']);
+    //order route end
+
+
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
 });
 
 Route::get('/getSlider', [ProductController::class, 'getSlider']);
 Route::post('/login', [LoginController::class, 'login']);
+<<<<<<< HEAD
 Route::get('/getVersion',[ProductController::class, 'getVersion']);
+=======
+Route::get('/getVersion', [ProductController::class, 'getVersion']);
+
+
+
+// admin routes
+>>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
