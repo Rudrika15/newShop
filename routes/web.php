@@ -16,6 +16,7 @@ use App\Http\Controllers\SliderController;
 // use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VersionController;
+use App\Http\Controllers\visitor\VisitorController;
 
 Route::get('/', function () {
 return redirect()->route('home');
