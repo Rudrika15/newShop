@@ -12,17 +12,19 @@
 
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    {{-- favicon --}}
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.png') }}">
 
 </head>
 
 <body>
 
     <!-- Header Section -->
-    <nav class="navbar navbar-expand-lg navbar-light position-sticky top-0 bg-white" style="z-index: 999;">
+    <nav class="navbar navbar-expand-lg navbar-dark position-sticky top-0 bg-dark" style="z-index: 999;">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="{{ asset('images/logo.png') }}" style="height: 40px" alt="Logo">
+                <img src="{{ asset('images/logo-mj-dream.png') }}" style="height: 40px" alt="Logo">
+                <img src="{{ asset('images/logo-the-trend.png') }}" style="height: 40px" alt="Logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,9 +44,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('contact') }}">Contact</a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" href="{{ route('login') }}">Login</a>
-                    </li>
+                    </li> --}}
                 </ul>
             </div>
         </div>
@@ -57,32 +59,48 @@
         <div class="container">
             <div class="row">
                 <!-- About Us Section -->
-                <div class="col-md-4 footer-section">
+                <div class="col-md-3 footer-section">
                     <h5>About Us</h5>
-                    <p>We are a leading company providing the best services for our clients. Our goal is to deliver
-                        on-time and quality results.</p>
+                    <p>Welcome to MJ Dream, your ultimate destination for exquisite sharees that blend tradition with
+                        contemporary elegance. As a proud child company of <span style="color:blueviolet">MS The
+                            Trends</span>, we are passionate about the
+                        rich heritage of Indian textiles. Our curated collection caters to every occasion, from weddings
+                        to festivals and everyday wear.</p>
                 </div>
 
                 <!-- Useful Links Section -->
-                <div class="col-md-4 footer-section">
+                <div class="col-md-3 footer-section">
                     <h5>Useful Links</h5>
                     <ul class="list-unstyled">
-                        <li><a href="/refund">Refund </a></li>
-                        <li><a href="/policy">Privacy Policy</a></li>
-                        <li><a href="/terms">Terms and Conditions</a></li>
+                        <li><a href="/refund" class="text-decoration-none text-dark">Refund </a></li>
+                        <li><a href="/policy" class="text-decoration-none text-dark"> Privacy Policy</a></li>
+                        <li><a href="/terms" class="text-decoration-none text-dark">Terms and Conditions</a></li>
                     </ul>
+                </div>
+                <div class="col-md-3 footer-section">
+                    <h5>Download App</h5>
+                    <a href="https://play.google.com/store/apps/details?id=com.flipcode.msthetrend" target="_blank">
+                        <img src="{{ asset('images/playstore.png') }}" alt="app store" class="img-fluid">
+                    </a>
                 </div>
 
                 <!-- Contact Section -->
-                <div class="col-md-4 footer-section">
+                <div class="col-md-3 footer-section">
                     <h5>Contact Us</h5>
-                    <p>Email: msthetrendushaben@gmail.com
+                    <p>
+                        Email:<a href="mailto:msthetrendushaben@gmail.com" class="text-decoration-none text-dark">
+                            msthetrendushaben@gmail.com</a>
                     </p>
-                    <p>Phone: 8866 232839
+                    <p>
+                        Phone: <a href="tel:+918866232839" class="text-decoration-none text-dark">+91 8866 232839</a>
                     </p>
-                    <p>Address: m j dreams
+                    <p>Address:
+
+                        MJ Dreams <br>
+                        C/o. Ms The Trends
+
                         <br>
-                        opp.ajay arcade,
+                        Opp. Ajay Arcade,
                         <br>
                         Jawahar Road,
                         <br>

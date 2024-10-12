@@ -5,14 +5,17 @@ namespace App\Http\Controllers\visitor;
 use App\Http\Controllers\Controller;
 use App\Models\Catalog;
 use App\Models\Product;
+use App\Models\Slider;
 use Illuminate\Http\Request;
 
 class VisitorController extends Controller
 {
     //
     public function home()
+
     {
-        return view('visitor.home.home');
+        $data = Slider::all();
+        return view('visitor.home.home',compact('data'));
     }
 
     public function product()
@@ -25,7 +28,7 @@ class VisitorController extends Controller
     {
         $catalogs = Catalog::where('id', $id)->first();
         $products =  Product::where('catalogid', $id)->get();
-        return view('visitor.product.productdetail', compact('catalogs', 'products'));
+        return view('visitor.product.productDetail', compact('catalogs', 'products'));
     }
 
     public function contact()

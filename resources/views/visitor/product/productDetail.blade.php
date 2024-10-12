@@ -105,8 +105,8 @@
 
         .change-color .thumb-box {
             /* margin: 10px 10px 10px 0;
-                                                                                                            width: 40px;
-                                                                                                            display: inline-block; */
+                                                                                                                                        width: 40px;
+                                                                                                                                        display: inline-block; */
             padding: 5px 10px;
             border-radius: 4px;
             border-color: rgb(189, 189, 189);
@@ -127,7 +127,7 @@
         }
     </style>
 
-    <nav aria-label="breadcrumb" style="background-color: #1582d4;height: 50px; padding-top: 10px; padding-left: 40%;">
+    <nav aria-label="breadcrumb" style="background-color: #1582d4;height: 100px; padding-top: 35px ;padding-left:40%">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-light">Home</a></li>
             <li class="breadcrumb-item" class="text-light" aria-current="page">Product Detail</li>
@@ -162,7 +162,7 @@
                 </div>
 
                 <!-- Product info section -->
-                <div class="item-info-parent">
+                <div class="item-info-parent " style="padding-left: 20px">
                     <!-- Main info -->
                     <div class="main-info mt-5">
                         <h4>{{ $catalogs->title }}</h4>
@@ -198,6 +198,11 @@
                                 @endif
                             </ul>
                         </div>
+                        <p>
+                            For shopping you must become a dealer<br />
+                            For become a dealer contact on +91 8866 232839
+
+                        </p>
                     </div>
                 </div>
 
