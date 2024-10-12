@@ -129,7 +129,7 @@
             letter-spacing: 1px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
             transition: background-color 0.3s, color 0.3s;
-           /* animation: pulse 2s infinite; */
+            /* animation: pulse 2s infinite; */
         }
 
         @keyframes pulse {
@@ -173,20 +173,21 @@
                 </div>
                 <div class="login-form">
                     @if (session('error'))
-                    <div class="alert alert-danger" id="successMessage">
-                        {{ session('error') }}
-                    </div>
+                        <div class="alert alert-danger" id="successMessage">
+                            {{ session('error') }}
+                        </div>
                     @endif
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="form-group">
                             <label for="email" class="form-control-label">EMAIL</label>
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
-                                name="email" value="{{ old('email') }}" autocomplete="email" autofocus>
+                            <input id="email" type="email"
+                                class="form-control @error('email') is-invalid @enderror" name="email"
+                                value="{{ old('email') }}" autocomplete="email" autofocus>
                             @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
                             @enderror
                         </div>
                         <div class="form-group">
@@ -195,9 +196,9 @@
                                 class="form-control @error('password') is-invalid @enderror" name="password"
                                 autocomplete="current-password">
                             @error('password')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
                             @enderror
                         </div>
                         <div class="login-btm">
