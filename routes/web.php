@@ -15,9 +15,10 @@ use App\Http\Controllers\SkuController;
 use App\Http\Controllers\SliderController;
 // use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VersionController;
 
 Route::get('/', function () {
-   return redirect()->route('login');
+    return redirect()->route('login');
 });
 
 // Route::get('/demo', function () {
@@ -157,14 +158,20 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
     Route::get('/sticker', [UserController::class, 'sticker'])->name('user.sticker');
     Route::get('/sticker/print', [UserController::class, 'stickerPrint'])->name('sticker.print');
-    
+
     // reports
     Route::get('/reports/users/index', [UserController::class, 'reportsUser'])->name('reports.index');
     Route::get('/reports/catalog/index', [UserController::class, 'reportsCatalog'])->name('reports.catalog.index');
-    
 
+    Route::get('/version/index', [VersionController::class, 'index'])->name('version.index');
+    Route::get('/version/create', [VersionController::class, 'create'])->name('version.create');
+    Route::post('/version/store', [VersionController::class, 'store'])->name('version.store');
+    Route::get('/version/edit/{id}', [VersionController::class, 'edit'])->name('version.edit');
+    Route::post('/version/update', [VersionController::class, 'update'])->name('version.update');
+    Route::get('/version/delete/{id}', [VersionController::class, 'destroy'])->name('version.delete');
+    
 });
-Route::get('/about',[CmsController::class, 'about'])->name('about');
-Route::get('/terms',[CmsController::class, 'terms'])->name('terms');
-Route::get('/policy',[CmsController::class, 'privacy'])->name('policy');
-Route::get('/refund',[CmsController::class, 'refund'])->name('refund');
+Route::get('/about', [CmsController::class, 'about'])->name('about');
+Route::get('/terms', [CmsController::class, 'terms'])->name('terms');
+Route::get('/policy', [CmsController::class, 'privacy'])->name('policy');
+Route::get('/refund', [CmsController::class, 'refund'])->name('refund');

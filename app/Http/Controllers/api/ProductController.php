@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Product_stock;
 use App\Models\Slider;
 use App\Models\Stock_Transaction;
+use App\Models\Version;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -83,6 +84,17 @@ class ProductController extends Controller
             'message' => 'Slider List',
             'imgPath' => $imgPath,
             'data' => $sliders
+        ];
+        return response()->json($response);
+    }
+
+    public function getVersion()
+    {
+        $version  = Version::orderBy('id', 'desc')->first();
+        $response = [
+            'status' => true,
+            'message' => 'Version',
+            'data' => $version
         ];
         return response()->json($response);
     }
