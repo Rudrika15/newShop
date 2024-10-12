@@ -17,14 +17,9 @@ class Catalog extends Model
     ];
 
 
-<<<<<<< HEAD
     public function products()
     {
         return $this->hasMany(Product::class, 'catalogid', 'id');
     }
-=======
-public function products(){
-    return $this->hasMany(Product::class, 'catalogid','id');
-}
->>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
+
 }

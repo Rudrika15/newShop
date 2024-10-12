@@ -1,9 +1,6 @@
 <?php
 
-<<<<<<< HEAD
-=======
 use App\Http\Controllers\api\AdminController;
->>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\LoginController;
@@ -48,8 +45,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cancel-order/{id}', [MyOrderController::class, 'cancelOrder']);
     Route::post('/addAddress', [MyOrderController::class, 'addAddress']);
     //get slider
-<<<<<<< HEAD
-=======
 
 
 
@@ -104,17 +99,13 @@ Route::middleware('auth:sanctum')->group(function () {
     //order route end
 
 
->>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
 });
 
 Route::get('/getSlider', [ProductController::class, 'getSlider']);
 Route::post('/login', [LoginController::class, 'login']);
-<<<<<<< HEAD
 Route::get('/getVersion',[ProductController::class, 'getVersion']);
-=======
-Route::get('/getVersion', [ProductController::class, 'getVersion']);
+
 
 
 
 // admin routes
->>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
