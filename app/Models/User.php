@@ -9,12 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
-<<<<<<< HEAD
-
-
-=======
 use Spatie\Permission\Contracts\Role;
->>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
 
 class User extends Authenticatable
 {
@@ -65,11 +60,7 @@ class User extends Authenticatable
     protected function type(): Attribute
     {
         return new Attribute(
-<<<<<<< HEAD
-            get: fn ($value) =>  ["user", "admin", "manager"][$value],
-=======
             get: fn($value) =>  ["user", "admin", "manager"][$value],
->>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
         );
     }
 }
