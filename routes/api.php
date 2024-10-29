@@ -98,14 +98,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/order-list', [AdminController::class, 'getAllOrders']);
     //order route end
 
-
+    // admin routes
+    Route::get('/catalog', [AdminController::class, 'getCatalog']);
+    Route::post('/catalog', [AdminController::class, 'addCatalog']);
+    Route::get('/catalog/products', [AdminController::class, 'catalogProducts']);
 });
 
 Route::get('/getSlider', [ProductController::class, 'getSlider']);
 Route::post('/login', [LoginController::class, 'login']);
-Route::get('/getVersion',[ProductController::class, 'getVersion']);
-
-
-
-
-// admin routes
+Route::get('/getVersion', [ProductController::class, 'getVersion']);

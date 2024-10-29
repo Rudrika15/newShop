@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 @extends('visitor.layouts.app')
 @section('content')
     <nav aria-label="breadcrumb" style="background-color: #1582d4;height: 100px; padding-top: 35px ;padding-left:40%">
@@ -108,45 +107,8 @@
                 <p>
 
                 </p>
-=======
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Term and Condition</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  </head>
-  <body>
-    <div class="container">
-        <div class="row py-5">
-           
-            <div class="col-12">
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas facilis deleniti ipsum quis aliquam minus accusamus libero eaque veritatis consequuntur voluptas dolor repellendus reprehenderit dolorum quos, voluptatem doloremque sunt? Corporis.</p>
->>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
             </div>
         </div>
 
     </div>
-<<<<<<< HEAD
 @endsection
-=======
-
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  </body>
-</html>
->>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44

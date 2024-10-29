@@ -22,9 +22,9 @@ Route::get('/login', function () {
 });
 use App\Http\Controllers\VersionController;
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+// Route::get('/', function () {
+//     return redirect()->route('login');
+// });
 
 // Route::get('/demo', function () {
 // return view('home');

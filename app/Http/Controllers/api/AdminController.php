@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Catalog;
 use App\Models\Category;
 use App\Models\OrderDetail;
 use App\Models\Sku;
@@ -311,7 +312,7 @@ class AdminController extends Controller
     public function getAllCategories()
     {
         try {
-            $categories = Category::with('children')->paginate(10);
+            $categories = Category::with('parent')->paginate(10);
 
             return response()->json([
                 'status' => true,
@@ -346,9 +347,9 @@ class AdminController extends Controller
 
             $newCategory = new Category();
             $newCategory->categoryname = $req->categoryname;
-            $newCategory->is_parent = $req->has('is_parent');
+            $newCategory->is_parent = $req->is_parent;
 
-            if (!$newCategory->is_parent && $req->parent) {
+            if ($req->parent) {
                 $newCategory->parent = $req->parent;
             }
             $newCategory->save();
@@ -694,5 +695,63 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while retrieving the orders. Please try again.'], 500);
         }
+    }
+
+    public function getCatalog(Request $request)
+    {
+        try {
+            $catalogs = Catalog::all();
+            return response()->json([
+                'status' => true,
+                'data' => $catalogs
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while creating the catalog. Please try again.'], 500);
+        }
+    }
+    public function addCatalog(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required',
+                'main_image' => 'required',
+            ],
+            [
+                'title.required' => 'Title is required',
+                'main_image.required' => 'Description is required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->first()
+            ]);
+        }
+        try {
+            $catalog = new Catalog();
+            $catalog->title = $request->title;
+            $catalog->main_image = time() . "." . $request->main_image->extension();
+            $request->main_image->move(public_path('images/catalog'), $catalog->main_image);
+            $catalog->save();
+            return response()->json([
+                'status' => true,
+                'message' => 'Catalog created successfully!',
+                'imagePath' => '/images/catalog/' . $catalog->main_image,
+                'data' => $catalog
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while creating the catalog. Please try again.'], 500);
+        }
+    }
+
+    public function catalogProducts()
+    {
+
+        $catalogs = Catalog::with('products.getStoke')->with('products.category')->get();
+        return response()->json([
+            'status' => true,
+            'data' => $catalogs
+        ]);
     }
 }
