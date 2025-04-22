@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Catalog;
 use App\Models\Category;
 use App\Models\OrderDetail;
+use App\Models\Product;
+use App\Models\Product_stock;
 use App\Models\Sku;
 use App\Models\Slider;
+use App\Models\Stock_Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -50,7 +53,11 @@ class AdminController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                     'contact' => $user->contact,
+                     'status' => $user->status
+
                 ],
+                
+                'status' => true,
                 'token' => $token,
                 'message' => 'User created successfully!'
             ], 201);
@@ -211,7 +218,7 @@ class AdminController extends Controller
     public function getAllSkus()
     {
         try {
-            $skus = Sku::paginate(5);
+           $skus = Sku::all();
 
             return response()->json([
                 'status' => true,
@@ -409,10 +416,12 @@ class AdminController extends Controller
             $category = Category::findOrFail($id);
             $category->categoryname = $req->categoryname;
             $category->is_parent = $req->has('is_parent');
-            if (!$category->is_parent && $req->parent) {
+            if ($req->parent) {
                 $category->parent = $req->parent;
+                $category->is_parent = 0;
             } else {
                 $category->parent = null;
+                $category->is_parent = 1;
             }
             $category->save();
             return response()->json([
@@ -662,31 +671,48 @@ class AdminController extends Controller
         try {
             $query = OrderDetail::with('product', 'order');
 
-            if ($request->has('orderStatus') && $request->orderStatus != 'select order status') {
+            if ($request->has('orderStatus')) {
                 $query->where('orderStatus', $request->orderStatus);
             }
-            //find by userId form order table
+
+            // Find by userId from the order table
             if ($request->has('userId')) {
                 $query->whereHas('order', function ($q) use ($request) {
                     $q->where('user_id', $request->userId);
                 });
             }
+
             if ($request->has('productName')) {
                 $query->whereHas('product', function ($q) use ($request) {
                     $q->where('slug', 'like', '%' . $request->productName . '%');
                 });
             }
+
             if ($request->has('userName')) {
                 $query->whereHas('order.users', function ($q) use ($request) {
                     $q->where('name', 'like', '%' . $request->userName . '%');
                 });
             }
+
             if ($request->has('date')) {
-                $query->whereHas('order',  function ($q) use ($request) {
-                    $q->where('created_at', 'like', '%' . $request->date . '%');
+                $query->whereHas('order', function ($q) use ($request) {
+                    $q->whereDate('created_at', $request->date);
                 });
             }
+
+
+            // Filter by startDate and endDate
+            if ($request->has('startDate') && $request->has('endDate')) {
+                // Convert startDate and endDate to Carbon instances
+                $startDate = \Carbon\Carbon::parse($request->startDate)->format('Y-m-d');
+                $endDate = \Carbon\Carbon::parse($request->endDate)->addDay()->format('Y-m-d');
+
+                // Apply whereBetween filter
+                $query->whereBetween('created_at', [$startDate, $endDate]);
+            }
+
             $orders = $query->orderBy('created_at', 'desc')->paginate(10);
+
             return response()->json([
                 'status' => true,
                 'message' => 'Orders retrieved successfully!',
@@ -697,29 +723,212 @@ class AdminController extends Controller
         }
     }
 
-    public function getCatalog(Request $request)
+    public function getCatalog(Request $request, $id = null)
     {
         try {
-            $catalogs = Catalog::all();
-            return response()->json([
-                'status' => true,
-                'data' => $catalogs
-            ]);
+
+            if ($id != null) {
+                $catalog = Catalog::find($id);
+                return response()->json([
+                    'status' => true,
+                    'data' => $catalog
+                ]);
+            } else {
+                $catalogs = Catalog::all();
+                return response()->json([
+                    'status' => true,
+                    'data' => $catalogs
+                ]);
+            }
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while creating the catalog. Please try again.'], 500);
         }
     }
     public function addCatalog(Request $request)
     {
+        // Validate the input
         $validator = Validator::make(
             $request->all(),
             [
-                'title' => 'required',
-                'main_image' => 'required',
+                'title' => 'required|string|max:255',
+                'main_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Ensure the file is an image
+                'description' => 'nullable|string|max:500', // Optional description
             ],
             [
-                'title.required' => 'Title is required',
-                'main_image.required' => 'Description is required',
+                'title.required' => 'Title is required.',
+
+                'main_image.required' => 'Main image is required.',
+                'main_image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif, svg.',
+                'main_image.max' => 'The image size must not exceed 2MB.',
+
+            ]
+        );
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->first(),
+            ]);
+        }
+
+        try {
+            $catalog = new Catalog();
+            $catalog->title = $request->title;
+
+            $imageName = uniqid('catalog_', true) . '.' . $request->main_image->extension();
+            $request->main_image->move(public_path('images/catalog'), $imageName);
+            $catalog->main_image = $imageName;
+
+
+            $catalog->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Catalog created successfully!',
+                'imagePath' => '/images/catalog/' . $catalog->main_image,
+                'data' => $catalog
+            ]);
+        } catch (\Exception $e) {
+            // Log the error (optional, for debugging purposes)
+            \Log::error('Error creating catalog: ' . $e->getMessage());
+
+            // Return error response
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while creating the catalog. Please try again.'
+            ], 500);
+        }
+    }
+
+
+    public function updateCatalog(Request $request)
+    {
+        // Validate the input
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string|max:500', // Optional description
+            ],
+            [
+                'title.required' => 'Title is required.',
+
+
+            ]
+        );
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->first(),
+            ]);
+        }
+
+        try {
+            $catalog = Catalog::findOrfail($request->id);
+            $catalog->title = $request->title;
+
+
+            if ($request->hasFile('main_image')) {
+                $imageName = uniqid('catalog_', true) . '.' . $request->main_image->extension();
+                $request->main_image->move(public_path('images/catalog'), $imageName);
+                $catalog->main_image = $imageName;
+            }
+
+
+            $catalog->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Catalog created successfully!',
+                'imagePath' => '/images/catalog/' . $catalog->main_image,
+                'data' => $catalog
+            ]);
+        } catch (\Exception $e) {
+            // Log the error (optional, for debugging purposes)
+            \Log::error('Error creating catalog: ' . $e->getMessage());
+
+            // Return error response
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while creating the catalog. Please try again.'
+            ], 500);
+        }
+    }
+
+
+    public function catalogProducts1()
+    {
+
+        $catalogs = Catalog::with('products.getStoke')->with('products.category')->get();
+        return response()->json([
+            'status' => true,
+            'data' => $catalogs
+        ]);
+    }
+    public function catalogs()
+    {
+
+        $catalogs = Catalog::with('products.getStoke')->with('products.category')->get();
+        return response()->json([
+            'status' => true,
+            'data' => $catalogs
+        ]);
+    }
+
+    // product
+    public function getProducts($id = null)
+    {
+        try {
+            if ($id == null) {
+
+
+                $products = Product::all();
+            } else {
+                $products = Product::where('catalogid', $id)->get();
+            }
+            return response()->json([
+                'status' => true,
+                'data' => $products
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while retrieving the products. Please try again.'], 500);
+        }
+    }
+
+    public function addProduct(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'catalogid' => 'required',
+                'sku' => 'required',
+                'categoryid' => 'required',
+                'color' => 'required',
+                'size' => 'required',
+                'image' => 'required',
+                'description' => 'required',
+                'base_price' => 'required',
+                'tax_price' => 'required',
+                'discount_amt' => 'required',
+                'mrp' => 'required',
+                'quantity' => 'required',
+            ],
+            [
+                'catalogid.required' => 'catalogid is required',
+                'sku.required' => 'sku is required',
+                'categoryid.required' => 'categoryid is required',
+                'color.required' => 'color is required',
+                'size.required' => 'size is required',
+                'image.required' => 'image is required',
+                'description.required' => 'description is required',
+                'base_price.required' => 'base_price is required',
+                'tax_price.required' => 'tax_price is required',
+                'discount_amt.required' => 'discount_amt is required',
+                'mrp.required' => 'mrp is required',
+                'quantity.required' => 'quantity is required',
             ]
         );
         if ($validator->fails()) {
@@ -729,29 +938,385 @@ class AdminController extends Controller
             ]);
         }
         try {
-            $catalog = new Catalog();
-            $catalog->title = $request->title;
-            $catalog->main_image = time() . "." . $request->main_image->extension();
-            $request->main_image->move(public_path('images/catalog'), $catalog->main_image);
-            $catalog->save();
+            $product = new Product();
+            $product->catalogid = $request->catalogid;
+            $product->slug = $request->slug;
+            $product->sku = $request->sku;
+            $product->categoryid = $request->categoryid;
+            $product->color = $request->color;
+            $product->size = $request->size;
+            $product->description = $request->description;
+            $product->base_price = $request->base_price;
+            $product->tax_price = $request->tax_price;
+            $product->discount_amt = $request->discount_amt;
+            $product->mrp = $request->mrp;
+            $product->image = time() . "." . $request->image->extension();
+            $request->image->move(public_path('images/product'), $product->image);
+            $product->save();
+
+            $stock = new Stock_Transaction();
+            $stock->product_id = $product->id;
+            $stock->quantity = $request->quantity;
+            $stock->type = 'in';
+            $stock->remarks = 'Initial Stock';
+            $stock->save();
+
+            // find sum for pproduct
+            $qty =  Stock_Transaction::where('product_id', $product->id)->sum('quantity');
+
+            $finalStock = new Product_stock();
+            $finalStock->product_id = $product->id;
+            $finalStock->quantity = $qty;
+            $finalStock->save();
+
             return response()->json([
                 'status' => true,
-                'message' => 'Catalog created successfully!',
-                'imagePath' => '/images/catalog/' . $catalog->main_image,
-                'data' => $catalog
+                'message' => 'Product created successfully!',
+                'imagePath' => '/images/product/' . $product->image,
+                'data' => $product
             ]);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred while creating the catalog. Please try again.'], 500);
+            return response()->json(
+                [
+                    'error' => 'An error occurred while creating the product. Please try again.',
+                    'message' => $e->getMessage()
+                ],
+                500
+            );
         }
     }
 
-    public function catalogProducts()
-    {
 
-        $catalogs = Catalog::with('products.getStoke')->with('products.category')->get();
+
+    public function updateProduct(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'catalogid' => 'required',
+                'sku' => 'required',
+                'categoryid' => 'required',
+                'color' => 'required',
+                'size' => 'required',
+                'description' => 'required',
+                'base_price' => 'required',
+                'tax_price' => 'required',
+                'discount_amt' => 'required',
+                'mrp' => 'required',
+
+            ],
+            [
+                'catalogid.required' => 'catalogid is required',
+                'sku.required' => 'sku is required',
+                'categoryid.required' => 'categoryid is required',
+                'color.required' => 'color is required',
+                'size.required' => 'size is required',
+                'description.required' => 'description is required',
+                'base_price.required' => 'base_price is required',
+                'tax_price.required' => 'tax_price is required',
+                'discount_amt.required' => 'discount_amt is required',
+                'mrp.required' => 'mrp is required',
+
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->first()
+            ]);
+        }
+        try {
+            $product = Product::findOrFail($request->id);
+            $product->catalogid = $request->catalogid;
+            $product->slug = $request->slug;
+            $product->sku = $request->sku;
+            $product->categoryid = $request->categoryid;
+            $product->color = $request->color;
+            $product->size = $request->size;
+            $product->description = $request->description;
+            $product->base_price = $request->base_price;
+            $product->tax_price = $request->tax_price;
+            $product->discount_amt = $request->discount_amt;
+            $product->mrp = $request->mrp;
+
+            if ($request->hasFile('image')) {
+                $product->image = time() . "." . $request->image->extension();
+                $request->image->move(public_path('images/product'), $product->image);
+            }
+
+            $product->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Product updated successfully!',
+                'imagePath' => '/images/product/' . $product->image,
+                'data' => $product
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'error' => 'An error occurred while updating the product. Please try again.',
+                    'message' => $e->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function getProductDetail($productId)
+    {
+        $product = Product::where('id', $productId)
+            ->with('productStocks')
+            ->with('catalog')
+            ->with('sku')
+            ->with('category')
+            ->first();
+        if (!$product) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Product not found'
+            ]);
+        }
         return response()->json([
             'status' => true,
-            'data' => $catalogs
+            'data' => $product
         ]);
+    }
+    public function catalogDelete(string $id)
+    {
+        $catalog = Catalog::findOrFail($id);
+
+        foreach ($catalog->products as $product) {
+            $product->delete();
+        }
+        $catalog->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Catalog and its products deleted successfully'
+        ]);
+    }
+    public function catalog_trash()
+    {
+
+        try {
+            $catalogs = Catalog::onlyTrashed()->get();
+            return response()->json([
+                'status' => true,
+                'data' => $catalogs
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred: ' . $e->getMessage(), // Add exception message here
+                'trace' => $e->getTrace() // Optional: include trace for debugging
+            ]);
+        }
+    }
+
+    public function catalogHardDelete($id)
+    {
+        // Retrieve the soft-deleted catalog by ID
+        $catalog = Catalog::onlyTrashed()->find($id);
+
+        // Check if the catalog exists
+        if (!$catalog) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Catalog not found or is not deleted.'
+            ]);
+        }
+
+        // Check if the catalog has associated products
+        if ($catalog->products()->count() > 0) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Cannot delete, there are products associated with this catalog.'
+            ]);
+        }
+
+        // Permanently delete the catalog and associated products
+        $catalog->forceDelete();
+        $catalog->products()->forceDelete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Catalog permanently deleted.'
+        ]);
+    }
+
+    public function catalogRestore($id)
+    {
+        $catalog = Catalog::withTrashed()->findOrFail($id);
+        $catalog->restore();
+
+        // Restore products
+        $catalog->products()->withTrashed()->restore();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Catalog Restored Successfully.'
+        ]);
+    }
+    public function productDelete($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Product Deleted Successfully'
+        ]);
+    }
+    public function trashProduct()
+    {
+        try {
+            // Retrieve soft-deleted products
+            $products = Product::onlyTrashed()->get();
+
+            // Return successful response with data
+            return response()->json([
+                'status' => true,
+                'data' => $products
+            ]);
+        } catch (\Throwable $th) {
+            // Log the error for debugging
+            \Log::error('Error retrieving trashed products: ' . $th->getMessage());
+
+            // Return a user-friendly error message
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while fetching trashed products. Please try again later.'
+            ], 500);
+        }
+    }
+    public function deletedProduct()
+    {
+        $products = Product::onlyTrashed()->get();
+        return response()->json([
+            'status' => true,
+            'data' => $products
+        ]);
+    }
+
+    public function productHardDelete($id)
+    {
+        $product = Product::onlyTrashed()->findOrFail($id);
+        $product->forceDelete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Product Permanently Deleted'
+        ]);
+    }
+    public function productRestore($id)
+    {
+        $product = Product::withTrashed()->findOrFail($id);
+        $product->restore();
+        return response()->json([
+            'status' => true,
+            'message' => 'Product Restored Successfully'
+        ]);
+    }
+    public function getStock($id)
+    {
+        try {
+            $stock = Product_stock::where('product_id', $id)->get();
+            return response()->json([
+                'status' => true,
+                'message' => 'Stock fetched successfully',
+                'data' => $stock
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function updateOrderStatus(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'id' => 'required',
+                'status' => 'required',
+            ],
+            [
+                'id.required' => 'Order Detail ID is required',
+                'status.required' => 'status is required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        try {
+            $orderDetail = OrderDetail::findOrFail($request->id);
+            $orderDetail->orderStatus = $request->status;
+            $orderDetail->save();
+            return response()->json([
+                'status' => true,
+                'message' => 'Order status updated successfully',
+                'data' => $orderDetail
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function updateProductStock(Request $request)
+    {
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'product_id' => 'required',
+                'quantity' => 'required|integer|min:1',
+            ],
+            [
+                'product_id.required' => 'Product ID is required',
+                'quantity.required' => 'Quantity is required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        try {
+            $stockTranjection = Stock_Transaction::create([
+                'product_id' => $request->product_id,
+                'type' => $request->type,
+                'quantity' => $request->quantity,
+                'remarks' => $request->remarks,
+            ]);
+            $getStock = Stock_Transaction::where('id', $stockTranjection->id)->sum('quantity');
+            $stock = Product_stock::where('product_id', $request->product_id)->first();
+            $stock->quantity = $stock->quantity + $getStock;
+            $stock->save();
+            return response()->json([
+                'status' => true,
+                'message' => 'Stock updated successfully',
+                'data' => $getStock
+            ]);
+        } catch (\Exception $e) {
+            // Log error for debugging
+            \Log::error('Stock update failed: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while updating stock. Please try again later.',
+            ]);
+        }
     }
 }

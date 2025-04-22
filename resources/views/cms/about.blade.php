@@ -12,16 +12,16 @@
 
             <div class="col-12">
                 <h1>About us</h1>
-                <p>Welcome to MJ Dream, your ultimate destination for exquisite sharees that blend tradition with
-                    contemporary elegance. As a proud child company of <span style="color:blueviolet">MS The
-                        Trends</span>, we are passionate about the
-                    rich heritage of Indian textiles. Our curated collection caters to every occasion, from weddings
-                    to festivals and everyday wear.</p>
+                <p>
+                    Welcome to MJ Dream, your ultimate destination for exquisite sharees that blend tradition with
+                    contemporary elegance. Our passion for the rich heritage of Indian textiles drives us to curate a
+                    stunning collection that caters to every occasion, from weddings to festivals and everyday wear.
+                </p>
 
                 <h4>Our Journey</h4>
                 <p>
 
-                    Founded with a vision to celebrate the artistry of sharee craftsmanship, MJ Dreams has quickly become a
+                    Founded with a vision to celebrate the artistry of sharee craftsmanship, MJ Dream has quickly become a
                     beloved name in the fashion community. Our journey began with a deep appreciation for the intricate
                     designs, vibrant colors, and luxurious fabrics that sharees embody. We believe that every sharee tells a
                     story, and we strive to help you find the perfect one that resonates with your personal style.
@@ -29,7 +29,7 @@
                 <h4>Our Collection</h4>
                 <p>
 
-                    At MJ Dreams, we offer a diverse range of sharees, featuring traditional handwoven pieces, modern
+                    At MJ Dream, we offer a diverse range of sharees, featuring traditional handwoven pieces, modern
                     interpretations, and everything in between. Each sharee in our collection is carefully selected for its
                     quality, uniqueness, and style. Whether you're looking for something classic or trendy, we have the
                     perfect piece to enhance your wardrobe.
@@ -49,7 +49,7 @@
                     and radiant. Whether you're dressing for a special occasion or looking to elevate your everyday style,
                     MJ Dream is here to help you express yourself.
 
-                    Thank you for choosing MJ Dreams. We look forward to being a part of your fashion journey!
+                    Thank you for choosing MJ Dream. We look forward to being a part of your fashion journey!
 
                 </p>
             </div>

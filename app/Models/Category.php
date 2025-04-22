@@ -23,6 +23,6 @@ class Category extends Model
     }
     public function parent()
     {
-        return $this->hasOne(Category::class, 'parent', 'id');
+        return $this->hasOne(Category::class, 'id', 'parent');
     }
 }

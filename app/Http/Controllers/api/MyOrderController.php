@@ -33,55 +33,55 @@ class MyOrderController extends Controller
         return Util::getMyOrderListResponse($response);
     }
     public function orderSave(Request $request)
-{
-    try {
-        $request->validate([
-            'product_id' => 'required',
-            'quantity' => 'required',
-            'price' => 'required',
-            'amount' => 'required',
-            'payment_id' => 'required',
-            'customer_address' => 'required',
-        ]);
+    {
+        try {
+            $request->validate([
+                'product_id' => 'required',
+                'quantity' => 'required',
+                'price' => 'required',
+                'amount' => 'required',
+                'payment_id' => 'required',
+                'customer_address' => 'required',
+            ]);
 
-        $userId = Auth::user()->id;
+            $userId = Auth::user()->id;
 
-        $order = new Order();
-        $order->user_id = $userId;
-        $order->amount = $request->amount;
-        $order->payment_id = $request->payment_id;
-        $order->save();
+            $order = new Order();
+            $order->user_id = $userId;
+            $order->amount = $request->amount;
+            $order->payment_id = $request->payment_id;
+            $order->save();
 
-        $orderId = $order->id;
+            $orderId = $order->id;
 
-        foreach ($request->product_id as $key => $productId) {
-            $orderDetail = new OrderDetail();
-            $orderDetail->order_id = $orderId;
-            $orderDetail->customer_address = $request->customer_address;
-            $orderDetail->product_id = $productId;
-            $orderDetail->quantity = $request->quantity[$key];
-            $orderDetail->price = $request->price[$key];
-            $orderDetail->save();
+            foreach ($request->product_id as $key => $productId) {
+                $orderDetail = new OrderDetail();
+                $orderDetail->order_id = $orderId;
+                $orderDetail->customer_address = $request->customer_address;
+                $orderDetail->product_id = $productId;
+                $orderDetail->quantity = $request->quantity[$key];
+                $orderDetail->price = $request->price[$key];
+                $orderDetail->save();
 
-            $stock = new Stock_Transaction();
-            $stock->product_id = $productId;
-            $stock->quantity = $request->quantity[$key] * -1;
-            $stock->type = 'out';
-            $stock->remarks = 'sold ' . $orderId;
-            $stock->save();
+                $stock = new Stock_Transaction();
+                $stock->product_id = $productId;
+                $stock->quantity = $request->quantity[$key] * -1;
+                $stock->type = 'out';
+                $stock->remarks = 'sold ' . $orderId;
+                $stock->save();
 
-            $productStock = Product_stock::find($productId);
-            if ($productStock) {
-                $productStock->quantity -= $request->quantity[$key];
-                $productStock->save();
+                $productStock = Product_stock::where('product_id', $productId)->first();
+                if ($productStock) {
+                    $productStock->quantity   = $productStock->quantity -   $request->quantity[$key];
+                    $productStock->save();
+                }
             }
-        }
 
-        return Util::getCreateResponse($order, 'Order created successfully');
-    } catch (Exception $err) {
-        return response()->json(['error' => $err->getMessage()], 500);
+            return Util::getCreateResponse($order, 'Order created successfully');
+        } catch (Exception $err) {
+            return response()->json(['error' => $err->getMessage()], 500);
+        }
     }
-}
 
 
 
@@ -109,15 +109,15 @@ class MyOrderController extends Controller
             return response()->json(['error' => $err->getMessage()], 500);
         }
     }
-    public function cancelOrder(Request $request ,$id)
+    public function cancelOrder(Request $request, $id)
     {
         try {
-        
+
 
             $orderDetail = OrderDetail::findOrFail($id);
 
             $orderDetail->orderStatus = 'cancelled';
-            $orderDetail->save();   
+            $orderDetail->save();
 
             return response()->json([
                 'success' => true,
@@ -135,16 +135,16 @@ class MyOrderController extends Controller
                 'id' => 'required|exists:order_details,order_id',
                 'customer_address' => 'required|string|max:255',
             ]);
-    
+
             // Retrieve all OrderDetail records associated with the given order_id
             $orderDetails = OrderDetail::where('order_id', $request->id)->get();
-    
+
             // Iterate over each OrderDetail record and update the customer_address
             foreach ($orderDetails as $orderDetail) {
                 $orderDetail->customer_address = $request->customer_address;
                 $orderDetail->save();
             }
-    
+
             return response()->json([
                 'success' => true,
                 'message' => 'Customer address updated successfully',
@@ -154,6 +154,4 @@ class MyOrderController extends Controller
             return response()->json(['error' => $err->getMessage()], 500);
         }
     }
-    
-    
 }

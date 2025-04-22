@@ -101,12 +101,9 @@
                 <p>
                     13. Contact Us
                     If you have any questions or concerns about these Terms and Conditions, please contact us at
-                    <strong>Ushaben doshi</strong>
                     msthetrendushaben@gmail.com or +91 8866 232839.
                 </p>
-                <p>
 
-                </p>
             </div>
         </div>
 

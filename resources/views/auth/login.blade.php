@@ -129,11 +129,7 @@
             letter-spacing: 1px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
             transition: background-color 0.3s, color 0.3s;
-<<<<<<< HEAD
             /* animation: pulse 2s infinite; */
-=======
-           /* animation: pulse 2s infinite; */
->>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
         }
 
         @keyframes pulse {
@@ -177,21 +173,14 @@
                 </div>
                 <div class="login-form">
                     @if (session('error'))
-<<<<<<< HEAD
                         <div class="alert alert-danger" id="successMessage">
                             {{ session('error') }}
                         </div>
-=======
-                    <div class="alert alert-danger" id="successMessage">
-                        {{ session('error') }}
-                    </div>
->>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
                     @endif
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="form-group">
                             <label for="email" class="form-control-label">EMAIL</label>
-<<<<<<< HEAD
                             <input id="email" type="email"
                                 class="form-control @error('email') is-invalid @enderror" name="email"
                                 value="{{ old('email') }}" autocomplete="email" autofocus>
@@ -199,14 +188,6 @@
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
-=======
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
-                                name="email" value="{{ old('email') }}" autocomplete="email" autofocus>
-                            @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
->>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
                             @enderror
                         </div>
                         <div class="form-group">
@@ -215,15 +196,9 @@
                                 class="form-control @error('password') is-invalid @enderror" name="password"
                                 autocomplete="current-password">
                             @error('password')
-<<<<<<< HEAD
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
-=======
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
->>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44
                             @enderror
                         </div>
                         <div class="login-btm">
@@ -243,8 +218,4 @@
     </script>
 </body>
 
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> 9c148faa03373b20c85430f50b589470dd4cfe44

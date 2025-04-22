@@ -10,10 +10,19 @@ use App\Http\Controllers\api\PincodeController;
 use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\CategoryController;
 use App\Http\Controllers\api\ChangePinController;
+use Illuminate\Support\Facades\Artisan;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
+
+Route::get('/route-clear', function (Request $request) {
+    Artisan::call('route:clear');
+});
+Route::get('/cache-clear', function (Request $request) {
+    Artisan::call('cache:clear');
+});
+
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -99,9 +108,36 @@ Route::middleware('auth:sanctum')->group(function () {
     //order route end
 
     // admin routes
-    Route::get('/catalog', [AdminController::class, 'getCatalog']);
+
+    // catalog
+    Route::get('/catalog/{id?}', [AdminController::class, 'getCatalog']);
     Route::post('/catalog', [AdminController::class, 'addCatalog']);
-    Route::get('/catalog/products', [AdminController::class, 'catalogProducts']);
+    Route::get('/catalog/products1', [AdminController::class, 'catalogProducts1']);
+    Route::get('/catalogs', [AdminController::class, 'catalogs']);
+    Route::post('/catalog/{id}', [AdminController::class, 'updateCatalog']);
+
+    //  products
+    Route::get('/products/{id?}', [AdminController::class, 'getProducts']);
+    Route::post('/product', [AdminController::class, 'addProduct']);
+    Route::post('/product/{id}', [AdminController::class, 'updateProduct']);
+
+
+    Route::get('catalog/delete/{id}', [AdminController::class, 'catalogDelete']);
+    Route::get('catalog_trash', [AdminController::class, 'catalog_trash'])->name('catalog.trash');
+    Route::get('catalog/hardDelete/{id}', [AdminController::class, 'catalogHardDelete']);
+    Route::get('catalog/restore/{id}', [AdminController::class, 'catalogRestore']);
+
+    Route::get('products/delete/{id}', [AdminController::class, 'productDelete']);
+    // Route::get('products/trash', [AdminController::class, 'trashProduct']);
+    Route::get('deletedProduct', [AdminController::class, 'deletedProduct']);
+    Route::get('products/hardDetelete/{id}', [AdminController::class, 'productHardDelete']);
+    Route::get('products/restore/{id}', [AdminController::class, 'productRestore']);
+
+
+    //stock
+    Route::get('/stock/{id}', [AdminController::class, 'getStock']);
+    Route::post('/update-stock', [AdminController::class, 'updateProductStock']);
+    Route::post('/update-order-status', [AdminController::class, 'updateOrderStatus']);
 });
 
 Route::get('/getSlider', [ProductController::class, 'getSlider']);

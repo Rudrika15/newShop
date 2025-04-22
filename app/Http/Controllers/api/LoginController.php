@@ -60,7 +60,7 @@ class LoginController extends Controller
         try {
             $userId = Auth::user()->id;
 
-            $user = User::find($userId)->first();
+            $user = User::where('id', $userId)->first();
 
             if (!$user) {
                 return response()->json(['error' => 'User not found'], 404);
