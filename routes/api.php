@@ -36,6 +36,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getProductList', [ProductController::class, 'getProductList']);
     Route::get('/getProductDetail/{id}', [ProductController::class, 'getProductDetail']);
     Route::get('/getOrderList', [OrderController::class, 'getOrderList']);
+
+
     Route::get('/getMyOrderList', [MyOrderController::class, 'getMyOrderList']);
     Route::get('/getCategoryList', [CategoryController::class, 'getCategoryfilter']);
     Route::post('/order-save', [MyOrderController::class, 'orderSave']);
@@ -104,7 +106,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //stricker print end
 
     //order route
-    Route::get('/order-list', [AdminController::class, 'getAllOrders']);
     //order route end
 
     // admin routes
@@ -143,3 +144,5 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/getSlider', [ProductController::class, 'getSlider']);
 Route::post('/login', [LoginController::class, 'login']);
 Route::get('/getVersion', [ProductController::class, 'getVersion']);
+Route::get('/cashfree/settlement/{orderId}', [OrderController::class, 'getSettlement']);
+Route::get('/order-list', [AdminController::class, 'getAllOrders']);

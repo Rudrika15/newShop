@@ -20,7 +20,9 @@ class LoginController extends Controller
         ]);
 
         try {
-            $user = User::where('contact', $request->number)->first();
+            $user = User::where('contact', $request->number)
+                ->where('status', 'Active')
+                ->first();
 
             if (!$user) {
                 return response()->json(['error' => 'User not found'], 404);

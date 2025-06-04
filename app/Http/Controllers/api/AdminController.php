@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Catalog;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
 use App\Models\Product_stock;
@@ -14,6 +15,7 @@ use App\Models\Stock_Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,12 +25,12 @@ class AdminController extends Controller
     {
         $validator = Validator::make($req->all(), [
             'name' => 'required',
-            'email' => 'required|email|unique:users',
+            // 'email' => 'email|unique:users',
             'contact' => 'required',
             'password' => 'required',
         ], [
             'name.required' => 'Name is required',
-            'email.required' => 'Email is required',
+            // 'email.required' => 'Email is required',
             'contact.required' => 'Contact is required',
             'password.required' => 'Password is required',
         ]);
@@ -53,10 +55,10 @@ class AdminController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                     'contact' => $user->contact,
-                     'status' => $user->status
+                    'status' => $user->status
 
                 ],
-                
+
                 'status' => true,
                 'token' => $token,
                 'message' => 'User created successfully!'
@@ -218,7 +220,7 @@ class AdminController extends Controller
     public function getAllSkus()
     {
         try {
-           $skus = Sku::all();
+            $skus = Sku::all();
 
             return response()->json([
                 'status' => true,
@@ -645,18 +647,29 @@ class AdminController extends Controller
                 'to.required' => 'To date is required',
             ]
         );
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'message' => $validator->errors()->first()
             ]);
         }
+
         try {
             $from = $request->from;
             $to = $request->to;
+
             $stickers = OrderDetail::whereDate('created_at', '>=', $from)
                 ->whereDate('created_at', '<=', $to)
-                ->pluck('customer_address');
+                ->with('order.user') // eager load user through order
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'address' => $item->customer_address,
+                        'mobile' => $item->order?->user?->contact // safely access mobile
+                    ];
+                });
+
             return response()->json([
                 'status' => true,
                 'message' => 'Stickers retrieved successfully!',
@@ -666,10 +679,17 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while retrieving the stickers. Please try again.'], 500);
         }
     }
+
     public function getAllOrders(Request $request)
+
     {
         try {
             $query = OrderDetail::with('product', 'order');
+
+
+            //find payment id from order 
+
+
 
             if ($request->has('orderStatus')) {
                 $query->where('orderStatus', $request->orderStatus);
@@ -712,6 +732,34 @@ class AdminController extends Controller
             }
 
             $orders = $query->orderBy('created_at', 'desc')->paginate(10);
+
+            foreach ($orders as $order) {
+                $orderId = $order->order->payment_id;
+                $url = "https://api.cashfree.com/pg/orders/{$orderId}/settlements";
+
+                try {
+                    $response = Http::withHeaders([
+                        'Content-Type'     => 'application/json',
+                        'x-client-id'      => env('CASHFREE_CLIENT_ID'),
+                        'x-client-secret'  => env('CASHFREE_CLIENT_SECRET'),
+                        'x-api-version'    => '2023-08-01',
+                    ])->timeout(30)->withoutVerifying()->get($url);
+
+                    if ($response->successful()) {
+                        $data = $response->json();
+
+                        if (!empty($data['transfer_id'])) {
+                            $updatestatus = Order::find($order->order_id);
+                            $updatestatus->status = 'Setteled';
+                            $updatestatus->save();
+                        }
+
+                        // return response()->json($data, 200);
+                    }
+                } catch (\Exception $e) {
+                    \Log::error("Cashfree API Error: " . $e->getMessage());
+                }
+            }
 
             return response()->json([
                 'status' => true,
@@ -912,7 +960,7 @@ class AdminController extends Controller
                 'description' => 'required',
                 'base_price' => 'required',
                 'tax_price' => 'required',
-                'discount_amt' => 'required',
+                // 'discount_amt' => 'required',
                 'mrp' => 'required',
                 'quantity' => 'required',
             ],
@@ -926,7 +974,7 @@ class AdminController extends Controller
                 'description.required' => 'description is required',
                 'base_price.required' => 'base_price is required',
                 'tax_price.required' => 'tax_price is required',
-                'discount_amt.required' => 'discount_amt is required',
+                // 'discount_amt.required' => 'discount_amt is required',
                 'mrp.required' => 'mrp is required',
                 'quantity.required' => 'quantity is required',
             ]
@@ -949,6 +997,7 @@ class AdminController extends Controller
             $product->base_price = $request->base_price;
             $product->tax_price = $request->tax_price;
             $product->discount_amt = $request->discount_amt;
+            $product->discount_type = $request->discount_type;
             $product->mrp = $request->mrp;
             $product->image = time() . "." . $request->image->extension();
             $request->image->move(public_path('images/product'), $product->image);
@@ -1038,6 +1087,8 @@ class AdminController extends Controller
             $product->tax_price = $request->tax_price;
             $product->discount_amt = $request->discount_amt;
             $product->mrp = $request->mrp;
+            $product->discount_type = $request->discount_type;
+
 
             if ($request->hasFile('image')) {
                 $product->image = time() . "." . $request->image->extension();
