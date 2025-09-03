@@ -14,15 +14,10 @@ use App\Models\Slider;
 use App\Models\Stock_Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\Firebase\Messaging\Notification as FirebaseNotification;
 
 class AdminController extends Controller
 {
@@ -1314,36 +1309,6 @@ class AdminController extends Controller
             $orderDetail = OrderDetail::findOrFail($request->id);
             $orderDetail->orderStatus = $request->status;
             $orderDetail->save();
-
-            $order = Order::where('id', $orderDetail->order_id)->first();
-
-
-            // Send notification 
-            $users = User::where('id', $order->user_id)->whereNotNull('fcm_token')->get();
-
-            $factory = (new Factory)
-                ->withServiceAccount(storage_path('push-notification.json'));
-            $messaging = $factory->createMessaging();
-
-
-
-            foreach ($users as $admin) {
-                $token = $admin->fcm_token;
-                if (!$token) {
-                    Log::error("Admin {$admin->name} does not have a valid Firebase token.");
-                    continue;
-                }
-
-                try {
-                    $message = CloudMessage::withTarget('token', $token)
-                        ->withNotification(FirebaseNotification::create('test',  ' test notificationssss.'));
-                    $messaging->send($message);
-                    Log::error("error occured:", $messaging->send($message));
-                } catch (\Kreait\Firebase\Exception\Messaging\NotFound $e) {
-                    Log::error("Firebase token not found for admin: {$admin->name}, error: " . $e->getMessage());
-                }
-            }
-
             return response()->json([
                 'status' => true,
                 'message' => 'Order status updated successfully',
@@ -1402,38 +1367,6 @@ class AdminController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'An error occurred while updating stock. Please try again later.',
-            ]);
-        }
-    }
-
-    public function deleteAccount()
-    {
-        try {
-            $user = User::findOrFail(Auth::user()->id);
-            if (!$user) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'User not found'
-                ]);
-            }
-            if ($user->type == 1) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'You are not allowed to delete admin account'
-                ]);
-            }
-
-            // $user->delete();
-            $user->status = 'Deleted';
-            $user->save();
-            return response()->json([
-                'status' => true,
-                'message' => 'Account deleted successfully'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => $e->getMessage()
             ]);
         }
     }

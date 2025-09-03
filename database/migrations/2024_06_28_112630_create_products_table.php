@@ -26,7 +26,6 @@ return new class extends Migration
             $table->string('base_price');
             $table->string('tax_price');
             $table->string('discount_price');
-            $table->string('discount_type');
             $table->integer('mrp');
             $table->enum('is_active', ['yes', 'no']);
             $table->timestamps();

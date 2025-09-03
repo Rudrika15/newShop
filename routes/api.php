@@ -10,8 +10,6 @@ use App\Http\Controllers\api\PincodeController;
 use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\CategoryController;
 use App\Http\Controllers\api\ChangePinController;
-use App\Http\Controllers\api\Notification;
-use App\Http\Controllers\api\NotificationController;
 use Illuminate\Support\Facades\Artisan;
 
 // Route::get('/user', function (Request $request) {
@@ -141,14 +139,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/stock/{id}', [AdminController::class, 'getStock']);
     Route::post('/update-stock', [AdminController::class, 'updateProductStock']);
     Route::post('/update-order-status', [AdminController::class, 'updateOrderStatus']);
-
-    // delete account
-    Route::get('/delete-account', [AdminController::class, 'deleteAccount']);
-
-
-    //token update
-
-    Route::post('/update-token', [NotificationController::class, 'updateFcmToken']);
 });
 
 Route::get('/getSlider', [ProductController::class, 'getSlider']);
