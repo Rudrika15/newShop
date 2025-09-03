@@ -154,5 +154,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/getSlider', [ProductController::class, 'getSlider']);
 Route::post('/login', [LoginController::class, 'login']);
 Route::get('/getVersion', [ProductController::class, 'getVersion']);
+
 Route::get('/cashfree/settlement/{orderId}', [OrderController::class, 'getSettlement']);
+
 Route::get('/order-list', [AdminController::class, 'getAllOrders']);
