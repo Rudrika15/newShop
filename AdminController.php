@@ -14,15 +14,10 @@ use App\Models\Slider;
 use App\Models\Stock_Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\Firebase\Messaging\Notification as FirebaseNotification;
 
 class AdminController extends Controller
 {
@@ -63,7 +58,6 @@ class AdminController extends Controller
                     'status' => $user->status
 
                 ],
-
                 'status' => true,
                 'token' => $token,
                 'message' => 'User created successfully!'
@@ -175,11 +169,11 @@ class AdminController extends Controller
     {
         $validator = Validator::make($req->all(), [
             'name' => 'required',
-            'email' => 'required|email',
+            // 'email' => 'required|email',
             'contact' => 'required',
         ], [
             'name.required' => 'Name is required',
-            'email.required' => 'Email is required',
+            // 'email.required' => 'Email is required',
             'contact.required' => 'Contact is required',
 
         ]);
@@ -226,6 +220,7 @@ class AdminController extends Controller
     {
         try {
             $skus = Sku::all();
+
 
             return response()->json([
                 'status' => true,
@@ -652,29 +647,18 @@ class AdminController extends Controller
                 'to.required' => 'To date is required',
             ]
         );
-
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'message' => $validator->errors()->first()
             ]);
         }
-
         try {
             $from = $request->from;
             $to = $request->to;
-
             $stickers = OrderDetail::whereDate('created_at', '>=', $from)
                 ->whereDate('created_at', '<=', $to)
-                ->with('order.user') // eager load user through order
-                ->get()
-                ->map(function ($item) {
-                    return [
-                        'address' => $item->customer_address,
-                        'mobile' => $item->order?->user?->contact // safely access mobile
-                    ];
-                });
-
+                ->pluck('customer_address');
             return response()->json([
                 'status' => true,
                 'message' => 'Stickers retrieved successfully!',
@@ -684,7 +668,62 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while retrieving the stickers. Please try again.'], 500);
         }
     }
+    // public function getAllOrders(Request $request)
+    // {
+    //     try {
+    //         $query = OrderDetail::with('product', 'order');
 
+    //         if ($request->has('orderStatus')) {
+    //             $query->where('orderStatus', $request->orderStatus);
+    //         }
+
+    //         // Find by userId from the order table
+    //         if ($request->has('userId')) {
+    //             $query->whereHas('order', function ($q) use ($request) {
+    //                 $q->where('user_id', $request->userId);
+    //             });
+    //         }
+
+    //         if ($request->has('productName')) {
+    //             $query->whereHas('product', function ($q) use ($request) {
+    //                 $q->where('slug', 'like', '%' . $request->productName . '%');
+    //             });
+    //         }
+
+    //         if ($request->has('userName')) {
+    //             $query->whereHas('order.users', function ($q) use ($request) {
+    //                 $q->where('name', 'like', '%' . $request->userName . '%');
+    //             });
+    //         }
+
+    //         if ($request->has('date')) {
+    //             $query->whereHas('order', function ($q) use ($request) {
+    //                 $q->whereDate('created_at', $request->date);
+    //             });
+    //         }
+
+
+    //         // Filter by startDate and endDate
+    //         if ($request->has('startDate') && $request->has('endDate')) {
+    //             // Convert startDate and endDate to Carbon instances
+    //             $startDate = \Carbon\Carbon::parse($request->startDate)->format('Y-m-d');
+    //             $endDate = \Carbon\Carbon::parse($request->endDate)->addDay()->format('Y-m-d');
+
+    //             // Apply whereBetween filter
+    //             $query->whereBetween('created_at', [$startDate, $endDate]);
+    //         }
+
+    //         $orders = $query->orderBy('created_at', 'desc')->paginate(10);
+
+    //         return response()->json([
+    //             'status' => true,
+    //             'message' => 'Orders retrieved successfully!',
+    //             'data' => $orders
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => 'An error occurred while retrieving the orders. Please try again.'], 500);
+    //     }
+    // }
     public function getAllOrders(Request $request)
 
     {
@@ -775,7 +814,6 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while retrieving the orders. Please try again.'], 500);
         }
     }
-
     public function getCatalog(Request $request, $id = null)
     {
         try {
@@ -1001,9 +1039,12 @@ class AdminController extends Controller
             $product->description = $request->description;
             $product->base_price = $request->base_price;
             $product->tax_price = $request->tax_price;
+
             $product->discount_amt = $request->discount_amt;
             $product->discount_type = $request->discount_type;
+
             $product->mrp = $request->mrp;
+
             $product->image = time() . "." . $request->image->extension();
             $request->image->move(public_path('images/product'), $product->image);
             $product->save();
@@ -1039,7 +1080,6 @@ class AdminController extends Controller
             );
         }
     }
-
 
 
     public function updateProduct(Request $request)
@@ -1091,9 +1131,8 @@ class AdminController extends Controller
             $product->base_price = $request->base_price;
             $product->tax_price = $request->tax_price;
             $product->discount_amt = $request->discount_amt;
-            $product->mrp = $request->mrp;
             $product->discount_type = $request->discount_type;
-
+            $product->mrp = $request->mrp;
 
             if ($request->hasFile('image')) {
                 $product->image = time() . "." . $request->image->extension();
@@ -1314,36 +1353,6 @@ class AdminController extends Controller
             $orderDetail = OrderDetail::findOrFail($request->id);
             $orderDetail->orderStatus = $request->status;
             $orderDetail->save();
-
-            $order = Order::where('id', $orderDetail->order_id)->first();
-
-
-            // Send notification 
-            $users = User::where('id', $order->user_id)->whereNotNull('fcm_token')->get();
-
-            $factory = (new Factory)
-                ->withServiceAccount(storage_path('push-notification.json'));
-            $messaging = $factory->createMessaging();
-
-
-
-            foreach ($users as $admin) {
-                $token = $admin->fcm_token;
-                if (!$token) {
-                    Log::error("Admin {$admin->name} does not have a valid Firebase token.");
-                    continue;
-                }
-
-                try {
-                    $message = CloudMessage::withTarget('token', $token)
-                        ->withNotification(FirebaseNotification::create('test',  ' test notificationssss.'));
-                    $messaging->send($message);
-                    Log::error("error occured:", $messaging->send($message));
-                } catch (\Kreait\Firebase\Exception\Messaging\NotFound $e) {
-                    Log::error("Firebase token not found for admin: {$admin->name}, error: " . $e->getMessage());
-                }
-            }
-
             return response()->json([
                 'status' => true,
                 'message' => 'Order status updated successfully',
@@ -1402,38 +1411,6 @@ class AdminController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'An error occurred while updating stock. Please try again later.',
-            ]);
-        }
-    }
-
-    public function deleteAccount()
-    {
-        try {
-            $user = User::findOrFail(Auth::user()->id);
-            if (!$user) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'User not found'
-                ]);
-            }
-            if ($user->type == 1) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'You are not allowed to delete admin account'
-                ]);
-            }
-
-            // $user->delete();
-            $user->status = 'Deleted';
-            $user->save();
-            return response()->json([
-                'status' => true,
-                'message' => 'Account deleted successfully'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => $e->getMessage()
             ]);
         }
     }
