@@ -47,6 +47,7 @@ class AdminController extends Controller
             $user->email = $req->email;
             $user->contact = $req->contact;
             $user->password = Hash::make($req->password);
+            $user->status = "Active";
             $user->save();
             $token = $user->createToken('my-app-token')->plainTextToken;
 
@@ -687,7 +688,7 @@ class AdminController extends Controller
             $query = OrderDetail::with('product', 'order');
 
 
-            //find payment id from order 
+            // find payment id from order
 
 
 

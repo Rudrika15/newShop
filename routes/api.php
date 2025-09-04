@@ -139,6 +139,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/stock/{id}', [AdminController::class, 'getStock']);
     Route::post('/update-stock', [AdminController::class, 'updateProductStock']);
     Route::post('/update-order-status', [AdminController::class, 'updateOrderStatus']);
+
+    Route::get('/order-list', [AdminController::class, 'getAllOrders']);
+
 });
 
 Route::get('/getSlider', [ProductController::class, 'getSlider']);
@@ -147,4 +150,3 @@ Route::get('/getVersion', [ProductController::class, 'getVersion']);
 
 Route::get('/cashfree/settlement/{orderId}', [OrderController::class, 'getSettlement']);
 
-Route::get('/order-list', [AdminController::class, 'getAllOrders']);
