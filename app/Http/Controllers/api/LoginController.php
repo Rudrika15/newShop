@@ -12,6 +12,36 @@ use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/api/login",
+     *     summary="User Login",
+     *     description="Authenticate user by contact number and password. Returns user details and access token.",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"number","password"},
+     *             @OA\Property(property="number", type="string", example="9876543210"),
+     *             @OA\Property(property="password", type="string", format="password", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Login successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="John Doe"),
+     *             @OA\Property(property="email", type="string", example="john@example.com"),
+     *             @OA\Property(property="contact", type="string", example="9876543210"),
+     *             @OA\Property(property="type", type="string", example="Customer"),
+     *             @OA\Property(property="token", type="string", example="1|vJ6qJdF..")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Invalid password"),
+     *     @OA\Response(response=404, description="User not found"),
+     *     @OA\Response(response=500, description="An error occurred during login")
+     * )
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -51,6 +81,34 @@ class LoginController extends Controller
             return response()->json(['error' => 'An error occurred during login. Please try again.'], 500);
         }
     }
+
+    /**
+     * @OA\Post(
+     *     path="/api/change-password",
+     *     summary="Change Password",
+     *     description="Allows authenticated user to change their password.",
+     *     tags={"Authentication"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"old_password","new_password"},
+     *             @OA\Property(property="old_password", type="string", format="password", example="oldPass123"),
+     *             @OA\Property(property="new_password", type="string", format="password", example="newPass456")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password changed successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Password changed successfully")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Invalid old password"),
+     *     @OA\Response(response=404, description="User not found"),
+     *     @OA\Response(response=500, description="An error occurred during password change")
+     * )
+     */
 
     public function changePassword(Request $request)
     {

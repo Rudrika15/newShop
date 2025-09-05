@@ -12,6 +12,23 @@ use Illuminate\Http\Request;
 
 class PincodeController extends Controller
 {
+    /**
+ * @OA\Get(
+ *     path="/api/pincodes",
+ *     tags={"Pincodes"},
+ *     summary="Get all pincodes (limited to 50,000)",
+ *     security={{"sanctum":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of pincodes",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+ *         )
+ *     ),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function getAllPincodes(Request $request)
     {
         try {
@@ -24,6 +41,34 @@ class PincodeController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    /**
+ * @OA\get(
+ *     path="/api/pincode-details",
+ *     tags={"Pincodes"},
+ *     summary="Get details of a specific pincode",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="pincode",
+ *         in="query",
+ *         required=true,
+ *         description="The pincode to search for",
+ *         @OA\Schema(type="string", example="382350")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Pincode details found",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Pincode details"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(response=400, description="Pincode parameter is required"),
+ *     @OA\Response(response=404, description="Pincode not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
 
     public function getPincodeDetails(Request $request)
     {
@@ -45,6 +90,34 @@ class PincodeController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    /**
+ * @OA\post(
+ *     path="/api/checkPincode",
+ *     tags={"Pincodes"},
+ *     summary="Check if a pincode exists",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="pincode",
+ *         in="query",
+ *         required=true,
+ *         description="The pincode to check",
+ *         @OA\Schema(type="string", example="382350")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Pincode found",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Pincode found"),
+ *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+ *         )
+ *     ),
+ *     @OA\Response(response=400, description="Pincode parameter is required"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function checkPincode(Request $request)
     {
         try {
@@ -59,7 +132,7 @@ class PincodeController extends Controller
                 'message' => 'Pincode found',
                 'status'=>true,
             ]);
-           
+
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

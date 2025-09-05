@@ -21,6 +21,36 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
+    /**
+ * @OA\Post(
+ *     path="/api/user-create",
+ *     tags={"Users"},
+ *     summary="Create new user",
+ *     security={{"sanctum":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"name","contact","password"},
+ *             @OA\Property(property="name", type="string", example="John Doe"),
+ *             @OA\Property(property="email", type="string", example="john@example.com"),
+ *             @OA\Property(property="contact", type="string", example="9876543210"),
+ *             @OA\Property(property="password", type="string", example="123456")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="User created successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="User created successfully!"),
+ *             @OA\Property(property="token", type="string", example="eyJ0eXAiOiJKV1QiLCJh...")
+ *         )
+ *     ),
+ *     @OA\Response(response=400, description="Validation failed"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function userCreate(Request $req)
     {
         $validator = Validator::make($req->all(), [
@@ -68,6 +98,53 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while creating the user. Please try again.'], 500);
         }
     }
+
+  /**
+ * @OA\Get(
+ *     path="/api/user-list",
+ *     tags={"Users"},
+ *     summary="Get all active users (paginated)",
+ *     security={{"sanctum":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="User List",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="User List"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="current_page", type="integer", example=1),
+ *                 @OA\Property(
+ *                     property="data",
+ *                     type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(property="id", type="integer", example=1),
+ *                         @OA\Property(property="name", type="string", example="John Doe"),
+ *                         @OA\Property(property="email", type="string", example="john@example.com"),
+ *                         @OA\Property(property="contact", type="string", example="9876543210"),
+ *                         @OA\Property(property="status", type="string", example="Active"),
+ *                         @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-05T10:00:00Z"),
+ *                         @OA\Property(property="updated_at", type="string", format="date-time", example="2025-09-05T10:00:00Z")
+ *                     )
+ *                 ),
+ *                 @OA\Property(property="first_page_url", type="string", example="http://localhost/api/user-list?page=1"),
+ *                 @OA\Property(property="last_page", type="integer", example=5),
+ *                 @OA\Property(property="last_page_url", type="string", example="http://localhost/api/user-list?page=5"),
+ *                 @OA\Property(property="per_page", type="integer", example=10),
+ *                 @OA\Property(property="total", type="integer", example=50)
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(response=401, description="Unauthenticated"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
+
+
     public function getAllUsers(Request $req)
     {
         try {
@@ -87,6 +164,21 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while getting the user. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/user-trash",
+ *     tags={"Users"},
+ *     summary="Get all deleted users (paginated)",
+ *     security={{"sanctum":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Trash User List"
+ *     ),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function getTrashUsers()
     {
 
@@ -107,6 +199,25 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while getting the user. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Delete(
+ *     path="/api/user-delete/{id}",
+ *     tags={"Users"},
+ *     summary="Soft delete a user (mark as Deleted)",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id", in="path", required=true, description="User ID", @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="User deleted successfully"
+ *     ),
+ *     @OA\Response(response=404, description="User not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function deleteUser($id)
     {
         try {
@@ -122,6 +233,25 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while deleting the user. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Put(
+ *     path="/api/user-restore/{id}",
+ *     tags={"Users"},
+ *     summary="Restore a deleted user (mark as Active)",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id", in="path", required=true, description="User ID", @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="User restored successfully"
+ *     ),
+ *     @OA\Response(response=404, description="User not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function restoreUser($id)
     {
         try {
@@ -138,6 +268,25 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while restoring the user. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Delete(
+ *     path="/api/user-hard-delete/{id}",
+ *     tags={"Users"},
+ *     summary="Permanently delete a user",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id", in="path", required=true, description="User ID", @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="User deleted permanently"
+ *     ),
+ *     @OA\Response(response=404, description="User not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function hardDeleteUser($id)
     {
         try {
@@ -153,6 +302,25 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while permanently deleting the user. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/user-show/{id}",
+ *     tags={"Users"},
+ *     summary="Get user details by ID",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id", in="path", required=true, description="User ID", @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="User details"
+ *     ),
+ *     @OA\Response(response=404, description="User not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function showUser($id)
     {
         try {
@@ -167,6 +335,35 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while getting the user. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\patch(
+ *     path="/api/user-update/{id}",
+ *     tags={"Users"},
+ *     summary="Update user details",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id", in="path", required=true, description="User ID", @OA\Schema(type="integer")
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"name","email","contact"},
+ *             @OA\Property(property="name", type="string", example="Jane Doe"),
+ *             @OA\Property(property="email", type="string", example="jane@example.com"),
+ *             @OA\Property(property="contact", type="string", example="9998887777")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="User updated successfully"
+ *     ),
+ *     @OA\Response(response=400, description="Validation failed"),
+ *     @OA\Response(response=404, description="User not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function updateUser(Request $req, $id)
     {
         $validator = Validator::make($req->all(), [
@@ -201,6 +398,24 @@ class AdminController extends Controller
         }
     }
 
+    /**
+ * @OA\patch(
+ *     path="/api/user-reset-password/{id}",
+ *     tags={"Users"},
+ *     summary="Reset user password (default: 123456)",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id", in="path", required=true, description="User ID", @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Password reset successfully"
+ *     ),
+ *     @OA\Response(response=404, description="User not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function resetPassword($id)
     {
         try {
@@ -218,6 +433,38 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while getting the reset password. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/sku-list",
+ *     tags={"Skus"},
+ *     summary="Get all SKUs",
+ *     security={{"sanctum":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="SKU List",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Sku List"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="id", type="integer", example=1),
+ *                     @OA\Property(property="prefix", type="string", example="PRFX001"),
+ *                     @OA\Property(property="colorname", type="string", example="Red"),
+ *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-05T10:00:00Z"),
+ *                     @OA\Property(property="updated_at", type="string", format="date-time", example="2025-09-05T10:00:00Z")
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function getAllSkus()
     {
         try {
@@ -232,6 +479,44 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while getting the sku. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Post(
+ *     path="/api/sku-create",
+ *     tags={"Skus"},
+ *     summary="Create a new SKU",
+ *     security={{"sanctum":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"prefix", "colorname"},
+ *             @OA\Property(property="prefix", type="string", example="PRFX002"),
+ *             @OA\Property(property="colorname", type="string", example="Blue")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="SKU created successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Sku created successfully!"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="id", type="integer", example=2),
+ *                 @OA\Property(property="prefix", type="string", example="PRFX002"),
+ *                 @OA\Property(property="colorname", type="string", example="Blue"),
+ *                 @OA\Property(property="created_at", type="string", format="date-time"),
+ *                 @OA\Property(property="updated_at", type="string", format="date-time")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(response=400, description="Validation error"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function storeSku(Request $req)
     {
 
@@ -263,6 +548,43 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while creating the sku. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/sku-show/{id}",
+ *     tags={"Skus"},
+ *     summary="Get SKU details by ID",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="SKU ID",
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="SKU details",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Sku details"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="id", type="integer", example=1),
+ *                 @OA\Property(property="prefix", type="string", example="PRFX001"),
+ *                 @OA\Property(property="colorname", type="string", example="Red"),
+ *                 @OA\Property(property="created_at", type="string", format="date-time"),
+ *                 @OA\Property(property="updated_at", type="string", format="date-time")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(response=404, description="SKU not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function showSku($id)
     {
         try {
@@ -276,6 +598,52 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while getting the sku. Please try again.'], 500);
         }
     }
+
+/**
+ * @OA\post(
+ *     path="/api/sku-update/{id}",
+ *     tags={"Skus"},
+ *     summary="Update an existing SKU",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="SKU ID",
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"prefix", "colorname"},
+ *             @OA\Property(property="prefix", type="string", example="PRFX003"),
+ *             @OA\Property(property="colorname", type="string", example="Green")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="SKU updated successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Sku updated successfully!"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="id", type="integer", example=1),
+ *                 @OA\Property(property="prefix", type="string", example="PRFX003"),
+ *                 @OA\Property(property="colorname", type="string", example="Green"),
+ *                 @OA\Property(property="created_at", type="string", format="date-time"),
+ *                 @OA\Property(property="updated_at", type="string", format="date-time")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(response=400, description="Validation error"),
+ *     @OA\Response(response=404, description="SKU not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function updateSku(Request $req, $id)
     {
         $validator = Validator::make($req->all(), [
@@ -305,6 +673,43 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while updating the sku. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Delete(
+ *     path="/api/sku-delete/{id}",
+ *     tags={"Skus"},
+ *     summary="Delete SKU by ID",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="SKU ID",
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="SKU deleted successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Sku deleted successfully!"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="id", type="integer", example=1),
+ *                 @OA\Property(property="prefix", type="string", example="PRFX001"),
+ *                 @OA\Property(property="colorname", type="string", example="Red"),
+ *                 @OA\Property(property="created_at", type="string", format="date-time"),
+ *                 @OA\Property(property="updated_at", type="string", format="date-time")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(response=404, description="SKU not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function deleteSku($id)
     {
         try {
@@ -319,6 +724,47 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while deleting the sku. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/category-list",
+ *     tags={"Categories"},
+ *     summary="Get all categories (paginated)",
+ *     security={{"sanctum":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Category List",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Category List"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 description="Pagination object containing categories",
+ *                 @OA\Property(property="current_page", type="integer", example=1),
+ *                 @OA\Property(
+ *                     property="data",
+ *                     type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(property="id", type="integer", example=1),
+ *                         @OA\Property(property="categoryname", type="string", example="Electronics"),
+ *                         @OA\Property(property="is_parent", type="boolean", example=true),
+ *                         @OA\Property(property="parent", type="integer", nullable=true, example=null),
+ *                         @OA\Property(property="created_at", type="string", format="date-time"),
+ *                         @OA\Property(property="updated_at", type="string", format="date-time")
+ *                     )
+ *                 ),
+ *                 @OA\Property(property="per_page", type="integer", example=10),
+ *                 @OA\Property(property="total", type="integer", example=100)
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function getAllCategories()
     {
         try {
@@ -333,6 +779,46 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while getting the category. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Post(
+ *     path="/api/category-store",
+ *     tags={"Categories"},
+ *     summary="Create a new category",
+ *     security={{"sanctum":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"categoryname","is_parent"},
+ *             @OA\Property(property="categoryname", type="string", example="Clothing"),
+ *             @OA\Property(property="is_parent", type="boolean", example=true),
+ *             @OA\Property(property="parent", type="integer", nullable=true, example=null)
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="Category created successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Category created successfully!"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="id", type="integer", example=2),
+ *                 @OA\Property(property="categoryname", type="string", example="Clothing"),
+ *                 @OA\Property(property="is_parent", type="boolean", example=true),
+ *                 @OA\Property(property="parent", type="integer", nullable=true, example=null),
+ *                 @OA\Property(property="created_at", type="string", format="date-time"),
+ *                 @OA\Property(property="updated_at", type="string", format="date-time")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(response=400, description="Validation error"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function storeCategory(Request $req)
     {
         $validator = Validator::make(
@@ -372,6 +858,38 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while creating the category. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/category-show/{id}",
+ *     tags={"Categories"},
+ *     summary="Get category details by ID",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(name="id", in="path", required=true, description="Category ID", @OA\Schema(type="integer", example=1)),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Category details",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Category details"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="id", type="integer", example=1),
+ *                 @OA\Property(property="categoryname", type="string", example="Electronics"),
+ *                 @OA\Property(property="is_parent", type="boolean", example=true),
+ *                 @OA\Property(property="parent", type="integer", nullable=true, example=null),
+ *                 @OA\Property(property="created_at", type="string", format="date-time"),
+ *                 @OA\Property(property="updated_at", type="string", format="date-time")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(response=404, description="Category not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function showCategory($id)
     {
         try {
@@ -385,6 +903,29 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while getting the category. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Delete(
+ *     path="/api/category-delete/{id}",
+ *     tags={"Categories"},
+ *     summary="Soft delete category by ID",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(name="id", in="path", required=true, description="Category ID", @OA\Schema(type="integer", example=1)),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Category deleted successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Category deleted successfully!"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(response=404, description="Category not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function deleteCategory($id)
     {
         try {
@@ -399,6 +940,39 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while deleting the category. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\post(
+ *     path="/api/category-update/{id}",
+ *     tags={"Categories"},
+ *     summary="Update an existing category",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(name="id", in="path", required=true, description="Category ID", @OA\Schema(type="integer", example=1)),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"categoryname","is_parent"},
+ *             @OA\Property(property="categoryname", type="string", example="Updated Electronics"),
+ *             @OA\Property(property="is_parent", type="boolean", example=false),
+ *             @OA\Property(property="parent", type="integer", nullable=true, example=1)
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Category updated successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Category updated successfully!"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(response=400, description="Validation error"),
+ *     @OA\Response(response=404, description="Category not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function updateCategory(Request $req, $id)
     {
         $validator = Validator::make($req->all(), [
@@ -436,6 +1010,27 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while updating the category. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/category-trash",
+ *     tags={"Categories"},
+ *     summary="Get all trashed categories",
+ *     security={{"sanctum":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Trashed Category List",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Category List"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function getTrashCategories()
     {
         try {
@@ -449,6 +1044,29 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while getting the category. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\post(
+ *     path="/api/category-restore/{id}",
+ *     tags={"Categories"},
+ *     summary="Restore a soft-deleted category",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(name="id", in="path", required=true, description="Category ID", @OA\Schema(type="integer", example=1)),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Category restored successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Category restored successfully!"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(response=404, description="Category not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public  function restoreCategory($id)
     {
         try {
@@ -463,6 +1081,29 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while restoring the category. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\post(
+ *     path="/api/category-hard-delete/{id}",
+ *     tags={"Categories"},
+ *     summary="Permanently delete category by ID",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(name="id", in="path", required=true, description="Category ID", @OA\Schema(type="integer", example=1)),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Category permanently deleted successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Category deleted successfully!"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(response=404, description="Category not found"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function hardDeleteCategory($id)
 
     {
@@ -478,6 +1119,26 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while deleting the category. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/slider-list",
+ *     tags={"Sliders"},
+ *     summary="Get all active sliders (paginated)",
+ *     security={{"sanctum":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Slider List",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Slider List"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(response=500, description="Server error")
+ * )
+ */
+
     public function getAllSliders()
     {
         try {
@@ -492,6 +1153,24 @@ class AdminController extends Controller
         }
     }
 
+    /**
+ * @OA\Get(
+ *     path="/api/slider-trash",
+ *     tags={"Sliders"},
+ *     summary="Get all deleted sliders (paginated)",
+ *     security={{"sanctum":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Slider Trash List",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Slider List"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     )
+ * )
+ */
+
     public function getTrashSlider()
     {
         try {
@@ -505,6 +1184,32 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while getting the slider. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\post(
+ *     path="/api/slider-restore/{id}",
+ *     tags={"Sliders"},
+ *     summary="Restore a deleted slider",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Slider ID",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Slider restored successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Slider restored successfully!"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     )
+ * )
+ */
+
     public function restoreSlider($id)
     {
         try {
@@ -520,6 +1225,32 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while restoring the slider. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\post(
+ *     path="/api/slider-hard-delete/{id}",
+ *     tags={"Sliders"},
+ *     summary="Hard delete a slider (permanent delete)",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Slider ID",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Slider deleted permanently",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Slider deleted successfully!"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     )
+ * )
+ */
+
     public function hardDeleteSlider($id)
     {
         try {
@@ -535,6 +1266,32 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while permanently deleting the slider. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\post(
+ *     path="/api/slider-soft-delete/{id}",
+ *     tags={"Sliders"},
+ *     summary="Soft delete a slider (set status = Deleted)",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Slider ID",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Slider soft deleted successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Slider deleted successfully!"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     )
+ * )
+ */
+
     public function softDeleteSlider($id)
     {
         try {
@@ -550,6 +1307,39 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while soft deleting the slider. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\post(
+ *     path="/api/slider-update/{id}",
+ *     tags={"Sliders"},
+ *     summary="Update a slider by ID",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Slider ID",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"title"},
+ *             @OA\Property(property="title", type="string", example="Updated Title")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Slider updated successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Slider updated successfully!"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     )
+ * )
+ */
+
     public function updateSlider($id, Request $request)
     {
         $validator = Validator::make(
@@ -583,6 +1373,32 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while updating the slider. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/slider-show/{id}",
+ *     tags={"Sliders"},
+ *     summary="Get a single slider by ID",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Slider ID",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Slider retrieved successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Slider retrieved successfully!"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     )
+ * )
+ */
+
     public function showSlider($id)
     {
         try {
@@ -596,6 +1412,36 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while retrieving the slider. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Post(
+ *     path="/api/slider-create",
+ *     tags={"Sliders"},
+ *     summary="Create a new slider",
+ *     security={{"sanctum":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 required={"title","image"},
+ *                 @OA\Property(property="title", type="string", example="Summer Collection"),
+ *                 @OA\Property(property="image", type="string", format="binary")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Slider created successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Slider created successfully!"),
+ *             @OA\Property(property="data", type="object")
+ *         )
+ *     )
+ * )
+ */
+
     public function store(Request $request)
     {
         try {

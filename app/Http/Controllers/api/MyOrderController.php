@@ -32,6 +32,30 @@ class MyOrderController extends Controller
 
         return Util::getMyOrderListResponse($response);
     }
+
+    /**
+ * @OA\Post(
+ *     path="/api/order-save",
+ *     tags={"Orders"},
+ *     summary="Create a new order",
+ *     security={{"sanctum":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="product_id", type="array", @OA\Items(type="integer"), example={1,2}),
+ *             @OA\Property(property="quantity", type="array", @OA\Items(type="integer"), example={2,1}),
+ *             @OA\Property(property="price", type="array", @OA\Items(type="number", format="float"), example={500,1200}),
+ *             @OA\Property(property="amount", type="number", format="float", example=1700),
+ *             @OA\Property(property="payment_id", type="string", example="pay_12345"),
+ *             @OA\Property(property="customer_address", type="string", example="123 Main St, NY")
+ *         )
+ *     ),
+ *     @OA\Response(response=201, description="Order created successfully"),
+ *     @OA\Response(response=400, description="Validation error"),
+ *     @OA\Response(response=401, description="Unauthenticated")
+ * )
+ */
+
     public function orderSave(Request $request)
     {
         try {
@@ -83,6 +107,24 @@ class MyOrderController extends Controller
         }
     }
 
+/**
+ * @OA\Post(
+ *     path="/api/update-customer-address",
+ *     tags={"Orders"},
+ *     summary="Update customer address for a single order detail",
+ *     security={{"sanctum":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="id", type="integer", example=5),
+ *             @OA\Property(property="customer_address", type="string", example="New Street 456, LA")
+ *         )
+ *     ),
+ *     @OA\Response(response=200, description="Customer address updated successfully"),
+ *     @OA\Response(response=400, description="Validation error"),
+ *     @OA\Response(response=404, description="Order detail not found")
+ * )
+ */
 
 
 
@@ -109,6 +151,25 @@ class MyOrderController extends Controller
             return response()->json(['error' => $err->getMessage()], 500);
         }
     }
+
+    /**
+ * @OA\get(
+ *     path="/api/cancel-order/{id}",
+ *     tags={"Orders"},
+ *     summary="Cancel an order",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="OrderDetail ID",
+ *         @OA\Schema(type="integer", example=10)
+ *     ),
+ *     @OA\Response(response=200, description="Order cancelled successfully"),
+ *     @OA\Response(response=404, description="Order not found")
+ * )
+ */
+
     public function cancelOrder(Request $request, $id)
     {
         try {
@@ -128,6 +189,26 @@ class MyOrderController extends Controller
             return response()->json(['error' => $err->getMessage()], 500);
         }
     }
+
+    /**
+ * @OA\Post(
+ *     path="/api/addAddress",
+ *     tags={"Orders"},
+ *     summary="Update customer address for all order details in an order",
+ *     security={{"sanctum":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="id", type="integer", example=3, description="Order ID"),
+ *             @OA\Property(property="customer_address", type="string", example="45 Downtown Street, Chicago")
+ *         )
+ *     ),
+ *     @OA\Response(response=200, description="Customer address updated successfully for all order items"),
+ *     @OA\Response(response=400, description="Validation error"),
+ *     @OA\Response(response=404, description="Order not found")
+ * )
+ */
+
     public function addAddress(Request $request)
     {
         try {
