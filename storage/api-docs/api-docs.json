@@ -1884,6 +1884,1858 @@
                 ]
             }
         },
+        "/api/sticker-print": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get stickers (customer address & mobile) by date range",
+                "description": "Fetches order stickers (address and mobile) within a given date range based on order details.",
+                "operationId": "3cc1a2c1d0ef5fb827588b50e14f1c06",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "from",
+                                    "to"
+                                ],
+                                "properties": {
+                                    "from": {
+                                        "description": "Start date (YYYY-MM-DD)",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-09-01"
+                                    },
+                                    "to": {
+                                        "description": "End date (YYYY-MM-DD)",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-09-06"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Stickers retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Stickers retrieved successfully!"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "address": {
+                                                        "type": "string",
+                                                        "example": "123, Main Street, City"
+                                                    },
+                                                    "mobile": {
+                                                        "type": "string",
+                                                        "example": "+91 9876543210"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "From date is required"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "An error occurred while retrieving the stickers. Please try again."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/order-list": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get all orders with filters",
+                "description": "Retrieve paginated orders with filters such as status, user, product, and date range. Also syncs settlement status with Cashfree API.",
+                "operationId": "44a913e7bd17108243c392d790c4ea44",
+                "parameters": [
+                    {
+                        "name": "orderStatus",
+                        "in": "query",
+                        "description": "Filter by order status",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Pending"
+                        }
+                    },
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "description": "Filter by user ID (from orders table)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 12
+                        }
+                    },
+                    {
+                        "name": "productName",
+                        "in": "query",
+                        "description": "Filter by product slug (partial match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "samsung-galaxy-s22"
+                        }
+                    },
+                    {
+                        "name": "userName",
+                        "in": "query",
+                        "description": "Filter by user name (partial match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "John Doe"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "Filter by specific order date (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-09-05"
+                        }
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "description": "Filter by start date (YYYY-MM-DD). Must be used with endDate.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-09-01"
+                        }
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "description": "Filter by end date (YYYY-MM-DD). Must be used with startDate.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-09-06"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Orders retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Orders retrieved successfully!"
+                                        },
+                                        "data": {
+                                            "description": "Paginated orders",
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 25
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 101
+                                                            },
+                                                            "order_id": {
+                                                                "type": "integer",
+                                                                "example": 55
+                                                            },
+                                                            "orderStatus": {
+                                                                "type": "string",
+                                                                "example": "Pending"
+                                                            },
+                                                            "product": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "type": "integer",
+                                                                        "example": 5
+                                                                    },
+                                                                    "name": {
+                                                                        "type": "string",
+                                                                        "example": "Samsung Galaxy S22"
+                                                                    },
+                                                                    "slug": {
+                                                                        "type": "string",
+                                                                        "example": "samsung-galaxy-s22"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            "order": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "type": "integer",
+                                                                        "example": 55
+                                                                    },
+                                                                    "payment_id": {
+                                                                        "type": "string",
+                                                                        "example": "pay_123456789"
+                                                                    },
+                                                                    "status": {
+                                                                        "type": "string",
+                                                                        "example": "Settled"
+                                                                    },
+                                                                    "user": {
+                                                                        "properties": {
+                                                                            "id": {
+                                                                                "type": "integer",
+                                                                                "example": 12
+                                                                            },
+                                                                            "name": {
+                                                                                "type": "string",
+                                                                                "example": "John Doe"
+                                                                            },
+                                                                            "contact": {
+                                                                                "type": "string",
+                                                                                "example": "+91 9876543210"
+                                                                            }
+                                                                        },
+                                                                        "type": "object"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "An error occurred while retrieving the orders. Please try again."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/catalog/{id}": {
+            "get": {
+                "tags": [
+                    "Catalog"
+                ],
+                "summary": "Get catalog by ID",
+                "description": "Retrieve a single catalog by its ID.",
+                "operationId": "062a17549160ffc8062af273f73f37ab",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Catalog ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 4
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Catalog retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Hand work"
+                                                },
+                                                "main_image": {
+                                                    "type": "string",
+                                                    "example": "catalog_68b305e327de83.92394428.jpg"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-08-30T19:38:35.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-09-01T12:58:42.000000Z"
+                                                },
+                                                "deleted_at": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Catalog"
+                ],
+                "summary": "Update an existing catalog",
+                "description": "Update catalog title, description, and optionally replace its main image.",
+                "operationId": "2636a95bda5adb0567a3e491f766a598",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "title"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Updated Electronics"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Updated description"
+                                    },
+                                    "main_image": {
+                                        "description": "Upload a new image (optional)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Catalog updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Catalog created successfully!"
+                                        },
+                                        "imagePath": {
+                                            "type": "string",
+                                            "example": "/images/catalog/catalog_123.jpg"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": {
+                                                "id": 1,
+                                                "title": "Updated Electronics",
+                                                "main_image": "catalog_123.jpg"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/catalog": {
+            "post": {
+                "tags": [
+                    "Catalog"
+                ],
+                "summary": "Add a new catalog",
+                "description": "Create a new catalog with a title, image, and optional description.",
+                "operationId": "d2dcb70e65a8fd2bc9e04c6265c8c43c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "main_image"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Electronics"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "All electronic products"
+                                    },
+                                    "main_image": {
+                                        "description": "Upload an image",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Catalog created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Catalog created successfully!"
+                                        },
+                                        "imagePath": {
+                                            "type": "string",
+                                            "example": "/images/catalog/catalog_123.jpg"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": {
+                                                "id": 1,
+                                                "title": "Electronics",
+                                                "main_image": "catalog_123.jpg"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/catalog/products1": {
+            "get": {
+                "tags": [
+                    "Catalog"
+                ],
+                "summary": "Get catalogs with products (with stock and category)",
+                "description": "Retrieve all catalogs along with their products, stock, and categories.",
+                "operationId": "20d83444032c8af9ce79c669b561a41c",
+                "responses": {
+                    "200": {
+                        "description": "Catalogs retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "status": true,
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "Electronics",
+                                            "main_image": "catalog_123.jpg",
+                                            "products": [
+                                                {
+                                                    "id": 101,
+                                                    "name": "Samsung Galaxy S22",
+                                                    "slug": "samsung-galaxy-s22",
+                                                    "getStoke": {
+                                                        "id": 55,
+                                                        "quantity": 20
+                                                    },
+                                                    "category": {
+                                                        "id": 3,
+                                                        "name": "Smartphones"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/catalogs": {
+            "get": {
+                "tags": [
+                    "Catalog"
+                ],
+                "summary": "Get all catalogs with products",
+                "description": "Retrieve all catalogs along with their products, stock, and categories.",
+                "operationId": "8a03ec4200bacce04063605b24070c9a",
+                "responses": {
+                    "200": {
+                        "description": "Catalogs retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "Electronics"
+                                                    },
+                                                    "main_image": {
+                                                        "type": "string",
+                                                        "example": "catalog_123.jpg"
+                                                    },
+                                                    "products": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 101
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "Samsung Galaxy S22"
+                                                                },
+                                                                "slug": {
+                                                                    "type": "string",
+                                                                    "example": "samsung-galaxy-s22"
+                                                                },
+                                                                "getStoke": {
+                                                                    "type": "object",
+                                                                    "example": {
+                                                                        "id": 55,
+                                                                        "quantity": 20
+                                                                    }
+                                                                },
+                                                                "category": {
+                                                                    "type": "object",
+                                                                    "example": {
+                                                                        "id": 3,
+                                                                        "name": "Smartphones"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/products/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get products",
+                "description": "Retrieve all products or products by catalog ID (optional).",
+                "operationId": "9ccf74dbf4be82488c9ac401356d4c80",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Catalog ID (optional). If not provided, all products are returned.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Products retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "catalogid": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "sku": {
+                                                        "type": "string",
+                                                        "example": "SKU12345"
+                                                    },
+                                                    "categoryid": {
+                                                        "type": "integer",
+                                                        "example": 5
+                                                    },
+                                                    "color": {
+                                                        "type": "string",
+                                                        "example": "Black"
+                                                    },
+                                                    "size": {
+                                                        "type": "string",
+                                                        "example": "M"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "A sample product"
+                                                    },
+                                                    "base_price": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 500
+                                                    },
+                                                    "tax_price": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 50
+                                                    },
+                                                    "discount_amt": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 20
+                                                    },
+                                                    "discount_type": {
+                                                        "type": "string",
+                                                        "example": "flat"
+                                                    },
+                                                    "mrp": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 530
+                                                    },
+                                                    "image": {
+                                                        "type": "string",
+                                                        "example": "product_123.jpg"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-09-06T10:15:30Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-09-06T10:15:30Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "An error occurred while retrieving the products. Please try again."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/product": {
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Add a new product",
+                "description": "Create a new product with details and initial stock.",
+                "operationId": "aa14811ef4f08461d0c2b1e95b457a04",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "catalogid",
+                                    "sku",
+                                    "categoryid",
+                                    "color",
+                                    "size",
+                                    "image",
+                                    "description",
+                                    "base_price",
+                                    "tax_price",
+                                    "mrp",
+                                    "quantity"
+                                ],
+                                "properties": {
+                                    "catalogid": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "example": "sample-product"
+                                    },
+                                    "sku": {
+                                        "type": "string",
+                                        "example": "SKU12345"
+                                    },
+                                    "categoryid": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "example": "Black"
+                                    },
+                                    "size": {
+                                        "type": "string",
+                                        "example": "M"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "A sample product"
+                                    },
+                                    "base_price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 500
+                                    },
+                                    "tax_price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 50
+                                    },
+                                    "discount_amt": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 20
+                                    },
+                                    "discount_type": {
+                                        "type": "string",
+                                        "example": "flat"
+                                    },
+                                    "mrp": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 530
+                                    },
+                                    "quantity": {
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "status": true,
+                                    "message": "Product created successfully!",
+                                    "imagePath": "/images/product/product_123.jpg",
+                                    "data": {
+                                        "id": 101,
+                                        "catalogid": 1,
+                                        "sku": "SKU12345"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/product/{id}": {
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update an existing product",
+                "description": "Update product details and optionally update its image.",
+                "operationId": "33d489c36c65079f78369ca4fccbf1df",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 101
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "catalogid",
+                                    "sku",
+                                    "categoryid",
+                                    "color",
+                                    "size",
+                                    "description",
+                                    "base_price",
+                                    "tax_price",
+                                    "discount_amt",
+                                    "mrp"
+                                ],
+                                "properties": {
+                                    "catalogid": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "example": "sample-product"
+                                    },
+                                    "sku": {
+                                        "type": "string",
+                                        "example": "SKU12345"
+                                    },
+                                    "categoryid": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "example": "Red"
+                                    },
+                                    "size": {
+                                        "type": "string",
+                                        "example": "L"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Updated product description"
+                                    },
+                                    "base_price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 550
+                                    },
+                                    "tax_price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 55
+                                    },
+                                    "discount_amt": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 15
+                                    },
+                                    "discount_type": {
+                                        "type": "string",
+                                        "example": "percentage"
+                                    },
+                                    "mrp": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 600
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "status": true,
+                                    "message": "Product updated successfully!",
+                                    "imagePath": "/images/product/product_123.jpg",
+                                    "data": {
+                                        "id": 101,
+                                        "catalogid": 1,
+                                        "sku": "SKU12345"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/catalog/delete/{id}": {
+            "get": {
+                "tags": [
+                    "Catalogs"
+                ],
+                "summary": "Delete a catalog and its products",
+                "description": "Deletes a catalog and all associated products",
+                "operationId": "0faeaef0edffabc2b5531416d898b0ec",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Catalog ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Catalog deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Catalog and its products deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/catalog_trash": {
+            "get": {
+                "tags": [
+                    "Catalogs"
+                ],
+                "summary": "Get soft-deleted catalogs",
+                "description": "Retrieve all catalogs that are in the trash (soft deleted)",
+                "operationId": "da459a1f0773f70dd8ff30034a7a8266",
+                "responses": {
+                    "200": {
+                        "description": "List of soft-deleted catalogs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Electronics"
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "Active"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-09-06T10:00:00Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-09-06T10:00:00Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error retrieving catalogs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/catalog/hardDelete/{id}": {
+            "get": {
+                "tags": [
+                    "Catalogs"
+                ],
+                "summary": "Permanently delete a catalog",
+                "description": "Permanently deletes a soft-deleted catalog if it has no associated products",
+                "operationId": "f91bb1afc2a0ecc45904bc6136532afa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Catalog ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Catalog permanently deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Catalog permanently deleted."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Catalog not found or not deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Catalog not found or is not deleted."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Catalog has associated products",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Cannot delete, there are products associated with this catalog."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/catalog/restore/{id}": {
+            "get": {
+                "tags": [
+                    "Catalogs"
+                ],
+                "summary": "Restore a soft-deleted catalog",
+                "description": "Restores a catalog and all its soft-deleted products",
+                "operationId": "682002026a262f096f1f86ae69af2916",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Catalog ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Catalog restored successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Catalog Restored Successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/products/delete/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Delete a product",
+                "description": "Soft delete a product by ID",
+                "operationId": "e70213e1272b863379174c69c8f79100",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product Deleted Successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/deletedProduct": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get soft-deleted products",
+                "description": "Retrieve all soft-deleted products",
+                "operationId": "5738e8b520d43feef87ca78fa885fc5b",
+                "responses": {
+                    "200": {
+                        "description": "List of soft-deleted products",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "iPhone 15"
+                                                    },
+                                                    "price": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 999.99
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "Active"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-09-06T10:00:00Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-09-06T10:00:00Z"
+                                                    },
+                                                    "deleted_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-09-06T12:00:00Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/products/hardDetelete/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Permanently delete a product",
+                "description": "Permanently delete a soft-deleted product by ID",
+                "operationId": "92e972e96770b1e7a87be1628a5d25ab",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product permanently deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product Permanently Deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/products/restore/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Restore a soft-deleted product",
+                "description": "Restore a soft-deleted product by ID",
+                "operationId": "764b9052f082a2a453f6712466a1e77f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product restored successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product Restored Successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/stock/{id}": {
+            "get": {
+                "tags": [
+                    "Stock"
+                ],
+                "summary": "Get product stock",
+                "description": "Retrieve stock details for a specific product",
+                "operationId": "a06f3d526e4eddda4fddc12b0c2fc870",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Stock fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Stock fetched successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "product_id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "quantity": {
+                                                        "type": "integer",
+                                                        "example": 50
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-09-06T10:00:00Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-09-06T10:30:00Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/update-order-status": {
+            "post": {
+                "tags": [
+                    "Stock"
+                ],
+                "summary": "Update order status",
+                "description": "Update the status of an order detail",
+                "operationId": "017870cad1b282537567eab07a24a268",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 123
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "shipped"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Order status updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Order status updated successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 123
+                                                },
+                                                "orderStatus": {
+                                                    "type": "string",
+                                                    "example": "shipped"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-09-06T10:00:00Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-09-06T10:30:00Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/update-stock": {
+            "post": {
+                "tags": [
+                    "Stock"
+                ],
+                "summary": "Update product stock",
+                "description": "Update stock quantity for a product and create a stock transaction",
+                "operationId": "f59e012399109621006bfbfca2496449",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "product_id": {
+                                        "type": "integer",
+                                        "example": 101
+                                    },
+                                    "quantity": {
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "addition"
+                                    },
+                                    "remarks": {
+                                        "type": "string",
+                                        "example": "Stock replenishment"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Stock updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Stock updated successfully"
+                                        },
+                                        "data": {
+                                            "type": "integer",
+                                            "example": 60
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating stock",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred while updating stock. Please try again later."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/updatePin": {
             "post": {
                 "tags": [
@@ -2583,13 +4435,13 @@
                 ]
             }
         },
-        "/api/products": {
+        "/api/getProductList": {
             "get": {
                 "tags": [
                     "Products"
                 ],
                 "summary": "Get product list with catalogs and colors",
-                "operationId": "fdf8ea00d86f6800ac851c172e5b25e5",
+                "operationId": "20f4663d24f0d2d97fec7343051f6838",
                 "responses": {
                     "200": {
                         "description": "Product List",
@@ -2640,13 +4492,14 @@
                 ]
             }
         },
-        "/api/products/{id}": {
+        "/api/getProductDetail/{id}": {
             "get": {
                 "tags": [
                     "Products"
                 ],
                 "summary": "Get product detail by catalog ID",
-                "operationId": "8ebdcc918059f28f2ce89a025f213432",
+                "description": "Retrieve product details by providing the catalog ID.",
+                "operationId": "26f5c2d2b82e200aa104e5b61b967e5a",
                 "parameters": [
                     {
                         "name": "id",
@@ -2713,6 +4566,9 @@
                                 }
                             }
                         }
+                    },
+                    "500": {
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -2720,6 +4576,135 @@
                         "sanctum": []
                     }
                 ]
+            }
+        },
+        "/api/getSlider": {
+            "get": {
+                "tags": [
+                    "Sliders"
+                ],
+                "summary": "Get active sliders",
+                "description": "Retrieve all active sliders with image path",
+                "operationId": "cb9a03867ef8d042aecd208f8771f0ba",
+                "responses": {
+                    "200": {
+                        "description": "List of active sliders",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Slider List"
+                                        },
+                                        "imgPath": {
+                                            "type": "string",
+                                            "example": "https://example.com/slider/"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "Summer Sale"
+                                                    },
+                                                    "image": {
+                                                        "type": "string",
+                                                        "example": "slider1.jpg"
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "Active"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-09-06T10:00:00Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-09-06T10:10:00Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/getVersion": {
+            "get": {
+                "tags": [
+                    "Version"
+                ],
+                "summary": "Get latest version",
+                "description": "Retrieve the latest app version",
+                "operationId": "c1deb1161ca15fb589fd93a4aa46c80f",
+                "responses": {
+                    "200": {
+                        "description": "Latest version",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Version"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "version": {
+                                                    "type": "string",
+                                                    "example": "2.3.1"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Latest stable release"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-09-06T09:00:00Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-09-06T09:15:00Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     },
@@ -2754,6 +4739,22 @@
             "description": "Sliders"
         },
         {
+            "name": "Orders",
+            "description": "Orders"
+        },
+        {
+            "name": "Catalog",
+            "description": "Catalog"
+        },
+        {
+            "name": "Catalogs",
+            "description": "Catalogs"
+        },
+        {
+            "name": "Stock",
+            "description": "Stock"
+        },
+        {
             "name": "User",
             "description": "User"
         },
@@ -2762,12 +4763,12 @@
             "description": "Authentication"
         },
         {
-            "name": "Orders",
-            "description": "Orders"
-        },
-        {
             "name": "Pincodes",
             "description": "Pincodes"
+        },
+        {
+            "name": "Version",
+            "description": "Version"
         }
     ]
 }

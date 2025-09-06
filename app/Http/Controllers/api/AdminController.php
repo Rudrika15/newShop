@@ -1481,6 +1481,61 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while creating the slider. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Post(
+ *     path="/api/sticker-print",
+ *     tags={"Orders"},
+ *     summary="Get stickers (customer address & mobile) by date range",
+ *     description="Fetches order stickers (address and mobile) within a given date range based on order details.",
+ *     security={{"sanctum":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             type="object",
+ *             required={"from","to"},
+ *             @OA\Property(property="from", type="string", format="date", example="2025-09-01", description="Start date (YYYY-MM-DD)"),
+ *             @OA\Property(property="to", type="string", format="date", example="2025-09-06", description="End date (YYYY-MM-DD)")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Stickers retrieved successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Stickers retrieved successfully!"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="address", type="string", example="123, Main Street, City"),
+ *                     @OA\Property(property="mobile", type="string", example="+91 9876543210")
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Validation error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="From date is required")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="error", type="string", example="An error occurred while retrieving the stickers. Please try again.")
+ *         )
+ *     )
+ * )
+ */
+
     public function stickerPrint(Request $request)
     {
         $validator = Validator::make(
@@ -1513,9 +1568,16 @@ class AdminController extends Controller
                 ->map(function ($item) {
                     return [
                         'address' => $item->customer_address,
-                        'mobile' => $item->order?->user?->contact // safely access mobile
+                        'qrid' => $item->id // safely access mobile
                     ];
                 });
+
+                // $stickers = OrderDetail::whereDate('created_at', '>=', $from)
+                // ->whereDate('created_at', '<=', $to)
+                // ->with('order.user') // eager load user through order
+                // ->get();
+
+
 
             return response()->json([
                 'status' => true,
@@ -1526,6 +1588,121 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while retrieving the stickers. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/order-list",
+ *     tags={"Orders"},
+ *     summary="Get all orders with filters",
+ *     description="Retrieve paginated orders with filters such as status, user, product, and date range. Also syncs settlement status with Cashfree API.",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="orderStatus",
+ *         in="query",
+ *         required=false,
+ *         description="Filter by order status",
+ *         @OA\Schema(type="string", example="Pending")
+ *     ),
+ *     @OA\Parameter(
+ *         name="userId",
+ *         in="query",
+ *         required=false,
+ *         description="Filter by user ID (from orders table)",
+ *         @OA\Schema(type="integer", example=12)
+ *     ),
+ *     @OA\Parameter(
+ *         name="productName",
+ *         in="query",
+ *         required=false,
+ *         description="Filter by product slug (partial match)",
+ *         @OA\Schema(type="string", example="samsung-galaxy-s22")
+ *     ),
+ *     @OA\Parameter(
+ *         name="userName",
+ *         in="query",
+ *         required=false,
+ *         description="Filter by user name (partial match)",
+ *         @OA\Schema(type="string", example="John Doe")
+ *     ),
+ *     @OA\Parameter(
+ *         name="date",
+ *         in="query",
+ *         required=false,
+ *         description="Filter by specific order date (YYYY-MM-DD)",
+ *         @OA\Schema(type="string", format="date", example="2025-09-05")
+ *     ),
+ *     @OA\Parameter(
+ *         name="startDate",
+ *         in="query",
+ *         required=false,
+ *         description="Filter by start date (YYYY-MM-DD). Must be used with endDate.",
+ *         @OA\Schema(type="string", format="date", example="2025-09-01")
+ *     ),
+ *     @OA\Parameter(
+ *         name="endDate",
+ *         in="query",
+ *         required=false,
+ *         description="Filter by end date (YYYY-MM-DD). Must be used with startDate.",
+ *         @OA\Schema(type="string", format="date", example="2025-09-06")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Orders retrieved successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Orders retrieved successfully!"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 description="Paginated orders",
+ *                 @OA\Property(property="current_page", type="integer", example=1),
+ *                 @OA\Property(property="per_page", type="integer", example=10),
+ *                 @OA\Property(property="total", type="integer", example=25),
+ *                 @OA\Property(
+ *                     property="data",
+ *                     type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(property="id", type="integer", example=101),
+ *                         @OA\Property(property="order_id", type="integer", example=55),
+ *                         @OA\Property(property="orderStatus", type="string", example="Pending"),
+ *                         @OA\Property(
+ *                             property="product",
+ *                             type="object",
+ *                             @OA\Property(property="id", type="integer", example=5),
+ *                             @OA\Property(property="name", type="string", example="Samsung Galaxy S22"),
+ *                             @OA\Property(property="slug", type="string", example="samsung-galaxy-s22")
+ *                         ),
+ *                         @OA\Property(
+ *                             property="order",
+ *                             type="object",
+ *                             @OA\Property(property="id", type="integer", example=55),
+ *                             @OA\Property(property="payment_id", type="string", example="pay_123456789"),
+ *                             @OA\Property(property="status", type="string", example="Settled"),
+ *                             @OA\Property(
+ *                                 property="user",
+ *                                 type="object",
+ *                                 @OA\Property(property="id", type="integer", example=12),
+ *                                 @OA\Property(property="name", type="string", example="John Doe"),
+ *                                 @OA\Property(property="contact", type="string", example="+91 9876543210")
+ *                             )
+ *                         )
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="error", type="string", example="An error occurred while retrieving the orders. Please try again.")
+ *         )
+ *     )
+ * )
+ */
 
     public function getAllOrders(Request $request)
 
@@ -1618,6 +1795,47 @@ class AdminController extends Controller
         }
     }
 
+  /**
+ * @OA\Get(
+ *     path="/api/catalog/{id}",
+ *     tags={"Catalog"},
+ *     summary="Get catalog by ID",
+ *     description="Retrieve a single catalog by its ID.",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Catalog ID",
+ *         @OA\Schema(type="integer", example=4)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Catalog retrieved successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="id", type="integer", example=4),
+ *                 @OA\Property(property="title", type="string", example="Hand work"),
+ *                 @OA\Property(property="main_image", type="string", example="catalog_68b305e327de83.92394428.jpg"),
+ *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-08-30T19:38:35.000000Z"),
+ *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-09-01T12:58:42.000000Z"),
+ *                 @OA\Property(property="deleted_at", type="string", nullable=true, example=null)
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error"
+ *     )
+ * )
+ */
+
+
+
     public function getCatalog(Request $request, $id = null)
     {
         try {
@@ -1639,6 +1857,48 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while creating the catalog. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Post(
+ *     path="/api/catalog",
+ *     tags={"Catalog"},
+ *     summary="Add a new catalog",
+ *     description="Create a new catalog with a title, image, and optional description.",
+ *     security={{"sanctum":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 required={"title", "main_image"},
+ *                 @OA\Property(property="title", type="string", example="Electronics"),
+ *                 @OA\Property(property="description", type="string", example="All electronic products"),
+ *                 @OA\Property(property="main_image", type="string", format="binary", description="Upload an image")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="Catalog created successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Catalog created successfully!"),
+ *             @OA\Property(property="imagePath", type="string", example="/images/catalog/catalog_123.jpg"),
+ *             @OA\Property(property="data", type="object", example={"id": 1, "title": "Electronics", "main_image": "catalog_123.jpg"})
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Validation error"
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error"
+ *     )
+ * )
+ */
+
     public function addCatalog(Request $request)
     {
         // Validate the input
@@ -1695,6 +1955,48 @@ class AdminController extends Controller
             ], 500);
         }
     }
+
+    /**
+ * @OA\Post(
+ *     path="/api/catalog/{id}",
+ *     tags={"Catalog"},
+ *     summary="Update an existing catalog",
+ *     description="Update catalog title, description, and optionally replace its main image.",
+ *     security={{"sanctum":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 required={"id", "title"},
+ *                 @OA\Property(property="id", type="integer", example=1),
+ *                 @OA\Property(property="title", type="string", example="Updated Electronics"),
+ *                 @OA\Property(property="description", type="string", example="Updated description"),
+ *                 @OA\Property(property="main_image", type="string", format="binary", description="Upload a new image (optional)")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Catalog updated successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Catalog created successfully!"),
+ *             @OA\Property(property="imagePath", type="string", example="/images/catalog/catalog_123.jpg"),
+ *             @OA\Property(property="data", type="object", example={"id": 1, "title": "Updated Electronics", "main_image": "catalog_123.jpg"})
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Validation error"
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error"
+ *     )
+ * )
+ */
 
 
     public function updateCatalog(Request $request)
@@ -1754,6 +2056,46 @@ class AdminController extends Controller
     }
 
 
+  /**
+ * @OA\Get(
+ *     path="/api/catalog/products1",
+ *     tags={"Catalog"},
+ *     summary="Get catalogs with products (with stock and category)",
+ *     description="Retrieve all catalogs along with their products, stock, and categories.",
+ *     security={{"sanctum":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Catalogs retrieved successfully",
+ *         @OA\JsonContent(
+ *             example={
+ *                 "status": true,
+ *                 "data": {
+ *                     {
+ *                         "id": 1,
+ *                         "title": "Electronics",
+ *                         "main_image": "catalog_123.jpg",
+ *                         "products": {
+ *                             {
+ *                                 "id": 101,
+ *                                 "name": "Samsung Galaxy S22",
+ *                                 "slug": "samsung-galaxy-s22",
+ *                                 "getStoke": {"id": 55, "quantity": 20},
+ *                                 "category": {"id": 3, "name": "Smartphones"}
+ *                             }
+ *                         }
+ *                     }
+ *                 }
+ *             }
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error"
+ *     )
+ * )
+ */
+
+
     public function catalogProducts1()
     {
 
@@ -1763,6 +2105,59 @@ class AdminController extends Controller
             'data' => $catalogs
         ]);
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/catalogs",
+ *     tags={"Catalog"},
+ *     summary="Get all catalogs with products",
+ *     description="Retrieve all catalogs along with their products, stock, and categories.",
+ *     security={{"sanctum":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Catalogs retrieved successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="id", type="integer", example=1),
+ *                     @OA\Property(property="title", type="string", example="Electronics"),
+ *                     @OA\Property(property="main_image", type="string", example="catalog_123.jpg"),
+ *                     @OA\Property(
+ *                         property="products",
+ *                         type="array",
+ *                         @OA\Items(
+ *                             type="object",
+ *                             @OA\Property(property="id", type="integer", example=101),
+ *                             @OA\Property(property="name", type="string", example="Samsung Galaxy S22"),
+ *                             @OA\Property(property="slug", type="string", example="samsung-galaxy-s22"),
+ *                             @OA\Property(
+ *                                 property="getStoke",
+ *                                 type="object",
+ *                                 example={"id": 55, "quantity": 20}
+ *                             ),
+ *                             @OA\Property(
+ *                                 property="category",
+ *                                 type="object",
+ *                                 example={"id": 3, "name": "Smartphones"}
+ *                             )
+ *                         )
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error"
+ *     )
+ * )
+ */
+
     public function catalogs()
     {
 
@@ -1774,6 +2169,64 @@ class AdminController extends Controller
     }
 
     // product
+
+/**
+ * @OA\Get(
+ *     path="/api/products/{id}",
+ *     tags={"Products"},
+ *     summary="Get products",
+ *     description="Retrieve all products or products by catalog ID (optional).",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=false,
+ *         description="Catalog ID (optional). If not provided, all products are returned.",
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Products retrieved successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="id", type="integer", example=101),
+ *                     @OA\Property(property="catalogid", type="integer", example=1),
+ *                     @OA\Property(property="sku", type="string", example="SKU12345"),
+ *                     @OA\Property(property="categoryid", type="integer", example=5),
+ *                     @OA\Property(property="color", type="string", example="Black"),
+ *                     @OA\Property(property="size", type="string", example="M"),
+ *                     @OA\Property(property="description", type="string", example="A sample product"),
+ *                     @OA\Property(property="base_price", type="number", format="float", example=500),
+ *                     @OA\Property(property="tax_price", type="number", format="float", example=50),
+ *                     @OA\Property(property="discount_amt", type="number", format="float", example=20),
+ *                     @OA\Property(property="discount_type", type="string", example="flat"),
+ *                     @OA\Property(property="mrp", type="number", format="float", example=530),
+ *                     @OA\Property(property="image", type="string", example="product_123.jpg"),
+ *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T10:15:30Z"),
+ *                     @OA\Property(property="updated_at", type="string", format="date-time", example="2025-09-06T10:15:30Z")
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="error", type="string", example="An error occurred while retrieving the products. Please try again.")
+ *         )
+ *     )
+ * )
+ */
+
+
+
     public function getProducts($id = null)
     {
         try {
@@ -1792,6 +2245,59 @@ class AdminController extends Controller
             return response()->json(['error' => 'An error occurred while retrieving the products. Please try again.'], 500);
         }
     }
+
+    /**
+ * @OA\Post(
+ *     path="/api/product",
+ *     tags={"Products"},
+ *     summary="Add a new product",
+ *     description="Create a new product with details and initial stock.",
+ *     security={{"sanctum":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 required={"catalogid","sku","categoryid","color","size","image","description","base_price","tax_price","mrp","quantity"},
+ *                 @OA\Property(property="catalogid", type="integer", example=1),
+ *                 @OA\Property(property="slug", type="string", example="sample-product"),
+ *                 @OA\Property(property="sku", type="string", example="SKU12345"),
+ *                 @OA\Property(property="categoryid", type="integer", example=5),
+ *                 @OA\Property(property="color", type="string", example="Black"),
+ *                 @OA\Property(property="size", type="string", example="M"),
+ *                 @OA\Property(property="description", type="string", example="A sample product"),
+ *                 @OA\Property(property="base_price", type="number", format="float", example=500),
+ *                 @OA\Property(property="tax_price", type="number", format="float", example=50),
+ *                 @OA\Property(property="discount_amt", type="number", format="float", example=20),
+ *                 @OA\Property(property="discount_type", type="string", example="flat"),
+ *                 @OA\Property(property="mrp", type="number", format="float", example=530),
+ *                 @OA\Property(property="quantity", type="integer", example=10),
+ *                 @OA\Property(property="image", type="string", format="binary")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Product created successfully",
+ *         @OA\JsonContent(
+ *             example={
+ *                 "status": true,
+ *                 "message": "Product created successfully!",
+ *                 "imagePath": "/images/product/product_123.jpg",
+ *                 "data": {"id": 101, "catalogid": 1, "sku": "SKU12345"}
+ *             }
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation error"
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error"
+ *     )
+ * )
+ */
 
     public function addProduct(Request $request)
     {
@@ -1882,6 +2388,65 @@ class AdminController extends Controller
         }
     }
 
+
+    /**
+ * @OA\post(
+ *     path="/api/product/{id}",
+ *     tags={"Products"},
+ *     summary="Update an existing product",
+ *     description="Update product details and optionally update its image.",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Product ID",
+ *         @OA\Schema(type="integer", example=101)
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 required={"catalogid","sku","categoryid","color","size","description","base_price","tax_price","discount_amt","mrp"},
+ *                 @OA\Property(property="catalogid", type="integer", example=1),
+ *                 @OA\Property(property="slug", type="string", example="sample-product"),
+ *                 @OA\Property(property="sku", type="string", example="SKU12345"),
+ *                 @OA\Property(property="categoryid", type="integer", example=5),
+ *                 @OA\Property(property="color", type="string", example="Red"),
+ *                 @OA\Property(property="size", type="string", example="L"),
+ *                 @OA\Property(property="description", type="string", example="Updated product description"),
+ *                 @OA\Property(property="base_price", type="number", format="float", example=550),
+ *                 @OA\Property(property="tax_price", type="number", format="float", example=55),
+ *                 @OA\Property(property="discount_amt", type="number", format="float", example=15),
+ *                 @OA\Property(property="discount_type", type="string", example="percentage"),
+ *                 @OA\Property(property="mrp", type="number", format="float", example=600),
+ *                 @OA\Property(property="image", type="string", format="binary")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Product updated successfully",
+ *         @OA\JsonContent(
+ *             example={
+ *                 "status": true,
+ *                 "message": "Product updated successfully!",
+ *                 "imagePath": "/images/product/product_123.jpg",
+ *                 "data": {"id": 101, "catalogid": 1, "sku": "SKU12345"}
+ *             }
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation error"
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error"
+ *     )
+ * )
+ */
 
 
     public function updateProduct(Request $request)
@@ -1980,6 +2545,31 @@ class AdminController extends Controller
             'data' => $product
         ]);
     }
+
+    /**
+ * @OA\get(
+ *     path="/api/catalog/delete/{id}",
+ *     tags={"Catalogs"},
+ *     summary="Delete a catalog and its products",
+ *     description="Deletes a catalog and all associated products",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Catalog ID",
+ *         @OA\Schema(type="string")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Catalog deleted successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Catalog and its products deleted successfully")
+ *         )
+ *     ),
+ *     security={{"sanctum":{}}}
+ * )
+ */
     public function catalogDelete(string $id)
     {
         $catalog = Catalog::findOrFail($id);
@@ -1993,6 +2583,46 @@ class AdminController extends Controller
             'message' => 'Catalog and its products deleted successfully'
         ]);
     }
+
+   /**
+ * @OA\Get(
+ *     path="/api/catalog_trash",
+ *     tags={"Catalogs"},
+ *     summary="Get soft-deleted catalogs",
+ *     description="Retrieve all catalogs that are in the trash (soft deleted)",
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of soft-deleted catalogs",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="id", type="integer", example=1),
+ *                     @OA\Property(property="name", type="string", example="Electronics"),
+ *                     @OA\Property(property="status", type="string", example="Active"),
+ *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T10:00:00Z"),
+ *                     @OA\Property(property="updated_at", type="string", format="date-time", example="2025-09-06T10:00:00Z")
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Error retrieving catalogs",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="An error occurred")
+ *         )
+ *     ),
+ *     security={{"sanctum":{}}}
+ * )
+ */
+
     public function catalog_trash()
     {
 
@@ -2010,6 +2640,47 @@ class AdminController extends Controller
             ]);
         }
     }
+
+    /**
+ * @OA\get(
+ *     path="/api/catalog/hardDelete/{id}",
+ *     tags={"Catalogs"},
+ *     summary="Permanently delete a catalog",
+ *     description="Permanently deletes a soft-deleted catalog if it has no associated products",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Catalog ID",
+ *         @OA\Schema(type="string")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Catalog permanently deleted",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Catalog permanently deleted.")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Catalog not found or not deleted",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Catalog not found or is not deleted.")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Catalog has associated products",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Cannot delete, there are products associated with this catalog.")
+ *         )
+ *     ),
+ *     security={{"sanctum":{}}}
+ * )
+ */
 
     public function catalogHardDelete($id)
     {
@@ -2042,6 +2713,30 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+ * @OA\get(
+ *     path="/api/catalog/restore/{id}",
+ *     tags={"Catalogs"},
+ *     summary="Restore a soft-deleted catalog",
+ *     description="Restores a catalog and all its soft-deleted products",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Catalog ID",
+ *         @OA\Schema(type="string")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Catalog restored successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Catalog Restored Successfully.")
+ *         )
+ *     ),
+ *     security={{"sanctum":{}}}
+ * )
+ */
     public function catalogRestore($id)
     {
         $catalog = Catalog::withTrashed()->findOrFail($id);
@@ -2055,6 +2750,32 @@ class AdminController extends Controller
             'message' => 'Catalog Restored Successfully.'
         ]);
     }
+
+    /**
+ * @OA\get(
+ *     path="/api/products/delete/{id}",
+ *     tags={"Products"},
+ *     summary="Delete a product",
+ *     description="Soft delete a product by ID",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Product ID",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Product deleted successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Product Deleted Successfully")
+ *         )
+ *     ),
+ *     security={{"sanctum":{}}}
+ * )
+ */
     public function productDelete($id)
     {
         $product = Product::findOrFail($id);
@@ -2087,6 +2808,38 @@ class AdminController extends Controller
             ], 500);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/deletedProduct",
+ *     tags={"Products"},
+ *     summary="Get soft-deleted products",
+ *     description="Retrieve all soft-deleted products",
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of soft-deleted products",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="id", type="integer", example=1),
+ *                     @OA\Property(property="name", type="string", example="iPhone 15"),
+ *                     @OA\Property(property="price", type="number", format="float", example=999.99),
+ *                     @OA\Property(property="status", type="string", example="Active"),
+ *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T10:00:00Z"),
+ *                     @OA\Property(property="updated_at", type="string", format="date-time", example="2025-09-06T10:00:00Z"),
+ *                     @OA\Property(property="deleted_at", type="string", format="date-time", example="2025-09-06T12:00:00Z")
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     security={{"sanctum":{}}}
+ * )
+ */
     public function deletedProduct()
     {
         $products = Product::onlyTrashed()->get();
@@ -2096,6 +2849,31 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+ * @OA\get(
+ *     path="/api/products/hardDetelete/{id}",
+ *     tags={"Products"},
+ *     summary="Permanently delete a product",
+ *     description="Permanently delete a soft-deleted product by ID",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Product ID",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Product permanently deleted",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Product Permanently Deleted")
+ *         )
+ *     ),
+ *     security={{"sanctum":{}}}
+ * )
+ */
     public function productHardDelete($id)
     {
         $product = Product::onlyTrashed()->findOrFail($id);
@@ -2105,6 +2883,32 @@ class AdminController extends Controller
             'message' => 'Product Permanently Deleted'
         ]);
     }
+
+    /**
+ * @OA\get(
+ *     path="/api/products/restore/{id}",
+ *     tags={"Products"},
+ *     summary="Restore a soft-deleted product",
+ *     description="Restore a soft-deleted product by ID",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Product ID",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Product restored successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Product Restored Successfully")
+ *         )
+ *     ),
+ *     security={{"sanctum":{}}}
+ * )
+ */
     public function productRestore($id)
     {
         $product = Product::withTrashed()->findOrFail($id);
@@ -2114,6 +2918,44 @@ class AdminController extends Controller
             'message' => 'Product Restored Successfully'
         ]);
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/stock/{id}",
+ *     tags={"Stock"},
+ *     summary="Get product stock",
+ *     description="Retrieve stock details for a specific product",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Product ID",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Stock fetched successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Stock fetched successfully"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="id", type="integer", example=1),
+ *                     @OA\Property(property="product_id", type="integer", example=101),
+ *                     @OA\Property(property="quantity", type="integer", example=50),
+ *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T10:00:00Z"),
+ *                     @OA\Property(property="updated_at", type="string", format="date-time", example="2025-09-06T10:30:00Z")
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     security={{"sanctum":{}}}
+ * )
+ */
     public function getStock($id)
     {
         try {
@@ -2131,6 +2973,40 @@ class AdminController extends Controller
         }
     }
 
+    /**
+ * @OA\Post(
+ *     path="/api/update-order-status",
+ *     tags={"Stock"},
+ *     summary="Update order status",
+ *     description="Update the status of an order detail",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="id", type="integer", example=123),
+ *             @OA\Property(property="status", type="string", example="shipped")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Order status updated successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Order status updated successfully"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="id", type="integer", example=123),
+ *                 @OA\Property(property="orderStatus", type="string", example="shipped"),
+ *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T10:00:00Z"),
+ *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-09-06T10:30:00Z")
+ *             )
+ *         )
+ *     ),
+ *     security={{"sanctum":{}}}
+ * )
+ */
     public function updateOrderStatus(Request $request)
     {
         $validator = Validator::make(
@@ -2169,6 +3045,44 @@ class AdminController extends Controller
         }
     }
 
+    /**
+ * @OA\Post(
+ *     path="/api/update-stock",
+ *     tags={"Stock"},
+ *     summary="Update product stock",
+ *     description="Update stock quantity for a product and create a stock transaction",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="product_id", type="integer", example=101),
+ *             @OA\Property(property="quantity", type="integer", example=10),
+ *             @OA\Property(property="type", type="string", example="addition"),
+ *             @OA\Property(property="remarks", type="string", example="Stock replenishment")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Stock updated successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Stock updated successfully"),
+ *             @OA\Property(property="data", type="integer", example=60)
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Error updating stock",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="An error occurred while updating stock. Please try again later.")
+ *         )
+ *     ),
+ *     security={{"sanctum":{}}}
+ * )
+ */
     public function updateProductStock(Request $request)
     {
 

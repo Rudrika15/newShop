@@ -23,7 +23,7 @@ class ProductController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/products",
+     *     path="/api/getProductList",
      *     tags={"Products"},
      *     summary="Get product list with catalogs and colors",
      *     security={{"sanctum":{}}},
@@ -73,45 +73,54 @@ class ProductController extends Controller
             return response()->json(['error' => $err->getMessage()]);
         }
     }
+
     /**
-     * @OA\Get(
-     *     path="/api/products/{id}",
-     *     tags={"Products"},
-     *     summary="Get product detail by catalog ID",
-     *     security={{"sanctum":{}}},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="Catalog ID",
-     *         @OA\Schema(type="integer", example=1)
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Product Detail",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="Product Detail"),
-     *             @OA\Property(property="imgPath", type="string", example="http://localhost/images/product/"),
-     *             @OA\Property(
-     *                 property="data",
-     *                 type="array",
-     *                 @OA\Items(
-     *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="name", type="string", example="Product 1"),
-     *                     @OA\Property(property="color", type="string", example="Red"),
-     *                     @OA\Property(
-     *                         property="stock",
-     *                         type="object",
-     *                         nullable=true,
-     *                         @OA\Property(property="quantity", type="integer", example=50)
-     *                     )
-     *                 )
-     *             )
-     *         )
-     *     )
-     * )
-     */
+ * @OA\Get(
+ *     path="/api/getProductDetail/{id}",
+ *     tags={"Products"},
+ *     summary="Get product detail by catalog ID",
+ *     description="Retrieve product details by providing the catalog ID.",
+ *     security={{"sanctum":{}}},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="Catalog ID",
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Product Detail",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Product Detail"),
+ *             @OA\Property(property="imgPath", type="string", example="http://localhost/images/product/"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="id", type="integer", example=1),
+ *                     @OA\Property(property="name", type="string", example="Product 1"),
+ *                     @OA\Property(property="color", type="string", example="Red"),
+ *                     @OA\Property(
+ *                         property="stock",
+ *                         type="object",
+ *                         nullable=true,
+ *                         @OA\Property(property="quantity", type="integer", example=50)
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error"
+ *     )
+ * )
+ */
+
     public function getProductDetail($id)
     {
         try {
@@ -145,6 +154,38 @@ class ProductController extends Controller
             return response()->json(['error' => $err->getMessage()]);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/getSlider",
+ *     tags={"Sliders"},
+ *     summary="Get active sliders",
+ *     description="Retrieve all active sliders with image path",
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of active sliders",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Slider List"),
+ *             @OA\Property(property="imgPath", type="string", example="https://example.com/slider/"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="id", type="integer", example=1),
+ *                     @OA\Property(property="title", type="string", example="Summer Sale"),
+ *                     @OA\Property(property="image", type="string", example="slider1.jpg"),
+ *                     @OA\Property(property="status", type="string", example="Active"),
+ *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T10:00:00Z"),
+ *                     @OA\Property(property="updated_at", type="string", format="date-time", example="2025-09-06T10:10:00Z")
+ *                 )
+ *             )
+ *         )
+ *     )
+ * )
+ */
     public function  getSlider()
     {
         $imgPath = asset('slider/');
@@ -158,6 +199,32 @@ class ProductController extends Controller
         return response()->json($response);
     }
 
+    /**
+ * @OA\Get(
+ *     path="/api/getVersion",
+ *     tags={"Version"},
+ *     summary="Get latest version",
+ *     description="Retrieve the latest app version",
+ *     @OA\Response(
+ *         response=200,
+ *         description="Latest version",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Version"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="id", type="integer", example=5),
+ *                 @OA\Property(property="version", type="string", example="2.3.1"),
+ *                 @OA\Property(property="description", type="string", example="Latest stable release"),
+ *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T09:00:00Z"),
+ *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-09-06T09:15:00Z")
+ *             )
+ *         )
+ *     )
+ * )
+ */
     public function getVersion()
     {
         $version  = Version::orderBy('id', 'desc')->first();
